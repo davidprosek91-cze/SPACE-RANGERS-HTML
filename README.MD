@@ -5,7 +5,6 @@
 
 Vesmírná arkádová hra v jediném HTML souboru. Kombinuje souboje, obchodování, těžbu asteroidů, crafting, RPG skilly, úkoly a simulovaný multiplayer. Inspirováno klasikou *Space Rangers*, *X3* a *Escape Velocity*.
 
-> **Poznámka k verzi:** DUCO / DuinoCoin peněženka byla z projektu zcela odstraněna. Hra používá pouze vlastní měnu **HVC (Havirov Coin)**.
 
 ---
 
