@@ -120,6 +120,417 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
 @media (min-aspect-ratio:1024/768) {
   #gameContainer { height:100vh; width:calc(100vh * 1024 / 768); max-width:100vw; }
 }
+
+/* ============================================================
+   V3.3 – VISUAL & ICON UPDATE
+   ============================================================ */
+:root{
+  --ui-bg:#070b18;
+  --ui-panel:rgba(10,16,36,.92);
+  --ui-panel2:rgba(18,28,56,.9);
+  --ui-border:#2f6d9e;
+  --ui-border-hi:#7ad4ff;
+  --ui-accent:#4aa8e8;
+  --ui-accent2:#8ef0ff;
+  --ui-yellow:#f2e85c;
+  --ui-green:#54e89a;
+  --ui-red:#ff6b6b;
+  --ui-purple:#b78cff;
+  --ui-cyan:#5ce1e6;
+  --ui-text:#dbe7f5;
+  --ui-muted:#8296b3;
+}
+.icon{
+  width:1em;height:1em;display:inline-block;vertical-align:-.14em;flex:0 0 auto;
+  stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  overflow:visible;
+}
+
+/* ---------- SCREEN BACKGROUND ---------- */
+#menu-screen, #docked-screen, #trading-screen, #quest-screen, #upgrade-screen,
+#fuel-screen, #credits-screen, #mining-log-screen, #skills-screen, #multiplayer-screen,
+#crafting-screen, #inventory-screen, #trader-screen, #help-screen{
+  background:
+    radial-gradient(circle at 50% -10%, rgba(42,138,204,.18), transparent 55%),
+    radial-gradient(circle at 85% 110%, rgba(153,102,255,.12), transparent 50%),
+    rgba(4,7,22,.94);
+}
+#menu-screen{
+  background:
+    radial-gradient(circle at 50% 18%, rgba(42,138,204,.22), transparent 52%),
+    radial-gradient(circle at 50% 100%, rgba(0,204,68,.08), transparent 55%),
+    rgba(4,7,22,.96);
+}
+
+/* ---------- MENU ---------- */
+.menu-title{
+  font-size:50px;letter-spacing:7px;line-height:1.05;
+  background:linear-gradient(180deg,#e8fbff 0%,#8ef0ff 28%,#4aa8e8 55%,#1b5f9e 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 22px rgba(74,168,232,.5));
+  text-shadow:none;margin-bottom:2px;
+}
+.menu-subtitle{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-size:15px;letter-spacing:3px;color:#f7f0a0;
+  padding:4px 16px;margin:4px 0 10px;border-radius:999px;
+  background:linear-gradient(180deg,rgba(230,230,64,.12),rgba(20,20,50,.5));
+  border:1px solid rgba(242,232,92,.35);
+  box-shadow:inset 0 0 14px rgba(242,232,92,.08),0 0 18px rgba(242,232,92,.08);
+  text-shadow:0 0 10px rgba(242,232,92,.35);
+}
+.menu-subtitle .icon{width:15px;height:15px;color:#f2e85c}
+.menu-wallet{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-size:15px;color:var(--ui-green);margin:0 0 12px;padding:4px 14px;
+  border-radius:999px;background:rgba(0,40,20,.4);border:1px solid rgba(84,232,154,.25);
+  box-shadow:inset 0 0 12px rgba(84,232,154,.06);letter-spacing:.5px;
+}
+.menu-wallet .icon{width:16px;height:16px;color:var(--ui-green)}
+.menu-hero{
+  width:min(360px,82vw);height:148px;margin:-4px 0 -2px;position:relative;
+  filter:drop-shadow(0 10px 24px rgba(0,0,0,.35));
+}
+.menu-hero svg{width:100%;height:100%;overflow:visible}
+.hero-ship{animation:heroFloat 4.5s ease-in-out infinite;transform-origin:280px 78px}
+@keyframes heroFloat{
+  0%,100%{transform:translate(0,0) rotate(-1deg)}
+  50%{transform:translate(7px,-5px) rotate(1.5deg)}
+}
+.menu-features{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;max-width:430px;margin:2px 0 6px}
+.menu-feature{
+  display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;
+  font-size:10px;letter-spacing:.4px;color:#a9c4e0;background:rgba(20,35,65,.55);
+  border:1px solid rgba(74,168,232,.22);
+}
+.menu-feature .icon{width:12px;height:12px;color:var(--ui-accent2)}
+
+/* ---------- BUTTONS ---------- */
+.menu-btn,.panel-btn{
+  position:relative;overflow:hidden;isolation:isolate;
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 10px;
+  background:linear-gradient(180deg,rgba(30,48,88,.94),rgba(8,13,30,.97));
+  border:1px solid rgba(74,168,232,.75);border-radius:8px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),inset 0 0 22px rgba(42,138,204,.12),0 7px 20px rgba(0,0,0,.4);
+  color:var(--ui-text);text-shadow:0 1px 2px #000;letter-spacing:.5px;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.menu-btn{padding:9px 22px;width:410px}
+.panel-btn{padding:8px 20px;width:340px}
+.menu-btn::before,.panel-btn::before{
+  content:'';position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(110deg,transparent 18%,rgba(142,240,255,.14) 42%,rgba(142,240,255,.03) 50%,transparent 72%);
+  transform:translateX(-130%);transition:transform .55s ease;pointer-events:none;
+}
+.menu-btn::after,.panel-btn::after{
+  content:'';position:absolute;left:12px;right:12px;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--ui-accent2),transparent);
+  opacity:.7;pointer-events:none;
+}
+.menu-btn:hover,.panel-btn:hover{
+  background:linear-gradient(180deg,rgba(42,72,126,.96),rgba(11,20,44,.98));
+  border-color:var(--ui-accent2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 28px rgba(74,168,232,.2),0 0 24px rgba(74,168,232,.35),0 10px 24px rgba(0,0,0,.45);
+  transform:translateY(-2px);
+}
+.menu-btn:hover::before,.panel-btn:hover::before{transform:translateX(130%)}
+.menu-btn:active,.panel-btn:active{transform:translateY(1px) scale(.995)}
+.menu-btn:focus-visible,.panel-btn:focus-visible{outline:2px solid var(--ui-accent2);outline-offset:2px}
+.btn-ico{
+  display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:30px;height:30px;border-radius:7px;
+  background:linear-gradient(145deg,rgba(74,168,232,.24),rgba(8,16,34,.9));
+  border:1px solid rgba(142,240,255,.3);
+  box-shadow:inset 0 0 10px rgba(74,168,232,.18);
+  color:var(--btn-ico,var(--ui-accent2));
+}
+.btn-ico .icon{width:18px;height:18px}
+.menu-btn .key,.panel-btn .key{
+  color:var(--ui-yellow);font-weight:700;font-size:.86em;
+  padding:1px 5px;border-radius:4px;background:rgba(242,232,92,.08);
+  border:1px solid rgba(242,232,92,.18);
+}
+.menu-btn .desc{
+  flex-basis:100%;display:block;font-size:11px;color:#93a8c4;
+  margin-top:0;letter-spacing:.2px;line-height:1.35;
+}
+.panel-btn.green{--btn-ico:var(--ui-green);border-color:rgba(84,232,154,.72)}
+.panel-btn.red{--btn-ico:var(--ui-red);border-color:rgba(255,107,107,.72)}
+.panel-btn.yellow{--btn-ico:var(--ui-yellow);border-color:rgba(242,232,92,.72)}
+.panel-btn.purple{--btn-ico:var(--ui-purple);border-color:rgba(183,140,255,.72)}
+.panel-btn.cyan{--btn-ico:var(--ui-cyan);border-color:rgba(92,225,230,.72)}
+.panel-btn.green:hover{box-shadow:inset 0 0 24px rgba(84,232,154,.16),0 0 22px rgba(84,232,154,.28),0 10px 24px rgba(0,0,0,.45)}
+.panel-btn.red:hover{box-shadow:inset 0 0 24px rgba(255,107,107,.16),0 0 22px rgba(255,107,107,.28),0 10px 24px rgba(0,0,0,.45)}
+.panel-btn.yellow:hover{box-shadow:inset 0 0 24px rgba(242,232,92,.16),0 0 22px rgba(242,232,92,.28),0 10px 24px rgba(0,0,0,.45)}
+.panel-btn.purple:hover{box-shadow:inset 0 0 24px rgba(183,140,255,.16),0 0 22px rgba(183,140,255,.28),0 10px 24px rgba(0,0,0,.45)}
+.panel-btn.cyan:hover{box-shadow:inset 0 0 24px rgba(92,225,230,.16),0 0 22px rgba(92,225,230,.28),0 10px 24px rgba(0,0,0,.45)}
+.close-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(10,16,36,.85);border:1px solid rgba(74,168,232,.45);
+  box-shadow:inset 0 0 12px rgba(0,0,0,.4);color:#9fb4cf;
+  transition:transform .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.close-btn:hover{color:#fff;border-color:var(--ui-red);box-shadow:0 0 16px rgba(255,107,107,.35);transform:rotate(90deg) scale(1.06)}
+
+/* ---------- PANELS ---------- */
+.panel-title{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  font-size:29px;letter-spacing:2px;line-height:1.1;
+  text-shadow:0 0 18px rgba(230,230,64,.18);
+}
+.panel-title .btn-ico{width:38px;height:38px;border-radius:9px}
+.panel-title .btn-ico .icon{width:22px;height:22px}
+.panel-sub{
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+  font-size:16px;color:#88ccff;margin-bottom:12px;text-align:center;
+}
+.panel-sub .icon{color:var(--ui-accent2)}
+.muted{color:var(--ui-muted)}
+.panel-text{color:#c9d8ea;font-size:15px;line-height:1.65;max-width:700px;text-align:center}
+.scroll-area{
+  background:rgba(5,10,24,.35);border:1px solid rgba(74,168,232,.18);
+  border-radius:10px;padding:6px;
+}
+.scroll-area::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--ui-accent2),var(--ui-accent));border-radius:999px}
+.scroll-area::-webkit-scrollbar-track{background:rgba(10,20,40,.6)}
+
+/* ---------- THUMBNAILS ---------- */
+.thumb{
+  --t1:#1a2b4a;--t2:#080d1c;--ico:#8ef0ff;--tborder:rgba(142,240,255,.28);
+  display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:34px;height:34px;border-radius:8px;position:relative;overflow:hidden;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.16),transparent 52%),
+    linear-gradient(145deg,var(--t1),var(--t2));
+  border:1px solid var(--tborder);
+  box-shadow:inset 0 0 12px rgba(0,0,0,.45),0 0 8px rgba(74,168,232,.08);
+}
+.thumb::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 42%);
+}
+.thumb .icon{width:20px;height:20px;stroke:var(--ico);filter:drop-shadow(0 0 4px rgba(255,255,255,.18));position:relative;z-index:1}
+.thumb.sm{width:26px;height:26px;border-radius:6px}
+.thumb.sm .icon{width:15px;height:15px}
+.thumb.lg{width:56px;height:56px;border-radius:12px}
+.thumb.lg .icon{width:32px;height:32px}
+.thumb.xl{width:86px;height:86px;border-radius:16px}
+.thumb.xl .icon{width:48px;height:48px}
+.thumb.tier-1{--tborder:rgba(74,168,232,.65)}
+.thumb.tier-2{--tborder:rgba(183,140,255,.7)}
+.thumb.tier-3{--tborder:rgba(242,232,92,.75)}
+.thumb.ghost{opacity:.42;filter:saturate(.5)}
+.cat-minerals{--t1:#4a3a1a;--t2:#160f06;--ico:#f2c96b;--tborder:rgba(242,201,107,.35)}
+.cat-weapons{--t1:#4a1a1a;--t2:#200808;--ico:#ff8b7a;--tborder:rgba(255,139,122,.35)}
+.cat-food{--t1:#1a4a24;--t2:#081a0c;--ico:#7df0a1;--tborder:rgba(125,240,161,.35)}
+.cat-tech{--t1:#123a52;--t2:#071624;--ico:#6fdcff;--tborder:rgba(111,220,255,.35)}
+.cat-meds{--t1:#3a1a4a;--t2:#160820;--ico:#d79bff;--tborder:rgba(215,155,255,.35)}
+.cat-luxury{--t1:#4a3a12;--t2:#1c1404;--ico:#ffe66d;--tborder:rgba(255,230,109,.35)}
+.cat-components{--t1:#2a2f3a;--t2:#10131a;--ico:#b9c6d8;--tborder:rgba(185,198,216,.35)}
+.cat-station{--t1:#123a52;--t2:#050a16;--ico:#8ef0ff;--tborder:rgba(142,240,255,.4)}
+.cat-quest{--t1:#3a1a4a;--t2:#160820;--ico:#d79bff;--tborder:rgba(215,155,255,.4)}
+.cat-ship{--t1:#123a2a;--t2:#05120c;--ico:#9dffc4;--tborder:rgba(157,255,196,.4)}
+.cat-default{--t1:#1a2b4a;--t2:#080d1c;--ico:#8ef0ff;--tborder:rgba(142,240,255,.28)}
+
+/* ---------- ITEM ROWS ---------- */
+.item-row{
+  align-items:center;gap:8px;padding:6px 10px;
+  background:linear-gradient(180deg,rgba(18,30,58,.62),rgba(8,14,30,.62));
+  border:1px solid rgba(74,168,232,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+.item-row:hover{
+  background:linear-gradient(180deg,rgba(30,54,98,.72),rgba(10,20,42,.75));
+  border-color:rgba(142,240,255,.6);
+  box-shadow:0 0 14px rgba(74,168,232,.18),inset 0 1px 0 rgba(255,255,255,.05);
+  transform:translateX(2px);
+}
+.item-row.sell:hover{border-color:rgba(255,107,107,.65);box-shadow:0 0 14px rgba(255,107,107,.16)}
+.item-row .name{display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.25}
+.item-row .item-cat{font-size:10px;color:var(--ui-muted);letter-spacing:.35px;font-weight:400}
+.item-row .qty{color:#b9c9dd;font-weight:700}
+.item-row .price{color:#9df0a8;font-weight:700;letter-spacing:.2px}
+.item-row .price.bad{color:#ff8b7a}
+.lvl{color:var(--ui-accent2);font-size:11px;font-weight:700;padding:0 4px;border-radius:4px;background:rgba(74,168,232,.12)}
+
+/* ---------- CRAFTING ---------- */
+#craftingResources{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;max-width:760px}
+.res-chip{
+  display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;
+  font-size:11px;color:#bcd2e8;background:rgba(20,35,65,.6);
+  border:1px solid rgba(74,168,232,.22);
+}
+.res-chip .icon{width:13px;height:13px;color:var(--ui-accent2)}
+.res-chip b{color:#fff}
+.recipe-row{align-items:flex-start;flex-wrap:wrap}
+.recipe-body{flex:1 1 220px;min-width:180px;display:flex;flex-direction:column;gap:3px}
+.recipe-title{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.2}
+.recipe-title b{color:#eaf4ff;letter-spacing:.2px}
+.tier-badge{font-size:9px;letter-spacing:.8px;text-transform:uppercase;padding:1px 5px;border-radius:4px;border:1px solid}
+.tier-badge.tier-1{color:#8ecbff;border-color:rgba(74,168,232,.5);background:rgba(74,168,232,.1)}
+.tier-badge.tier-2{color:#d4b3ff;border-color:rgba(183,140,255,.5);background:rgba(183,140,255,.1)}
+.tier-badge.tier-3{color:#fff3a0;border-color:rgba(242,232,92,.55);background:rgba(242,232,92,.1)}
+.recipe-req{display:flex;flex-wrap:wrap;gap:3px 6px;font-size:11px}
+.req-chip{display:inline-flex;align-items:center;gap:3px;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)}
+.req-chip .icon{width:12px;height:12px}
+.req-ok{color:var(--ui-green)}
+.req-missing{color:var(--ui-red)}
+.recipe-bonus{font-size:10px;color:#93a8c4;display:flex;align-items:center;gap:4px}
+.recipe-bonus .icon{width:12px;height:12px;color:var(--ui-yellow)}
+.equipped-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--ui-green)}
+.equipped-tag .icon{width:12px;height:12px}
+
+/* ---------- INVENTORY ---------- */
+.slot-grid{max-width:640px}
+.slot-item{
+  min-height:84px;gap:3px;padding:7px 5px;
+  background:linear-gradient(180deg,rgba(18,30,58,.7),rgba(8,14,30,.75));
+  border:1px solid rgba(74,168,232,.22);
+}
+.slot-item:hover{background:linear-gradient(180deg,rgba(30,54,98,.8),rgba(10,20,42,.82));border-color:rgba(142,240,255,.6)}
+.slot-item.equipped{border-color:rgba(84,232,154,.55);box-shadow:inset 0 0 14px rgba(84,232,154,.08),0 0 12px rgba(84,232,154,.1)}
+.slot-item.empty{opacity:.72}
+.slot-item .thumb{width:34px;height:34px;margin-bottom:1px}
+.slot-label{font-size:9px;color:var(--ui-muted);letter-spacing:.6px;text-transform:uppercase}
+.slot-name{font-size:11px;color:#e2f0ff;line-height:1.15}
+.slot-effect{font-size:9px;color:var(--ui-green)}
+.slot-empty{font-size:10px;color:#53657d}
+
+/* ---------- STATS / PROGRESS ---------- */
+.stat-line{display:flex;align-items:center;gap:6px;line-height:1.65}
+.stat-line .icon{width:14px;height:14px;color:var(--ui-accent2);flex:0 0 auto}
+.progress{height:7px;border-radius:999px;background:#141d33;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.progress>span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--ui-accent),var(--ui-accent2));transition:width .3s ease}
+.upgrade-next{flex-basis:100%;display:flex;align-items:center;gap:4px;font-size:10px;color:#93a8c4}
+.upgrade-next .icon{width:12px;height:12px;color:var(--ui-accent2)}
+.skill-row{align-items:center;flex-wrap:wrap}
+.skill-bar{flex-basis:100%;margin-top:2px}
+.skill-val{font-weight:700;color:#e8f4ff}
+.skill-add{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(84,232,154,.12);border:1px solid rgba(84,232,154,.45);color:var(--ui-green)}
+.skill-add .icon{width:12px;height:12px}
+
+/* ---------- QUEST ---------- */
+.quest-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.quest-kicker{font-size:11px;letter-spacing:1.4px;color:var(--ui-green);text-transform:uppercase}
+.quest-name{font-size:17px;color:#eaf4ff;font-weight:700}
+.quest-reward{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ui-yellow);margin:4px 0}
+.quest-reward .icon{width:13px;height:13px}
+.quest-progress{font-size:12px;color:#a9bdd6;margin-top:3px}
+.quest-note{display:flex;align-items:center;gap:4px;font-size:11px;color:#88ccff;margin-top:3px}
+.quest-note .icon{width:13px;height:13px}
+.quest-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#c9d8ea;margin-top:4px}
+
+/* ---------- STATION / SHIP ART ---------- */
+.station-banner{display:flex;align-items:center;justify-content:center;gap:26px;margin:4px 0 16px;flex-wrap:wrap}
+.station-art{
+  position:relative;width:104px;height:104px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 28%,rgba(255,255,255,.18),transparent 34%),
+    radial-gradient(circle at 50% 58%,var(--art1,#123a52),var(--art2,#050a16) 72%);
+  border:1px solid var(--art-border,#2f6d9e);
+  box-shadow:inset 0 0 26px rgba(0,0,0,.55),0 0 26px var(--art-glow,rgba(74,168,232,.25));
+}
+.station-art::before{content:'';position:absolute;inset:-9px;border-radius:50%;border:1px dashed rgba(142,240,255,.28);animation:spin 20s linear infinite}
+.station-art::after{content:'';position:absolute;inset:-21px;border-radius:50%;border:1px solid rgba(142,240,255,.09)}
+.station-art .icon{width:46px;height:46px;color:var(--art-ico,#8ef0ff);filter:drop-shadow(0 0 10px rgba(142,240,255,.45))}
+.station-art-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--ui-muted);white-space:nowrap;letter-spacing:1.2px;text-transform:uppercase}
+.ship-art{
+  position:relative;width:96px;height:96px;display:flex;align-items:center;justify-content:center;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,rgba(84,232,154,.22),rgba(5,10,20,.92) 70%);
+  border:1px solid rgba(84,232,154,.35);box-shadow:inset 0 0 20px rgba(0,0,0,.5),0 0 26px rgba(84,232,154,.16);
+}
+.ship-art::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px dashed rgba(84,232,154,.32);animation:spin 16s linear infinite reverse}
+.ship-art .icon{width:48px;height:48px;color:#9dffc4;filter:drop-shadow(0 0 10px rgba(84,232,154,.5));transform:rotate(45deg)}
+.ship-art-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--ui-muted);white-space:nowrap;letter-spacing:1.2px;text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+#dockedShipStats{display:flex;align-items:center;justify-content:center;gap:8px 16px;flex-wrap:wrap;font-size:12px;color:#a9bdd6}
+#dockedShipStats .stat-line .icon{width:13px;height:13px}
+
+/* ---------- HELP / LEGEND ---------- */
+.help-grid{background:linear-gradient(180deg,rgba(14,24,48,.6),rgba(8,14,30,.6));border-color:rgba(74,168,232,.22)}
+.help-grid .key-col{color:var(--ui-yellow)}
+.help-section-title{display:flex;align-items:center;gap:6px;color:#7fe4ff;letter-spacing:.6px}
+.help-section-title .btn-ico{width:22px;height:22px;border-radius:5px;background:rgba(74,168,232,.12);border-color:rgba(142,240,255,.22)}
+.help-section-title .btn-ico .icon{width:14px;height:14px}
+.icon-legend{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:680px;margin:8px 0}
+.legend-item{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;background:rgba(20,35,65,.6);border:1px solid rgba(74,168,232,.22);font-size:11px;color:#bcd2e8}
+.legend-item .icon{width:14px;height:14px;color:var(--ui-accent2)}
+.legend-item .thumb{width:22px;height:22px;border-radius:5px}
+.legend-item .thumb .icon{width:13px;height:13px}
+
+/* ---------- MISC ---------- */
+a{color:#7fe4ff;text-decoration:none}
+a:hover{text-decoration:underline}
+.mining-stat{display:flex;align-items:center;gap:5px;font-size:12px;color:#a9bdd6}
+.mining-stat .icon{width:13px;height:13px;color:var(--ui-accent2)}
+.highlight{color:#eaf4ff;font-weight:700}
+.highlight2{color:var(--ui-green);font-weight:700}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:1050px){
+  .menu-btn{width:90%;max-width:410px;font-size:15px;padding:8px 18px}
+  .panel-btn{width:90%;max-width:340px;font-size:14px;padding:7px 16px}
+  .menu-title{font-size:38px;letter-spacing:4px}
+  .menu-subtitle{font-size:13px;letter-spacing:2px}
+  .panel-title{font-size:25px}
+  .slot-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:600px){
+  .menu-title{font-size:27px;letter-spacing:2px}
+  .menu-subtitle{font-size:11px;letter-spacing:1px;padding:3px 10px}
+  .menu-btn{font-size:13px;padding:7px 12px;gap:4px 7px}
+  .menu-btn .desc{font-size:10px}
+  .btn-ico{width:26px;height:26px}
+  .btn-ico .icon{width:16px;height:16px}
+  .panel-title{font-size:19px;gap:8px}
+  .panel-title .btn-ico{width:30px;height:30px}
+  .panel-title .btn-ico .icon{width:18px;height:18px}
+  .panel-btn{width:95%;font-size:12px;padding:6px 10px}
+  .item-row{font-size:12px;padding:5px 7px;gap:6px}
+  .item-row .item-cat{font-size:9px}
+  .thumb{width:30px;height:30px}
+  .thumb .icon{width:17px;height:17px}
+  .close-btn{width:30px;height:30px;font-size:20px;top:8px;right:12px}
+  .slot-grid{grid-template-columns:repeat(2,1fr)}
+  .station-art{width:80px;height:80px}
+  .station-art .icon{width:36px;height:36px}
+  .ship-art{width:74px;height:74px}
+  .ship-art .icon{width:38px;height:38px}
+}
+@media (max-height:800px){
+  .menu-hero{height:112px;width:min(290px,78vw);margin:-2px 0 0}
+  .menu-title{font-size:34px;letter-spacing:4px}
+  .menu-subtitle{font-size:12px;margin:2px 0 6px;padding:3px 12px}
+  .menu-wallet{font-size:13px;margin-bottom:8px;padding:3px 10px}
+  .menu-btn{padding:6px 16px;font-size:13px;margin:3px 0}
+  .menu-btn .desc{font-size:10px}
+  .menu-features{display:none}
+  .menu-version{bottom:6px;font-size:9px}
+  .panel-title{font-size:22px;margin-bottom:10px}
+  .station-banner{margin:0 0 12px}
+  .station-art{width:82px;height:82px}
+  .ship-art{width:76px;height:76px}
+}
+@media (max-height:650px){
+  .menu-hero{display:none}
+  .menu-title{font-size:24px;letter-spacing:2px}
+  .menu-subtitle{font-size:10px;margin:1px 0 4px;padding:2px 8px}
+  .menu-wallet{font-size:11px;margin-bottom:5px;padding:2px 8px}
+  .menu-btn{padding:4px 10px;font-size:11px;margin:2px 0;width:300px;gap:3px 6px}
+  .menu-btn .desc{display:none}
+  .btn-ico{width:22px;height:22px}
+  .btn-ico .icon{width:13px;height:13px}
+  .panel-title{font-size:17px;margin-bottom:6px}
+  .panel-title .btn-ico{width:24px;height:24px}
+  .panel-title .btn-ico .icon{width:14px;height:14px}
+  .panel-btn{padding:4px 10px;font-size:11px;margin:2px 0;width:250px}
+  .station-banner{display:none}
+  .scroll-area{max-height:200px}
+  .close-btn{width:26px;height:26px;font-size:16px;top:4px;right:8px}
+}
+
 </style>
 </head>
 <body>
@@ -130,22 +541,66 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <div id="menu-screen">
     <div class="menu-title">SPACE RANGERS</div>
     <div class="menu-subtitle">⚡ Havirov Coin Edition ⚡</div>
+    <div class="menu-hero" aria-hidden="true">
+      <svg viewBox="0 0 360 150" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="planetGrad" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#b8fbff"/>
+            <stop offset="42%" stop-color="#2a8acc"/>
+            <stop offset="100%" stop-color="#07162e"/>
+          </radialGradient>
+          <linearGradient id="shipGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d6ffe9"/>
+            <stop offset="48%" stop-color="#54e89a"/>
+            <stop offset="100%" stop-color="#1a8a5a"/>
+          </linearGradient>
+          <radialGradient id="heroGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(142,240,255,.5)"/>
+            <stop offset="100%" stop-color="rgba(142,240,255,0)"/>
+          </radialGradient>
+          <filter id="softGlow">
+            <feGaussianBlur stdDeviation="2.6" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <circle cx="95" cy="80" r="58" fill="url(#heroGlow)"/>
+        <circle cx="95" cy="80" r="40" fill="url(#planetGrad)" stroke="rgba(142,240,255,.4)" stroke-width="1"/>
+        <ellipse cx="95" cy="80" rx="62" ry="18" fill="none" stroke="rgba(142,240,255,.28)" stroke-width="1.5" transform="rotate(-18 95 80)"/>
+        <ellipse cx="95" cy="80" rx="54" ry="14" fill="none" stroke="rgba(142,240,255,.12)" stroke-width="1" transform="rotate(-18 95 80)"/>
+        <circle cx="150" cy="42" r="4" fill="#8ef0ff" opacity=".8"/>
+        <circle cx="200" cy="112" r="3" fill="#f2e85c" opacity=".7"/>
+        <circle cx="250" cy="36" r="2" fill="#fff" opacity=".6"/>
+        <path d="M190 130 C220 120, 250 120, 280 128" fill="none" stroke="rgba(142,240,255,.18)" stroke-width="1" stroke-dasharray="3 5"/>
+        <g class="hero-ship" filter="url(#softGlow)">
+          <path d="M268 78 L318 66 L300 78 L318 90 Z" fill="url(#shipGrad)" stroke="#d6ffe9" stroke-width="1.2"/>
+          <path d="M286 78 L300 72 L294 78 L300 84 Z" fill="#07162e" opacity=".55"/>
+          <path d="M264 78 L252 72 L258 78 L252 84 Z" fill="#ffb347" opacity=".9"/>
+          <path d="M248 78 L238 74 L243 78 L238 82 Z" fill="#ff6b6b" opacity=".8"/>
+        </g>
+      </svg>
+    </div>
     <div class="menu-wallet" id="menuWallet">Wallet: 0.0000 HVC</div>
-    <button class="menu-btn" data-action="newGame"><span class="key">[1]</span> Nová hra <span class="desc">Začněte jako nový ranger v galaxii</span></button>
-    <button class="menu-btn" data-action="loadGame"><span class="key">[2]</span> Načíst hru <span class="desc">Načtěte uloženou hru z walletu</span></button>
-    <button class="menu-btn" data-action="help"><span class="key">[3]</span> Nápověda <span class="desc">Ovládání hry a tipy</span></button>
-    <button class="menu-btn" data-action="credits"><span class="key">[4]</span> Kredity <span class="desc">Autor a licence</span></button>
-    <button class="menu-btn" data-action="multiplayer"><span class="key">[5]</span> Multiplayer <span class="desc">Hrajte s ostatními hráči (simulace)</span></button>
-    <div class="menu-version">Version 3.2 - Mercenary & Craft Update · David Prošek © 2026</div>
+    <div class="menu-features">
+      <span class="menu-feature" data-icon="wrench">29 receptů</span>
+      <span class="menu-feature" data-icon="globe">4 galaxie</span>
+      <span class="menu-feature" data-icon="pickaxe">Mining</span>
+      <span class="menu-feature" data-icon="users">Mercenary</span>
+    </div>
+    <button class="menu-btn" data-action="newGame" data-icon="rocket"><span class="key">[1]</span> Nová hra <span class="desc">Začněte jako nový ranger v galaxii</span></button>
+    <button class="menu-btn" data-action="loadGame" data-icon="folder-open"><span class="key">[2]</span> Načíst hru <span class="desc">Načtěte uloženou hru z walletu</span></button>
+    <button class="menu-btn" data-action="help" data-icon="circle-help"><span class="key">[3]</span> Nápověda <span class="desc">Ovládání hry a tipy</span></button>
+    <button class="menu-btn" data-action="credits" data-icon="award"><span class="key">[4]</span> Kredity <span class="desc">Autor a licence</span></button>
+    <button class="menu-btn" data-action="multiplayer" data-icon="users"><span class="key">[5]</span> Multiplayer <span class="desc">Hrajte s ostatními hráči (simulace)</span></button>
+    <div class="menu-version">Version 3.3 - Visual & Icon Update · David Prošek © 2026</div>
   </div>
 
   <!-- NÁPOVĚDA -->
   <div id="help-screen" class="hidden">
     <button class="close-btn" data-action="closeHelp">✕</button>
-    <div class="panel-title" style="color:#66ddff;">NÁPOVĚDA – OVLÁDÁNÍ</div>
+    <div class="panel-title" style="color:#66ddff;" data-icon="circle-help">NÁPOVĚDA – OVLÁDÁNÍ</div>
     <div class="scroll-area" style="max-height:600px; max-width:720px;">
 
-      <div class="help-section-title">🚀 Pohyb a boj</div>
+      <div class="help-section-title" data-icon="rocket">Pohyb a boj</div>
       <div class="help-grid">
         <div class="key-col">W / ↑</div><div class="desc-col">Tah motoru vpřed</div>
         <div class="key-col">S / ↓</div><div class="desc-col">Zpětný tah (brzdění)</div>
@@ -155,7 +610,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
         <div class="key-col">E</div><div class="desc-col">Auto-battle (automatický boj)</div>
       </div>
 
-      <div class="help-section-title">💰 Ekonomika a obchod</div>
+      <div class="help-section-title" data-icon="coins">Ekonomika a obchod</div>
       <div class="help-grid">
         <div class="key-col">T</div><div class="desc-col">Komunikace s obchodní lodí (prodej / nákup / nájem)</div>
         <div class="key-col">F</div><div class="desc-col">Nákup paliva (u stanice)</div>
@@ -164,7 +619,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
         <div class="key-col">B</div><div class="desc-col">Zobrazit stav walletu</div>
       </div>
 
-      <div class="help-section-title">🪨 Mining a suroviny</div>
+      <div class="help-section-title" data-icon="pickaxe">Mining a suroviny</div>
       <div class="help-grid">
         <div class="key-col">K</div><div class="desc-col">Start / stop těžby asteroidu (u asteroidu)</div>
         <div class="key-col">J</div><div class="desc-col">Sebrat předměty v dosahu (drop z lodí)</div>
@@ -173,7 +628,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
         <div class="key-col">I</div><div class="desc-col">Inventář (u stanice)</div>
       </div>
 
-      <div class="help-section-title">⚔ Najímání lodí</div>
+      <div class="help-section-title" data-icon="users">Najímání lodí</div>
       <div class="help-grid">
         <div class="key-col">T</div><div class="desc-col">Komunikace s přátelskou lodí</div>
         <div class="key-col">[4]</div><div class="desc-col">Najmout pro boj (permanentní)</div>
@@ -181,7 +636,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
         <div class="key-col">Auto</div><div class="desc-col">Najmutá loď letí za tebou a útočí na piráty</div>
       </div>
 
-      <div class="help-section-title">🌌 Navigace a galaxie</div>
+      <div class="help-section-title" data-icon="map">Navigace a galaxie</div>
       <div class="help-grid">
         <div class="key-col">M</div><div class="desc-col">Mapa galaxie</div>
         <div class="key-col">Klik na planetu</div><div class="desc-col">Teleport na planetu (za kredity)</div>
@@ -189,7 +644,10 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
         <div class="key-col">ESC</div><div class="desc-col">Zpět / menu</div>
       </div>
 
-      <div class="help-section-title">⚔ Tipy pro přežití</div>
+      <div class="help-section-title" data-icon="gem">Kategorie zboží</div>
+      <div class="icon-legend" id="helpCategoryLegend"></div>
+
+      <div class="help-section-title" data-icon="shield-check">Tipy pro přežití</div>
       <div class="help-grid">
         <div class="key-col">☄ Puto asteroidy</div><div class="desc-col">Pozor na nárazy – poškozují trup podle rychlosti</div>
         <div class="key-col">☠ Piráti</div><div class="desc-col">Vyhněte se jim nebo je zničte pro XP a drop</div>
@@ -204,7 +662,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- KREDITY -->
   <div id="credits-screen" class="hidden">
     <button class="close-btn" data-action="closeCredits">✕</button>
-    <div class="panel-title" style="color:#2a8acc;">KREDITY</div>
+    <div class="panel-title" style="color:#2a8acc;" data-icon="award">KREDITY</div>
     <div class="panel-text" style="max-width:640px;line-height:1.9;">
       <div style="color:#e6e640;font-size:24px;margin-bottom:4px;">SPACE RANGERS</div>
       <div style="color:#e6e640;font-size:18px;margin-bottom:16px;">Havirov Coin Edition</div>
@@ -225,7 +683,15 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
         Všechny texty v češtině.
       </div>
 
-      <div style="color:#444;font-size:11px;margin-top:16px;">Version 3.2 · Mercenary & Craft Update</div>
+      <div style="color:#66ddff;font-size:16px;margin-top:14px;">🎨 Ikony a veřejné zdroje</div>
+      <div style="color:#aaa;font-size:12px;line-height:1.7;margin-bottom:8px;">
+        Ikony: <b>Lucide</b> v1.64.0 – <a href="https://lucide.dev" target="_blank" rel="noopener">lucide.dev</a><br>
+        Licence ikon: <b>ISC</b> (volné použití s uvedením autora)<br>
+        Thumbnaily, planetární ilustrace a dekorace: originální SVG pro tento projekt.<br>
+        Vše je uloženo přímo v HTML – hra funguje i offline.
+      </div>
+
+      <div style="color:#444;font-size:11px;margin-top:16px;">Version 3.3 · Visual & Icon Update</div>
       <div style="color:#666;font-size:12px;margin-top:8px;">[ESC] Zpět</div>
     </div>
   </div>
@@ -235,17 +701,18 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
     <button class="close-btn" data-action="undock">✕</button>
     <div class="panel-title" id="dockedTitle">DOKOVÁNO U: Planeta</div>
     <div class="panel-sub" id="dockedType">Typ: Planeta</div>
+    <div class="station-banner" id="dockedArt"></div>
     <div class="panel-text" id="dockedInfo">Zboží: 0 jednotek</div>
     <div style="margin:12px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
-      <button class="panel-btn" data-action="trade"><span class="key">[T]</span> Obchodování</button>
-      <button class="panel-btn" data-action="quests"><span class="key">[Q]</span> Úkoly</button>
-      <button class="panel-btn" data-action="upgrade"><span class="key">[U]</span> Vylepšení</button>
-      <button class="panel-btn" data-action="fuel"><span class="key">[F]</span> Palivo</button>
-      <button class="panel-btn" data-action="mining"><span class="key">[K]</span> Mining</button>
-      <button class="panel-btn purple" data-action="skills"><span class="key">[P]</span> Skilly</button>
-      <button class="panel-btn cyan" data-action="crafting"><span class="key">[C]</span> Crafting</button>
-      <button class="panel-btn green" data-action="inventory"><span class="key">[I]</span> Inventář</button>
-      <button class="panel-btn red" data-action="undock"><span class="key">[ESC]</span> Odlet</button>
+      <button class="panel-btn" data-action="trade" data-icon="shopping-cart"><span class="key">[T]</span> Obchodování</button>
+      <button class="panel-btn" data-action="quests" data-icon="scroll-text"><span class="key">[Q]</span> Úkoly</button>
+      <button class="panel-btn" data-action="upgrade" data-icon="arrow-up-circle"><span class="key">[U]</span> Vylepšení</button>
+      <button class="panel-btn" data-action="fuel" data-icon="fuel"><span class="key">[F]</span> Palivo</button>
+      <button class="panel-btn" data-action="mining" data-icon="pickaxe"><span class="key">[K]</span> Mining</button>
+      <button class="panel-btn purple" data-action="skills" data-icon="sparkles"><span class="key">[P]</span> Skilly</button>
+      <button class="panel-btn cyan" data-action="crafting" data-icon="wrench"><span class="key">[C]</span> Crafting</button>
+      <button class="panel-btn green" data-action="inventory" data-icon="package"><span class="key">[I]</span> Inventář</button>
+      <button class="panel-btn red" data-action="undock" data-icon="log-out"><span class="key">[ESC]</span> Odlet</button>
     </div>
     <div style="position:absolute;bottom:20px;left:20px;color:#888;font-size:13px;text-align:left;line-height:1.6;" id="dockedShipStats"></div>
   </div>
@@ -253,7 +720,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- CRAFTING -->
   <div id="crafting-screen" class="hidden">
     <button class="close-btn" data-action="closeCrafting">✕</button>
-    <div class="panel-title" style="color:#00cccc;">CRAFTING</div>
+    <div class="panel-title" style="color:#00cccc;" data-icon="wrench">CRAFTING</div>
     <div class="panel-sub" id="craftingResources">Suroviny: Ruda: 0, Komponenty: 0</div>
     <div class="scroll-area" id="craftingList" style="max-height:400px;width:100%;max-width:700px;"></div>
     <div style="margin-top:8px;color:#666;font-size:12px;">Klikni na recept pro výrobu | [ESC] Zpět</div>
@@ -262,8 +729,8 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- INVENTÁŘ -->
   <div id="inventory-screen" class="hidden">
     <button class="close-btn" data-action="closeInventory">✕</button>
-    <div class="panel-title" style="color:#44ee88;">INVENTÁŘ</div>
-    <div class="panel-sub">Náklad a vybavení</div>
+    <div class="panel-title" style="color:#44ee88;" data-icon="package">INVENTÁŘ</div>
+    <div class="panel-sub" data-icon="ship">Náklad a vybavení</div>
     <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;width:100%;max-width:900px;">
       <div style="flex:1;min-width:250px;">
         <div style="color:#88dd88;font-size:16px;">Náklad</div>
@@ -280,7 +747,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- TRADING -->
   <div id="trading-screen" class="hidden">
     <button class="close-btn" data-action="closeTrade">✕</button>
-    <div class="panel-title" style="font-size:26px;">OBCHODNÍ CENTRUM</div>
+    <div class="panel-title" style="font-size:26px;" data-icon="shopping-cart">OBCHODNÍ CENTRUM</div>
     <div class="panel-sub" id="tradeStation">Planeta | Kredity: 0.0000 HVC</div>
     <div style="display:flex;gap:20px;width:100%;max-width:880px;flex-wrap:wrap;justify-content:center;">
       <div style="flex:1;min-width:280px;">
@@ -298,7 +765,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- QUESTY -->
   <div id="quest-screen" class="hidden">
     <button class="close-btn" data-action="closeQuests">✕</button>
-    <div class="panel-title">ÚKOLY RANGERA</div>
+    <div class="panel-title" data-icon="scroll-text">ÚKOLY RANGERA</div>
     <div id="questActive" style="width:100%;max-width:780px;background:rgba(10,30,10,0.5);border:2px solid #44aa44;border-radius:8px;padding:14px 20px;margin:8px 0;"></div>
     <div class="panel-sub" style="font-size:18px;margin-top:10px;">DOSTUPNÉ ÚKOLY</div>
     <div class="scroll-area" id="questList" style="max-height:260px;"></div>
@@ -308,7 +775,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- UPGRADES -->
   <div id="upgrade-screen" class="hidden">
     <button class="close-btn" data-action="closeUpgrade">✕</button>
-    <div class="panel-title">VYLEPŠENÍ LODI</div>
+    <div class="panel-title" data-icon="arrow-up-circle">VYLEPŠENÍ LODI</div>
     <div class="panel-sub" style="color:#88dd88;">Neomezené levely – cena roste o 35 % za každý level</div>
     <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px;">
       <div style="flex:1;min-width:240px;background:rgba(10,10,30,0.4);border:1px solid #3a5a7a;border-radius:8px;padding:12px 16px;">
@@ -326,13 +793,13 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- FUEL -->
   <div id="fuel-screen" class="hidden">
     <button class="close-btn" data-action="closeFuel">✕</button>
-    <div class="panel-title">NÁKUP PALIVA</div>
+    <div class="panel-title" data-icon="fuel">NÁKUP PALIVA</div>
     <div class="panel-sub" id="fuelCurrent">Aktuální palivo: 100/100</div>
     <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0;">
-      <button class="panel-btn" data-action="fuel10"><span class="key">[1]</span> 10 (0.05 HVC)</button>
-      <button class="panel-btn" data-action="fuel25"><span class="key">[2]</span> 25 (0.12 HVC)</button>
-      <button class="panel-btn" data-action="fuel50"><span class="key">[3]</span> 50 (0.25 HVC)</button>
-      <button class="panel-btn" data-action="fuel100"><span class="key">[4]</span> 100 (0.50 HVC)</button>
+      <button class="panel-btn" data-action="fuel10" data-icon="fuel"><span class="key">[1]</span> 10 (0.05 HVC)</button>
+      <button class="panel-btn" data-action="fuel25" data-icon="fuel"><span class="key">[2]</span> 25 (0.12 HVC)</button>
+      <button class="panel-btn" data-action="fuel50" data-icon="fuel"><span class="key">[3]</span> 50 (0.25 HVC)</button>
+      <button class="panel-btn" data-action="fuel100" data-icon="fuel"><span class="key">[4]</span> 100 (0.50 HVC)</button>
     </div>
     <div style="margin-top:8px;color:#666;font-size:12px;">[ESC] Zpět</div>
   </div>
@@ -340,7 +807,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- MINING LOG -->
   <div id="mining-log-screen" class="hidden">
     <button class="close-btn" data-action="closeMiningLog">✕</button>
-    <div class="panel-title" style="color:#e6e640;">MINING STATISTICS</div>
+    <div class="panel-title" style="color:#e6e640;" data-icon="pickaxe">MINING STATISTICS</div>
     <div id="miningOverall" style="width:100%;max-width:700px;background:rgba(10,10,30,0.5);border:1px solid #3a5a7a;border-radius:8px;padding:12px 16px;margin:6px 0;"></div>
     <div class="panel-sub" style="font-size:16px;margin-top:6px;">RECENT SESSIONS</div>
     <div class="scroll-area" id="miningSessions" style="max-height:240px;width:100%;max-width:700px;"></div>
@@ -350,7 +817,7 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- SKILLS -->
   <div id="skills-screen" class="hidden">
     <button class="close-btn" data-action="closeSkills">✕</button>
-    <div class="panel-title">SKILLY RANGERA</div>
+    <div class="panel-title" data-icon="sparkles">SKILLY RANGERA</div>
     <div class="panel-sub" id="skillPoints">Volných bodů: 0</div>
     <div id="skillList" style="width:100%;max-width:600px;margin:8px 0;"></div>
     <div style="margin-top:8px;color:#666;font-size:12px;">[1-5] Přidat | [ESC] Zpět</div>
@@ -359,11 +826,11 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- MULTIPLAYER -->
   <div id="multiplayer-screen" class="hidden">
     <button class="close-btn" data-action="closeMultiplayer">✕</button>
-    <div class="panel-title" style="color:#00cccc;">MULTIPLAYER</div>
+    <div class="panel-title" style="color:#00cccc;" data-icon="users">MULTIPLAYER</div>
     <div class="panel-sub" style="color:#88ccff;">Simulace hry s ostatními hráči</div>
     <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0;">
-      <button class="panel-btn cyan" data-action="hostGame"><span class="key">[1]</span> Hostovat hru</button>
-      <button class="panel-btn cyan" data-action="joinGame"><span class="key">[2]</span> Připojit se</button>
+      <button class="panel-btn cyan" data-action="hostGame" data-icon="server"><span class="key">[1]</span> Hostovat hru</button>
+      <button class="panel-btn cyan" data-action="joinGame" data-icon="wifi"><span class="key">[2]</span> Připojit se</button>
     </div>
     <div style="color:#888;font-size:13px;max-width:500px;text-align:center;margin:8px 0;">Multiplayer je v této HTML verzi simulován.</div>
     <div style="margin-top:8px;color:#666;font-size:12px;">[ESC] Zpět</div>
@@ -372,14 +839,14 @@ canvas { display:block; width:100% !important; height:100% !important; border-ra
   <!-- TRADER -->
   <div id="trader-screen" class="hidden">
     <button class="close-btn" data-action="closeTrader">✕</button>
-    <div class="panel-title" id="traderTitle" style="color:#66ddff;">OBCHODNÍ LOĎ</div>
+    <div class="panel-title" id="traderTitle" style="color:#66ddff;" data-icon="ship">OBCHODNÍ LOĎ</div>
     <div class="panel-sub" id="traderStatus">Přátelská loď</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0;">
-      <button class="panel-btn green" data-action="traderBuy"><span class="key">[1]</span> Koupit zboží</button>
-      <button class="panel-btn yellow" data-action="traderSell"><span class="key">[2]</span> Prodat náklad</button>
-      <button class="panel-btn cyan" data-action="traderFuel"><span class="key">[3]</span> Koupit palivo</button>
-      <button class="panel-btn purple" data-action="traderHire"><span class="key">[4]</span> Najmout pro boj</button>
-      <button class="panel-btn red" data-action="traderDismiss"><span class="key">[5]</span> Propustit</button>
+      <button class="panel-btn green" data-action="traderBuy" data-icon="shopping-cart"><span class="key">[1]</span> Koupit zboží</button>
+      <button class="panel-btn yellow" data-action="traderSell" data-icon="coins"><span class="key">[2]</span> Prodat náklad</button>
+      <button class="panel-btn cyan" data-action="traderFuel" data-icon="fuel"><span class="key">[3]</span> Koupit palivo</button>
+      <button class="panel-btn purple" data-action="traderHire" data-icon="user-plus"><span class="key">[4]</span> Najmout pro boj</button>
+      <button class="panel-btn red" data-action="traderDismiss" data-icon="user-minus"><span class="key">[5]</span> Propustit</button>
     </div>
     <div id="traderContent" class="scroll-area" style="max-height:340px;width:100%;max-width:760px;"></div>
     <div style="margin-top:8px;color:#666;font-size:12px;">[ESC] Zavřít</div>
@@ -425,6 +892,382 @@ const COLORS = {
   brightBlue:'#4488ee', brightYellow:'#eeee44', brightCyan:'#66ddff',
   brightPurple:'#aa66ff', orange:'#ff8800', borderColor:'#3a8acc',
 };
+
+// ===================================================================
+// IKONY – Lucide (ISC licence, https://lucide.dev)
+// Thumbnaily, kategorie a pomocné ikonové funkce pro celé UI.
+// ===================================================================
+const ICON_PATHS = {
+  "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />",
+  "alert-triangle": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />",
+  "anchor": "<path d=\"M12 6v16\" /> <path d=\"m19 13 2-1a9 9 0 0 1-18 0l2 1\" /> <path d=\"M9 11h6\" /> <circle cx=\"12\" cy=\"4\" r=\"2\" />",
+  "apple": "<path d=\"M12 6.528V3a1 1 0 0 1 1-1h0\" /> <path d=\"M18.237 21A15 15 0 0 0 22 11a6 6 0 0 0-10-4.472A6 6 0 0 0 2 11a15.1 15.1 0 0 0 3.763 10 3 3 0 0 0 3.648.648 5.5 5.5 0 0 1 5.178 0A3 3 0 0 0 18.237 21\" />",
+  "arrow-down-circle": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 8v8\" /> <path d=\"m8 12 4 4 4-4\" />",
+  "arrow-up-circle": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"m16 12-4-4-4 4\" /> <path d=\"M12 16V8\" />",
+  "atom": "<circle cx=\"12\" cy=\"12\" r=\"1\" /> <path d=\"M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z\" /> <path d=\"M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z\" />",
+  "award": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />",
+  "badge-check": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />",
+  "banana": "<path d=\"M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5\" /> <path d=\"M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z\" />",
+  "bean": "<path d=\"M10.165 6.598C9.954 7.478 9.64 8.36 9 9c-.64.64-1.521.954-2.402 1.165A6 6 0 0 0 8 22c7.732 0 14-6.268 14-14a6 6 0 0 0-11.835-1.402Z\" /> <path d=\"M5.341 10.62a4 4 0 1 0 5.279-5.28\" />",
+  "beef": "<path d=\"M16.4 13.7A6.5 6.5 0 1 0 6.28 6.6c-1.1 3.13-.78 3.9-3.18 6.08A3 3 0 0 0 5 18c4 0 8.4-1.8 11.4-4.3\" /> <path d=\"m18.5 6 1.754 3.5a6.48 6.48 0 0 1-1.854 8.2C15.4 20.2 11 22 7 22a3 3 0 0 1-2.68-1.66L2.4 16.5\" /> <circle cx=\"12.5\" cy=\"8.5\" r=\"2.5\" />",
+  "beer": "<path d=\"M17 11h1a3 3 0 0 1 0 6h-1\" /> <path d=\"M9 12v6\" /> <path d=\"M13 12v6\" /> <path d=\"M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 2 11 2s2 1.5 3 1.5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5Z\" /> <path d=\"M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8\" />",
+  "bolt": "<path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\" /> <circle cx=\"12\" cy=\"12\" r=\"4\" />",
+  "bomb": "<circle cx=\"11\" cy=\"13\" r=\"9\" /> <path d=\"M14.35 4.65 16.3 2.7a2.41 2.41 0 0 1 3.4 0l1.6 1.6a2.4 2.4 0 0 1 0 3.4l-1.95 1.95\" /> <path d=\"m22 2-1.5 1.5\" />",
+  "book-open": "<path d=\"M12 5v16\" /> <path d=\"M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z\" />",
+  "boxes": "<path d=\"M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z\" /> <path d=\"m7 16.5-4.74-2.85\" /> <path d=\"m7 16.5 5-3\" /> <path d=\"M7 16.5v5.17\" /> <path d=\"M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z\" /> <path d=\"m17 16.5-5-3\" /> <path d=\"m17 16.5 4.74-2.85\" /> <path d=\"M17 16.5v5.17\" /> <path d=\"M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z\" /> <path d=\"M12 8 7.26 5.15\" /> <path d=\"m12 8 4.74-2.85\" /> <path d=\"M12 13.5V8\" />",
+  "brain-circuit": "<path d=\"M12 13h4\" /> <path d=\"M12 18h6a2 2 0 012 2v1\" /> <path d=\"M12 8h8\" /> <path d=\"M12 9a4.17 4.17 0 01-3 4\" /> <path d=\"M16 8V5a2 2 0 012-2\" /> <path d=\"M6 18a4 4 0 01-2-7.465\" /> <path d=\"M6.004 5.125a4 4 0 00-2.526 5.77\" /> <path d=\"M6.294 6.294A3 3 0 1112 5v13a4 4 0 11-7.967-.518\" /> <circle cx=\"16\" cy=\"13\" r=\"0.5\" fill=\"currentColor\" /> <circle cx=\"18\" cy=\"3\" r=\"0.5\" fill=\"currentColor\" /> <circle cx=\"20\" cy=\"21\" r=\"0.5\" fill=\"currentColor\" /> <circle cx=\"20\" cy=\"8\" r=\"0.5\" fill=\"currentColor\" />",
+  "cable": "<path d=\"M17 19a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1z\" /> <path d=\"M17 21v-2\" /> <path d=\"M19 14V6.5a1 1 0 0 0-7 0v11a1 1 0 0 1-7 0V10\" /> <path d=\"M21 21v-2\" /> <path d=\"M3 5V3\" /> <path d=\"M4 10a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2z\" /> <path d=\"M7 5V3\" />",
+  "cake-slice": "<path d=\"M16 13H3\" /> <path d=\"M16 17H3\" /> <path d=\"m7.2 7.9-3.388 2.5A2 2 0 0 0 3 12.01V20a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-8.654c0-2-2.44-6.026-6.44-8.026a1 1 0 0 0-1.082.057L10.4 5.6\" /> <circle cx=\"9\" cy=\"7\" r=\"2\" />",
+  "camera": "<path d=\"M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z\" /> <circle cx=\"12\" cy=\"13\" r=\"3\" />",
+  "candy": "<path d=\"M10 7v10.9\" /> <path d=\"M14 6.1V17\" /> <path d=\"M16 7V3a1 1 0 0 1 1.707-.707 2.5 2.5 0 0 0 2.152.717 1 1 0 0 1 1.131 1.131 2.5 2.5 0 0 0 .717 2.152A1 1 0 0 1 21 8h-4\" /> <path d=\"M16.536 7.465a5 5 0 0 0-7.072 0l-2 2a5 5 0 0 0 0 7.07 5 5 0 0 0 7.072 0l2-2a5 5 0 0 0 0-7.07\" /> <path d=\"M8 17v4a1 1 0 0 1-1.707.707 2.5 2.5 0 0 0-2.152-.717 1 1 0 0 1-1.131-1.131 2.5 2.5 0 0 0-.717-2.152A1 1 0 0 1 3 16h4\" />",
+  "carrot": "<path d=\"M15 16a1 1 0 0 0-7-7q-4 4-5.987 12.385a.5.5 0 0 0 .602.602Q11 20 15 16l-3-3\" /> <path d=\"M15 9q4 4 7 0-3-4-7 0 4-4 0-7-4 3 0 7\" /> <path d=\"m8 15-2.58-2.58\" />",
+  "chart-bar": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M7 16h8\" /> <path d=\"M7 11h12\" /> <path d=\"M7 6h3\" />",
+  "chart-line": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"m19 9-5 5-4-4-3 3\" />",
+  "chef-hat": "<path d=\"M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z\" /> <path d=\"M6 17h12\" />",
+  "chevron-right": "<path d=\"m9 18 6-6-6-6\" />",
+  "circle": "<circle cx=\"12\" cy=\"12\" r=\"10\" />",
+  "circle-check": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"m16 9-5.5 5.5L8 12\" />",
+  "circle-dollar-sign": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8\" /> <path d=\"M12 18V6\" />",
+  "circle-dot": "<circle cx=\"12\" cy=\"12\" r=\"1\" /> <circle cx=\"12\" cy=\"12\" r=\"10\" />",
+  "circle-help": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3\" /> <path d=\"M12 17h.01\" />",
+  "citrus": "<path d=\"M21.66 17.67a1.08 1.08 0 0 1-.04 1.6A12 12 0 0 1 4.73 2.38a1.1 1.1 0 0 1 1.61-.04z\" /> <path d=\"M19.65 15.66A8 8 0 0 1 8.35 4.34\" /> <path d=\"m14 10-5.5 5.5\" /> <path d=\"M14 17.85V10H6.15\" />",
+  "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />",
+  "cloud": "<path d=\"M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z\" />",
+  "coffee": "<path d=\"M10 2v2\" /> <path d=\"M14 2v2\" /> <path d=\"M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1\" /> <path d=\"M6 2v2\" />",
+  "cog": "<path d=\"M11 10.27 7 3.34\" /> <path d=\"m11 13.73-4 6.93\" /> <path d=\"M12 22v-2\" /> <path d=\"M12 2v2\" /> <path d=\"M14 12h8\" /> <path d=\"m17 20.66-1-1.73\" /> <path d=\"m17 3.34-1 1.73\" /> <path d=\"M2 12h2\" /> <path d=\"m20.66 17-1.73-1\" /> <path d=\"m20.66 7-1.73 1\" /> <path d=\"m3.34 17 1.73-1\" /> <path d=\"m3.34 7 1.73 1\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" /> <circle cx=\"12\" cy=\"12\" r=\"8\" />",
+  "coins": "<path d=\"M13.744 17.736a6 6 0 1 1-7.48-7.48\" /> <path d=\"M15 6h1v4\" /> <path d=\"m6.134 14.768.866-.5 2 3.464\" /> <circle cx=\"16\" cy=\"8\" r=\"6\" />",
+  "compass": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z\" />",
+  "container": "<path d=\"M22 7.7c0-.6-.4-1.2-.8-1.5l-6.3-3.9a1.72 1.72 0 0 0-1.7 0l-10.3 6c-.5.2-.9.8-.9 1.4v6.6c0 .5.4 1.2.8 1.5l6.3 3.9a1.72 1.72 0 0 0 1.7 0l10.3-6c.5-.3.9-1 .9-1.5Z\" /> <path d=\"M10 21.9V14L2.1 9.1\" /> <path d=\"m10 14 11.9-6.9\" /> <path d=\"M14 19.8v-8.1\" /> <path d=\"M18 17.5V9.4\" />",
+  "cookie": "<path d=\"M11 17h.01\" /> <path d=\"M11.496 2c.324-.016.558.292.529.615a4 4 0 004.235 4.368.713.713 0 01.758.757 4 4 0 004.366 4.237c.323-.03.63.204.614.527a10 10 0 01-2.915 6.566A1 1 0 114.93 4.918 10 10 0 0111.496 2\" /> <path d=\"M12 12h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M16 3h.01\" /> <path d=\"M21 4h.01\" /> <path d=\"M21 8h.01\" /> <path d=\"M7 14h.01\" /> <path d=\"M9 8h.01\" />",
+  "cpu": "<path d=\"M12 20v2\" /> <path d=\"M12 2v2\" /> <path d=\"M17 20v2\" /> <path d=\"M17 2v2\" /> <path d=\"M2 12h2\" /> <path d=\"M2 17h2\" /> <path d=\"M2 7h2\" /> <path d=\"M20 12h2\" /> <path d=\"M20 17h2\" /> <path d=\"M20 7h2\" /> <path d=\"M7 20v2\" /> <path d=\"M7 2v2\" /> <rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\" /> <rect x=\"8\" y=\"8\" width=\"8\" height=\"8\" rx=\"1\" />",
+  "credit-card": "<rect width=\"20\" height=\"14\" x=\"2\" y=\"5\" rx=\"2\" /> <line x1=\"2\" x2=\"22\" y1=\"10\" y2=\"10\" /> <path d=\"M6 14h2\" />",
+  "croissant": "<path d=\"M10.2 18H4.774a1.5 1.5 0 0 1-1.352-.97 11 11 0 0 1 .132-6.487\" /> <path d=\"M18 10.2V4.774a1.5 1.5 0 0 0-.97-1.352 11 11 0 0 0-6.486.132\" /> <path d=\"M18 5a4 3 0 0 1 4 3 2 2 0 0 1-2 2 10 10 0 0 0-5.139 1.42\" /> <path d=\"M5 18a3 4 0 0 0 3 4 2 2 0 0 0 2-2 10 10 0 0 1 1.42-5.14\" /> <path d=\"M8.709 2.554a10 10 0 0 0-6.155 6.155 1.5 1.5 0 0 0 .676 1.626l9.807 5.42a2 2 0 0 0 2.718-2.718l-5.42-9.807a1.5 1.5 0 0 0-1.626-.676\" />",
+  "crosshair": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <line x1=\"22\" x2=\"18\" y1=\"12\" y2=\"12\" /> <line x1=\"6\" x2=\"2\" y1=\"12\" y2=\"12\" /> <line x1=\"12\" x2=\"12\" y1=\"6\" y2=\"2\" /> <line x1=\"12\" x2=\"12\" y1=\"22\" y2=\"18\" />",
+  "crown": "<path d=\"M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z\" /> <path d=\"M5 21h14\" />",
+  "cylinder": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />",
+  "database": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />",
+  "diamond": "<path d=\"M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z\" />",
+  "dna": "<path d=\"m10 16 1.5 1.5\" /> <path d=\"m14 8-1.5-1.5\" /> <path d=\"M15 2c-1.798 1.998-2.518 3.995-2.807 5.993\" /> <path d=\"m16.5 10.5 1 1\" /> <path d=\"m17 6-2.891-2.891\" /> <path d=\"M2 15c6.667-6 13.333 0 20-6\" /> <path d=\"m20 9 .891.891\" /> <path d=\"M3.109 14.109 4 15\" /> <path d=\"m6.5 12.5 1 1\" /> <path d=\"m7 18 2.891 2.891\" /> <path d=\"M9 22c1.798-1.998 2.518-3.995 2.807-5.993\" />",
+  "drone": "<path d=\"M10 10 7 7\" /> <path d=\"m10 14-3 3\" /> <path d=\"m14 10 3-3\" /> <path d=\"m14 14 3 3\" /> <path d=\"M14.205 4.139a4 4 0 1 1 5.439 5.863\" /> <path d=\"M19.637 14a4 4 0 1 1-5.432 5.868\" /> <path d=\"M4.367 10a4 4 0 1 1 5.438-5.862\" /> <path d=\"M9.795 19.862a4 4 0 1 1-5.429-5.873\" /> <rect x=\"10\" y=\"8\" width=\"4\" height=\"8\" rx=\"1\" />",
+  "droplet": "<path d=\"M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z\" />",
+  "droplets": "<path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\" /> <path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\" />",
+  "egg": "<path d=\"M12 2C8 2 4 8 4 14a8 8 0 0 0 16 0c0-6-4-12-8-12\" />",
+  "eye": "<path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" />",
+  "factory": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />",
+  "fan": "<path d=\"M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z\" /> <path d=\"M12 12v.01\" />",
+  "file-text": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />",
+  "filter": "<path d=\"M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z\" />",
+  "fingerprint": "<path d=\"M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4\" /> <path d=\"M14 13.12c0 2.38 0 6.38-1 8.88\" /> <path d=\"M17.29 21.02c.12-.6.43-2.3.5-3.02\" /> <path d=\"M2 12a10 10 0 0 1 18-6\" /> <path d=\"M2 16h.01\" /> <path d=\"M21.8 16c.2-2 .131-5.354 0-6\" /> <path d=\"M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2\" /> <path d=\"M8.65 22c.21-.66.45-1.32.57-2\" /> <path d=\"M9 6.8a6 6 0 0 1 9 5.2v2\" />",
+  "fish": "<path d=\"M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z\" /> <path d=\"M18 12v.5\" /> <path d=\"M16 17.93a9.77 9.77 0 0 1 0-11.86\" /> <path d=\"M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33\" /> <path d=\"M10.46 7.26C10.2 5.88 9.17 4.24 8 3h5.8a2 2 0 0 1 1.98 1.67l.23 1.4\" /> <path d=\"m16.01 17.93-.23 1.4A2 2 0 0 1 13.8 21H9.5a5.96 5.96 0 0 0 1.49-3.98\" />",
+  "flag": "<path d=\"M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528\" />",
+  "flame": "<path d=\"M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4\" />",
+  "flask-conical": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />",
+  "flower-2": "<path d=\"M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1\" /> <circle cx=\"12\" cy=\"8\" r=\"2\" /> <path d=\"M12 10v12\" /> <path d=\"M12 22c4.2 0 7-1.667 7-5-4.2 0-7 1.667-7 5Z\" /> <path d=\"M12 22c-4.2 0-7-1.667-7-5 4.2 0 7 1.667 7 5Z\" />",
+  "folder-open": "<path d=\"m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2\" />",
+  "fuel": "<path d=\"M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0v-6.998a2 2 0 0 0-.59-1.42L18 5\" /> <path d=\"M14 21V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v16\" /> <path d=\"M2 21h13\" /> <path d=\"M3 9h11\" />",
+  "gamepad-2": "<line x1=\"6\" x2=\"10\" y1=\"11\" y2=\"11\" /> <line x1=\"8\" x2=\"8\" y1=\"9\" y2=\"13\" /> <line x1=\"15\" x2=\"15.01\" y1=\"12\" y2=\"12\" /> <line x1=\"18\" x2=\"18.01\" y1=\"10\" y2=\"10\" /> <path d=\"M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z\" />",
+  "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />",
+  "gem": "<path d=\"M10.5 3 8 9l4 13 4-13-2.5-6\" /> <path d=\"M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z\" /> <path d=\"M2 9h20\" />",
+  "glass-water": "<path d=\"M5.116 4.104A1 1 0 0 1 6.11 3h11.78a1 1 0 0 1 .994 1.105L17.19 20.21A2 2 0 0 1 15.2 22H8.8a2 2 0 0 1-2-1.79z\" /> <path d=\"M6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0\" />",
+  "globe": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\" /> <path d=\"M2 12h20\" />",
+  "grape": "<path d=\"M22 5V2l-5.89 5.89\" /> <circle cx=\"16.6\" cy=\"15.89\" r=\"3\" /> <circle cx=\"8.11\" cy=\"7.4\" r=\"3\" /> <circle cx=\"12.35\" cy=\"11.65\" r=\"3\" /> <circle cx=\"13.91\" cy=\"5.85\" r=\"3\" /> <circle cx=\"18.15\" cy=\"10.09\" r=\"3\" /> <circle cx=\"6.56\" cy=\"13.2\" r=\"3\" /> <circle cx=\"10.8\" cy=\"17.44\" r=\"3\" /> <circle cx=\"5\" cy=\"19\" r=\"3\" />",
+  "hammer": "<path d=\"m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9\" /> <path d=\"m18 15 4-4\" /> <path d=\"m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5\" />",
+  "hard-drive": "<path d=\"M10 16h.01\" /> <path d=\"M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z\" /> <path d=\"M21.946 12.013H2.054\" /> <path d=\"M6 16h.01\" />",
+  "heart": "<path d=\"M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5\" />",
+  "heart-pulse": "<path d=\"M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5\" /> <path d=\"M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27\" />",
+  "hexagon": "<path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\" />",
+  "home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />",
+  "hospital": "<path d=\"M12 7v4\" /> <path d=\"M14 21v-3a2 2 0 0 0-4 0v3\" /> <path d=\"M14 9h-4\" /> <path d=\"M18 11h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2\" /> <path d=\"M18 21V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16\" />",
+  "ice-cream-cone": "<path d=\"m7 11 4.08 10.35a1 1 0 0 0 1.84 0L17 11\" /> <path d=\"M17 7A5 5 0 0 0 7 7\" /> <path d=\"M17 7a2 2 0 0 1 0 4H7a2 2 0 0 1 0-4\" />",
+  "info": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 16v-4\" /> <path d=\"M12 8h.01\" />",
+  "key": "<path d=\"m2 21 9.6-9.6\" /> <path d=\"m7.5 15.5 2.3 2.3a1 1 0 0 1 0 1.4l-2.1 2.1a1 1 0 0 1-1.4 0L4 19\" /> <circle cx=\"15.5\" cy=\"7.5\" r=\"5.5\" />",
+  "landmark": "<path d=\"M10 18v-7\" /> <path d=\"M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z\" /> <path d=\"M14 18v-7\" /> <path d=\"M18 18v-7\" /> <path d=\"M3 22h18\" /> <path d=\"M6 18v-7\" />",
+  "laptop": "<path d=\"M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z\" /> <path d=\"M20.054 15.987H3.946\" />",
+  "layers": "<path d=\"M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z\" /> <path d=\"M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12\" /> <path d=\"M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17\" />",
+  "leaf": "<path d=\"M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20\" /> <path d=\"M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13\" />",
+  "library": "<path d=\"m16 6 4 14\" /> <path d=\"M12 6v14\" /> <path d=\"M8 8v12\" /> <path d=\"M4 4v16\" />",
+  "lightbulb": "<path d=\"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5\" /> <path d=\"M9 18h6\" /> <path d=\"M10 22h4\" />",
+  "lock": "<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /> <path d=\"M7 11V7a5 5 0 0 1 10 0v4\" />",
+  "log-out": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />",
+  "lollipop": "<circle cx=\"11\" cy=\"11\" r=\"8\" /> <path d=\"m21 21-4.3-4.3\" /> <path d=\"M11 11a2 2 0 0 0 4 0 4 4 0 0 0-8 0 6 6 0 0 0 12 0\" />",
+  "mail": "<path d=\"m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7\" /> <rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\" />",
+  "map": "<path d=\"M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z\" /> <path d=\"M15 5.764v15\" /> <path d=\"M9 3.236v15\" />",
+  "map-pin": "<path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\" /> <circle cx=\"12\" cy=\"10\" r=\"3\" />",
+  "martini": "<path d=\"M12 12 4.207 4.207A.707.707 0 0 1 4.707 3h14.586a.707.707 0 0 1 .5 1.207z\" /> <path d=\"M12 12v10\" /> <path d=\"M7 22h10\" />",
+  "medal": "<path d=\"M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15\" /> <path d=\"M11 12 5.12 2.2\" /> <path d=\"m13 12 5.88-9.8\" /> <path d=\"M8 7h8\" /> <circle cx=\"12\" cy=\"17\" r=\"5\" /> <path d=\"M12 18v-2h-.5\" />",
+  "memory-stick": "<path d=\"M12 12v-2\" /> <path d=\"M12 18v-2\" /> <path d=\"M16 12v-2\" /> <path d=\"M16 18v-2\" /> <path d=\"M2 11h1.5\" /> <path d=\"M20 18v-2\" /> <path d=\"M20.5 11H22\" /> <path d=\"M4 18v-2\" /> <path d=\"M8 12v-2\" /> <path d=\"M8 18v-2\" /> <rect x=\"2\" y=\"6\" width=\"20\" height=\"10\" rx=\"2\" />",
+  "message-square": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" />",
+  "microchip": "<path d=\"M10 12h4\" /> <path d=\"M10 17h4\" /> <path d=\"M10 7h4\" /> <path d=\"M18 12h2\" /> <path d=\"M18 18h2\" /> <path d=\"M18 6h2\" /> <path d=\"M4 12h2\" /> <path d=\"M4 18h2\" /> <path d=\"M4 6h2\" /> <rect x=\"6\" y=\"2\" width=\"12\" height=\"20\" rx=\"2\" />",
+  "microscope": "<path d=\"M6 18h8\" /> <path d=\"M3 22h18\" /> <path d=\"M14 22a7 7 0 1 0 0-14h-1\" /> <path d=\"M9 14h2\" /> <path d=\"M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z\" /> <path d=\"M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3\" />",
+  "milk": "<path d=\"M8 2h8\" /> <path d=\"M9 2v2.789a4 4 0 0 1-.672 2.219l-.656.984A4 4 0 0 0 7 10.212V20a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-9.789a4 4 0 0 0-.672-2.219l-.656-.984A4 4 0 0 1 15 4.788V2\" /> <path d=\"M7 15a6.472 6.472 0 0 1 5 0 6.47 6.47 0 0 0 5 0\" />",
+  "minus": "<path d=\"M5 12h14\" />",
+  "monitor": "<rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"21\" y2=\"21\" /> <line x1=\"12\" x2=\"12\" y1=\"17\" y2=\"21\" />",
+  "moon": "<path d=\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\" />",
+  "mountain": "<path d=\"m8 3 4 8 5-5 5 15H2L8 3z\" />",
+  "music": "<path d=\"M21 16V3a1 1 0 0 0-1.28-.96l-10 2.917a1 1 0 0 0-.72.96V19\" /> <circle cx=\"18\" cy=\"16\" r=\"3\" /> <circle cx=\"6\" cy=\"19\" r=\"3\" />",
+  "navigation": "<polygon points=\"3 11 22 2 13 21 11 13 3 11\" />",
+  "network": "<rect x=\"16\" y=\"16\" width=\"6\" height=\"6\" rx=\"1\" /> <rect x=\"2\" y=\"16\" width=\"6\" height=\"6\" rx=\"1\" /> <rect x=\"9\" y=\"2\" width=\"6\" height=\"6\" rx=\"1\" /> <path d=\"M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3\" /> <path d=\"M12 12V8\" />",
+  "nut": "<path d=\"M16.847 5.847 20 9a7.23 7.23 0 011.551 7.516C21.241 17.352 21 17.932 21 19v1a1 1 0 01-1 1h-1c-1.069 0-1.648.242-2.485.552A7.2 7.2 0 019.002 20l-3.155-3.153\" /> <path d=\"M18.21 5.43c-1.71.69-5.07 1.07-6.71 1.07.46 1.38.91 2.74.61 4.88a.88.88 0 01-.73.74c-1.78.28-3.54-.17-4.88-.62 0 1.64-.38 5-1.07 6.71-.21.52-.82.55-1.17.12A10 10 0 0118.33 4.26c.43.35.4.97-.12 1.17\" /> <path d=\"M4.93 4.93 3 3a.7.7 0 010-1\" />",
+  "orbit": "<path d=\"M20.341 6.484A10 10 0 0 1 10.266 21.85\" /> <path d=\"M3.659 17.516A10 10 0 0 1 13.74 2.152\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <circle cx=\"19\" cy=\"5\" r=\"2\" /> <circle cx=\"5\" cy=\"19\" r=\"2\" />",
+  "package": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />",
+  "package-check": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />",
+  "package-open": "<path d=\"M12 22v-9\" /> <path d=\"M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z\" /> <path d=\"M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13\" /> <path d=\"M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z\" />",
+  "package-plus": "<path d=\"M12 22V12\" /> <path d=\"M16 17h6\" /> <path d=\"M19 14v6\" /> <path d=\"M21 10.535V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.675-.955\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />",
+  "package-search": "<path d=\"M12 22V12\" /> <path d=\"M20.27 18.27 22 20\" /> <path d=\"M21 10.498V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l.98-.559\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" /> <circle cx=\"18.5\" cy=\"16.5\" r=\"2.5\" />",
+  "palette": "<path d=\"M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z\" /> <circle cx=\"13.5\" cy=\"6.5\" r=\".5\" fill=\"currentColor\" /> <circle cx=\"17.5\" cy=\"10.5\" r=\".5\" fill=\"currentColor\" /> <circle cx=\"6.5\" cy=\"12.5\" r=\".5\" fill=\"currentColor\" /> <circle cx=\"8.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" />",
+  "percent": "<line x1=\"19\" x2=\"5\" y1=\"5\" y2=\"19\" /> <circle cx=\"6.5\" cy=\"6.5\" r=\"2.5\" /> <circle cx=\"17.5\" cy=\"17.5\" r=\"2.5\" />",
+  "phone": "<path d=\"M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384\" />",
+  "pickaxe": "<path d=\"m14 13-8.381 8.38a1 1 0 0 1-3.001-3L11 9.999\" /> <path d=\"M15.973 4.027A13 13 0 0 0 5.902 2.373c-1.398.342-1.092 2.158.277 2.601a19.9 19.9 0 0 1 5.822 3.024\" /> <path d=\"M16.001 11.999a19.9 19.9 0 0 1 3.024 5.824c.444 1.369 2.26 1.676 2.603.278A13 13 0 0 0 20 8.069\" /> <path d=\"M18.352 3.352a1.205 1.205 0 0 0-1.704 0l-5.296 5.296a1.205 1.205 0 0 0 0 1.704l2.296 2.296a1.205 1.205 0 0 0 1.704 0l5.296-5.296a1.205 1.205 0 0 0 0-1.704z\" />",
+  "pie-chart": "<path d=\"M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z\" /> <path d=\"M21.21 15.89A10 10 0 1 1 8 2.83\" />",
+  "pill": "<path d=\"m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z\" /> <path d=\"m8.5 8.5 7 7\" />",
+  "pizza": "<path d=\"m12 14-1 1\" /> <path d=\"m13.75 18.25-1.25 1.42\" /> <path d=\"M17.775 5.654a15.68 15.68 0 0 0-12.121 12.12\" /> <path d=\"M18.8 9.3a1 1 0 0 0 2.1 7.7\" /> <path d=\"M21.964 20.732a1 1 0 0 1-1.232 1.232l-18-5a1 1 0 0 1-.695-1.232A19.68 19.68 0 0 1 15.732 2.037a1 1 0 0 1 1.232.695z\" />",
+  "plus": "<path d=\"M5 12h14\" /> <path d=\"M12 5v14\" />",
+  "popcorn": "<path d=\"M18 8a2 2 0 0 0 0-4 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0 0 4\" /> <path d=\"M10 22 9 8\" /> <path d=\"m14 22 1-14\" /> <path d=\"M20 8c.5 0 .9.4.8 1l-2.6 12c-.1.5-.7 1-1.2 1H7c-.6 0-1.1-.4-1.2-1L3.2 9c-.1-.6.3-1 .8-1Z\" />",
+  "power": "<path d=\"M12 2v10\" /> <path d=\"M18.4 6.6a9 9 0 1 1-12.77.04\" />",
+  "qr-code": "<rect width=\"5\" height=\"5\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"5\" height=\"5\" x=\"16\" y=\"3\" rx=\"1\" /> <rect width=\"5\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" /> <path d=\"M21 16h-3a2 2 0 0 0-2 2v3\" /> <path d=\"M21 21v.01\" /> <path d=\"M12 7v3a2 2 0 0 1-2 2H7\" /> <path d=\"M3 12h.01\" /> <path d=\"M12 3h.01\" /> <path d=\"M12 16v.01\" /> <path d=\"M16 12h1\" /> <path d=\"M21 12v.01\" /> <path d=\"M12 21v-1\" />",
+  "radar": "<path d=\"M19.07 4.93A10 10 0 0 0 6.99 3.34\" /> <path d=\"M4 6h.01\" /> <path d=\"M2.29 9.62A10 10 0 1 0 21.31 8.35\" /> <path d=\"M16.24 7.76A6 6 0 1 0 8.23 16.67\" /> <path d=\"M12 18h.01\" /> <path d=\"M17.99 11.66A6 6 0 0 1 15.77 16.67\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" /> <path d=\"m13.41 10.59 5.66-5.66\" />",
+  "radiation": "<path d=\"M12 12h.01\" /> <path d=\"M14 15.4641a4 4 0 0 1-4 0L7.52786 19.74597 A 1 1 0 0 0 7.99303 21.16211 10 10 0 0 0 16.00697 21.16211 1 1 0 0 0 16.47214 19.74597z\" /> <path d=\"M16 12a4 4 0 0 0-2-3.464l2.472-4.282a1 1 0 0 1 1.46-.305 10 10 0 0 1 4.006 6.94A1 1 0 0 1 21 12z\" /> <path d=\"M8 12a4 4 0 0 1 2-3.464L7.528 4.254a1 1 0 0 0-1.46-.305 10 10 0 0 0-4.006 6.94A1 1 0 0 0 3 12z\" />",
+  "radio": "<path d=\"M16.247 7.761a6 6 0 0 1 0 8.478\" /> <path d=\"M19.075 4.933a10 10 0 0 1 0 14.134\" /> <path d=\"M4.925 19.067a10 10 0 0 1 0-14.134\" /> <path d=\"M7.753 16.239a6 6 0 0 1 0-8.478\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" />",
+  "receipt": "<path d=\"M12 17V7\" /> <path d=\"M16 8h-6a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8\" /> <path d=\"M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z\" />",
+  "refresh-cw": "<path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\" /> <path d=\"M21 3v5h-5\" /> <path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\" /> <path d=\"M8 16H3v5\" />",
+  "rocket": "<path d=\"M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5\" /> <path d=\"M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09\" /> <path d=\"M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z\" /> <path d=\"M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05\" />",
+  "rotate-3d": "<path d=\"m15.194 13.707 3.814 1.86-1.86 3.814\" /> <path d=\"M16.47214 7.52786 A 5 10 0 1 0 13 21.79796\" /> <path d=\"M21.79796 11 A 10 5 0 1 0 19 15.57071\" />",
+  "route": "<circle cx=\"6\" cy=\"19\" r=\"3\" /> <path d=\"M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15\" /> <circle cx=\"18\" cy=\"5\" r=\"3\" />",
+  "satellite": "<path d=\"m13.5 6.5-3.148-3.148a1.205 1.205 0 0 0-1.704 0L6.352 5.648a1.205 1.205 0 0 0 0 1.704L9.5 10.5\" /> <path d=\"M16.5 7.5 19 5\" /> <path d=\"m17.5 10.5 3.148 3.148a1.205 1.205 0 0 1 0 1.704l-2.296 2.296a1.205 1.205 0 0 1-1.704 0L13.5 14.5\" /> <path d=\"M9 21a6 6 0 0 0-6-6\" /> <path d=\"M9.352 10.648a1.205 1.205 0 0 0 0 1.704l2.296 2.296a1.205 1.205 0 0 0 1.704 0l4.296-4.296a1.205 1.205 0 0 0 0-1.704l-2.296-2.296a1.205 1.205 0 0 0-1.704 0z\" />",
+  "satellite-dish": "<path d=\"M18 12a6 6 0 00-6-6\" /> <path d=\"M2.824 10.459a8 8 0 0010.717 10.717c.558-.276.623-1.012.183-1.452l-9.448-9.448c-.44-.44-1.176-.375-1.452.183\" /> <path d=\"M22 12A10 10 0 0012 2\" /> <path d=\"m9 15 4-4\" />",
+  "scale": "<path d=\"M12 3v18\" /> <path d=\"m19 8 3 8a5 5 0 0 1-6 0zV7\" /> <path d=\"M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1\" /> <path d=\"m5 8 3 8a5 5 0 0 1-6 0zV7\" /> <path d=\"M7 21h10\" />",
+  "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" />",
+  "scan-line": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <path d=\"M7 12h10\" />",
+  "scroll-text": "<path d=\"M15 12h-5\" /> <path d=\"M15 8h-5\" /> <path d=\"M19 17V5a2 2 0 0 0-2-2H4\" /> <path d=\"M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3\" />",
+  "send": "<path d=\"M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z\" /> <path d=\"m21.854 2.147-10.94 10.939\" />",
+  "server": "<rect width=\"20\" height=\"8\" x=\"2\" y=\"2\" rx=\"2\" ry=\"2\" /> <rect width=\"20\" height=\"8\" x=\"2\" y=\"14\" rx=\"2\" ry=\"2\" /> <line x1=\"6\" x2=\"6.01\" y1=\"6\" y2=\"6\" /> <line x1=\"6\" x2=\"6.01\" y1=\"18\" y2=\"18\" />",
+  "settings": "<path d=\"M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" />",
+  "shield": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" />",
+  "shield-check": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"m9 12 2 2 4-4\" />",
+  "shield-half": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 22V2\" />",
+  "shield-plus": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M9 12h6\" /> <path d=\"M12 9v6\" />",
+  "ship": "<path d=\"M12 2v2\" /> <path d=\"M12 9.189V13\" /> <path d=\"M19 12V6a2 2 0 00-2-2H7a2 2 0 00-2 2v6\" /> <path d=\"M19.38 19A11.6 11.6 0 0021 13l-8.188-3.639a2 2 0 00-1.624 0L3 13.001a11.6 11.6 0 002.81 7.76\" /> <path d=\"M2 20c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1s1.2 1 2.5 1c2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1\" />",
+  "shopping-cart": "<path d=\"m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18\" /> <path d=\"M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25\" /> <circle cx=\"18\" cy=\"20\" r=\"2\" /> <circle cx=\"8\" cy=\"20\" r=\"2\" />",
+  "skull": "<path d=\"m12.5 17-.5-1-.5 1h1z\" /> <path d=\"M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z\" /> <circle cx=\"15\" cy=\"12\" r=\"1\" /> <circle cx=\"9\" cy=\"12\" r=\"1\" />",
+  "sliders-horizontal": "<path d=\"M10 5H3\" /> <path d=\"M12 19H3\" /> <path d=\"M14 3v4\" /> <path d=\"M16 17v4\" /> <path d=\"M21 12h-9\" /> <path d=\"M21 19h-5\" /> <path d=\"M21 5h-7\" /> <path d=\"M8 10v4\" /> <path d=\"M8 12H3\" />",
+  "smartphone": "<rect width=\"14\" height=\"20\" x=\"5\" y=\"2\" rx=\"2\" ry=\"2\" /> <path d=\"M12 18h.01\" />",
+  "snowflake": "<path d=\"m10 20-1.25-2.5L6 18\" /> <path d=\"M10 4 8.75 6.5 6 6\" /> <path d=\"m14 20 1.25-2.5L18 18\" /> <path d=\"m14 4 1.25 2.5L18 6\" /> <path d=\"m17 21-3-6h-4\" /> <path d=\"m17 3-3 6 1.5 3\" /> <path d=\"M2 12h6.5L10 9\" /> <path d=\"m20 10-1.5 2 1.5 2\" /> <path d=\"M22 12h-6.5L14 15\" /> <path d=\"m4 10 1.5 2L4 14\" /> <path d=\"m7 21 3-6-1.5-3\" /> <path d=\"m7 3 3 6h4\" />",
+  "soup": "<path d=\"M11.248 3c.273.1.808.53.747 1.36-.05.83-.938 1.2-.989 2.02-.06.78.333 1.24.727 1.62\" /> <path d=\"M16.252 3c.268.1.794.53.745 1.36-.06.83-.923 1.2-.993 2.02-.05.78.338 1.24.725 1.62\" /> <path d=\"M19.5 12 22 6\" /> <path d=\"M4 12a1 1 0 00-.99 1.133A9 9 0 0012 21a9 9 0 008.99-7.867A1 1 0 0020 12z\" /> <path d=\"M6.252 3c.268.1.794.53.745 1.36-.06.83-.923 1.2-.993 2.02-.05.78.338 1.24.735 1.62\" /> <path d=\"M7 21h10\" />",
+  "sparkle": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" />",
+  "sparkles": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />",
+  "sprout": "<path d=\"M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3\" /> <path d=\"M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4\" /> <path d=\"M5 21h14\" />",
+  "star": "<path d=\"M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z\" />",
+  "stethoscope": "<path d=\"M11 2v2\" /> <path d=\"M5 2v2\" /> <path d=\"M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1\" /> <path d=\"M8 15a6 6 0 0 0 12 0v-3\" /> <circle cx=\"20\" cy=\"10\" r=\"2\" />",
+  "store": "<path d=\"M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5\" /> <path d=\"M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244\" /> <path d=\"M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05\" />",
+  "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"m17.66 17.66 1.41 1.41\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.34 17.66-1.41 1.41\" /> <path d=\"m19.07 4.93-1.41 1.41\" />",
+  "sword": "<path d=\"m11 19-6-6\" /> <path d=\"m5 21-2-2\" /> <path d=\"m8 16-4 4\" /> <path d=\"M9.5 17.5 20.414 6.586A2 2 0 0021 5.172V3h-2.172a2 2 0 00-1.414.586L6.5 14.5\" />",
+  "swords": "<path d=\"m13 19 6-6\" /> <path d=\"M14.5 17.5 3.586 6.586A2 2 0 013 5.172V3h2.172a2 2 0 011.414.586L17.5 14.5\" /> <path d=\"m14.828 6.172 2.586-2.586A2 2 0 0118.828 3H21v2.172a2 2 0 01-.586 1.414l-2.586 2.586\" /> <path d=\"m16 16 4 4\" /> <path d=\"m19 21 2-2\" /> <path d=\"m5 14 4 4\" /> <path d=\"m5 21-2-2\" /> <path d=\"M7.5 16.5 4 20\" />",
+  "syringe": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />",
+  "table": "<path d=\"M12 3v18\" /> <rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" /> <path d=\"M3 9h18\" /> <path d=\"M3 15h18\" />",
+  "target": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <circle cx=\"12\" cy=\"12\" r=\"6\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" />",
+  "test-tube": "<path d=\"M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5c-1.4 0-2.5-1.1-2.5-2.5V2\" /> <path d=\"M8.5 2h7\" /> <path d=\"M14.5 16h-5\" />",
+  "thermometer": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />",
+  "timer": "<line x1=\"10\" x2=\"14\" y1=\"2\" y2=\"2\" /> <line x1=\"12\" x2=\"15\" y1=\"14\" y2=\"11\" /> <circle cx=\"12\" cy=\"14\" r=\"8\" />",
+  "tractor": "<path d=\"m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20\" /> <path d=\"M16 18h-5\" /> <path d=\"M18 5a1 1 0 0 0-1 1v5.573\" /> <path d=\"M3 4h8.129a1 1 0 0 1 .99.863L13 11.246\" /> <path d=\"M4 11V4\" /> <path d=\"M7 15h.01\" /> <path d=\"M8 10.1V4\" /> <circle cx=\"18\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"15\" r=\"5\" />",
+  "train-front": "<path d=\"M8 3.1V7a4 4 0 0 0 8 0V3.1\" /> <path d=\"m9 15-1-1\" /> <path d=\"m15 15 1-1\" /> <path d=\"M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z\" /> <path d=\"m8 19-2 3\" /> <path d=\"m16 19 2 3\" />",
+  "tree-pine": "<path d=\"m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z\" /> <path d=\"M12 22v-3\" />",
+  "trees": "<path d=\"M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z\" /> <path d=\"M7 16v6\" /> <path d=\"M13 19v3\" /> <path d=\"M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5\" />",
+  "trending-up": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />",
+  "triangle": "<path d=\"M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z\" />",
+  "truck": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />",
+  "umbrella": "<path d=\"M12 13v7a2 2 0 0 0 4 0\" /> <path d=\"M12 2v2\" /> <path d=\"M20.992 13a1 1 0 0 0 .97-1.274 10.284 10.284 0 0 0-19.923 0A1 1 0 0 0 3 13z\" />",
+  "unlock": "<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /> <path d=\"M7 11V7a5 5 0 0 1 9.9-1\" />",
+  "user": "<path d=\"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2\" /> <circle cx=\"12\" cy=\"7\" r=\"4\" />",
+  "user-minus": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" /> <line x1=\"22\" x2=\"16\" y1=\"11\" y2=\"11\" />",
+  "user-plus": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" /> <line x1=\"19\" x2=\"19\" y1=\"8\" y2=\"14\" /> <line x1=\"22\" x2=\"16\" y1=\"11\" y2=\"11\" />",
+  "users": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />",
+  "utensils": "<path d=\"M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2\" /> <path d=\"M7 2v20\" /> <path d=\"M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7\" />",
+  "vault": "<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" /> <circle cx=\"7.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" /> <path d=\"m7.9 7.9 2.7 2.7\" /> <circle cx=\"16.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" /> <path d=\"m13.4 10.6 2.7-2.7\" /> <circle cx=\"7.5\" cy=\"16.5\" r=\".5\" fill=\"currentColor\" /> <path d=\"m7.9 16.1 2.7-2.7\" /> <circle cx=\"16.5\" cy=\"16.5\" r=\".5\" fill=\"currentColor\" /> <path d=\"m13.4 13.4 2.7 2.7\" /> <circle cx=\"12\" cy=\"12\" r=\"2\" />",
+  "wallet": "<path d=\"M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1\" /> <path d=\"M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4\" />",
+  "warehouse": "<path d=\"M18 21V10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v11\" /> <path d=\"M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 1.132-1.803l7.95-3.974a2 2 0 0 1 1.837 0l7.948 3.974A2 2 0 0 1 22 8z\" /> <path d=\"M6 13h12\" /> <path d=\"M6 17h12\" />",
+  "watch": "<path d=\"M12 10v2.2l1.6 1\" /> <path d=\"m16.13 7.66-.81-4.05a2 2 0 0 0-2-1.61h-2.68a2 2 0 0 0-2 1.61l-.78 4.05\" /> <path d=\"m7.88 16.36.8 4a2 2 0 0 0 2 1.61h2.72a2 2 0 0 0 2-1.61l.81-4.05\" /> <circle cx=\"12\" cy=\"12\" r=\"6\" />",
+  "waves": "<path d=\"M2 12q2.5 2 5 0t5 0 5 0 5 0\" /> <path d=\"M2 19q2.5 2 5 0t5 0 5 0 5 0\" /> <path d=\"M2 5q2.5 2 5 0t5 0 5 0 5 0\" />",
+  "weight": "<circle cx=\"12\" cy=\"5\" r=\"3\" /> <path d=\"M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z\" />",
+  "wheat": "<path d=\"M2 22 16 8\" /> <path d=\"M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z\" /> <path d=\"M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z\" /> <path d=\"M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z\" /> <path d=\"M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z\" /> <path d=\"M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z\" /> <path d=\"M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z\" /> <path d=\"M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z\" />",
+  "wifi": "<path d=\"M12 20h.01\" /> <path d=\"M2 8.82a15 15 0 0 1 20 0\" /> <path d=\"M5 12.859a10 10 0 0 1 14 0\" /> <path d=\"M8.5 16.429a5 5 0 0 1 7 0\" />",
+  "wind": "<path d=\"M12.8 19.6A2 2 0 1 0 14 16H2\" /> <path d=\"M17.5 8a2.5 2.5 0 1 1 2 4H2\" /> <path d=\"M9.8 4.4A2 2 0 1 1 11 8H2\" />",
+  "wine": "<path d=\"M8 22h8\" /> <path d=\"M7 10h10\" /> <path d=\"M12 15v7\" /> <path d=\"M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z\" />",
+  "wrench": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />",
+  "x": "<path d=\"M18 6 6 18\" /> <path d=\"m6 6 12 12\" />",
+  "zap": "<path d=\"M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z\" />",
+};
+
+const CATEGORY_ICONS = {
+  'Minerály':'gem', 'Zbraně':'swords', 'Potraviny':'apple', 'Technologie':'cpu',
+  'Léky':'pill', 'Luxus':'crown', 'Komponenty':'wrench'
+};
+const CATEGORY_COLORS = {
+  'Minerály':'#f2c96b', 'Zbraně':'#ff8b7a', 'Potraviny':'#7df0a1', 'Technologie':'#6fdcff',
+  'Léky':'#d79bff', 'Luxus':'#ffe66d', 'Komponenty':'#b9c6d8'
+};
+const ITEM_ICONS = {
+  // Minerály
+  'Ruda':'mountain', 'Zlato':'coins', 'Stribro':'medal', 'Platina':'gem', 'Krystaly':'diamond',
+  'Kremik':'cpu', 'Uhlí':'flame', 'Síra':'flask-conical', 'Měď':'circle', 'Železo':'hammer',
+  'Titan':'shield', 'Kobalt':'hexagon',
+  // Zbraně
+  'Laser I':'zap', 'Laser II':'zap', 'Laser III':'zap', 'Plazmová puška':'crosshair',
+  'Fotonový kanón':'sun', 'Raketomet':'rocket', 'Torpedo':'navigation', 'Ionový blaster':'radiation',
+  'Railgun':'target', 'Disruptor':'bomb',
+  // Potraviny
+  'Chléb':'wheat', 'Maso':'beef', 'Ovoce':'apple', 'Zelenina':'carrot', 'Konzervy':'package',
+  'Syntetické jídlo':'flask-conical', 'Káva':'coffee', 'Čaj':'cup-soda', 'Víno':'wine', 'Pivo':'beer',
+  // Technologie
+  'Čipy':'cpu', 'Procesory':'microchip', 'Paměti':'memory-stick', 'Senzoři':'radar',
+  'Navigace':'compass', 'Komunikace':'radio', 'AI moduly':'brain-circuit', 'Hologramy':'scan',
+  'Nanotechnologie':'atom', 'Drony':'drone',
+  // Léky
+  'Analgetika':'pill', 'Antibiotika':'shield-plus', 'Stimulanty':'zap', 'Nanoleky':'syringe',
+  'Regenerace':'heart-pulse', 'Antitoxin':'test-tube', 'Vakcíny':'syringe', 'Vitamíny':'activity',
+  // Luxus
+  'Šperky':'gem', 'Kaviár':'fish', 'Umění':'palette', 'Starodávné předměty':'landmark',
+  'Hudební nástroje':'music', 'Knihy':'book-open', 'Parfémy':'sparkles',
+  // Komponenty
+  'Komponenty':'cog', 'Motory':'fan', 'Převodovky':'settings', 'Kabely':'cable',
+  'Trubky':'cylinder', 'Filtry':'filter', 'Čerpadla':'gauge', 'Ventily':'nut',
+  'Ložiska':'circle-dot', 'Šrouby':'bolt',
+};
+const SLOT_ICONS = {
+  trup:'shield', stit:'shield-check', motor:'rocket', zbran:'crosshair', naklad:'package',
+  palivo:'fuel', regenerace:'heart-pulse', radar:'radar', gyro:'rotate-3d'
+};
+const SLOT_LABELS = {
+  trup:'Trup', stit:'Štít', motor:'Motor', zbran:'Zbraň', naklad:'Náklad',
+  palivo:'Palivo', regenerace:'Regenerace', radar:'Radar', gyro:'Gyroskop'
+};
+const BONUS_LABELS = {
+  maxHp:'max HP', maxShield:'max štít', maxSpeed:'max rychlost', damagePct:'poškození',
+  maxCargo:'max náklad', maxFuel:'max palivo', hpRegen:'regenerace HP', shieldRegen:'regenerace štítu',
+  radarRange:'dosažení radaru', rotationSpeed:'rychlost rotace', thrustPower:'tah motoru'
+};
+const UPGRADE_ICONS = { hp:'heart', shield:'shield', speed:'gauge', cargo:'package', fuel:'fuel' };
+const SKILL_ICONS = { obchod:'coins', stity:'shield', zbrane:'swords', motor:'rocket', naklad:'package' };
+const STATION_ICONS = {
+  PLANET:'globe', DOCKY:'anchor', OBCHODNI_STANICE:'store', HI_TECH_LAB:'flask-conical', PIRATSKY_KLUB:'skull'
+};
+const STATION_INFO = {
+  PLANET:{ label:'Planeta', art1:'#123a52', art2:'#050a16', ico:'#8ef0ff', border:'rgba(74,168,232,.6)', glow:'rgba(74,168,232,.25)' },
+  DOCKY:{ label:'Doky', art1:'#2a3a4a', art2:'#080d14', ico:'#b9c6d8', border:'rgba(185,198,216,.5)', glow:'rgba(185,198,216,.2)' },
+  OBCHODNI_STANICE:{ label:'Obchodní stanice', art1:'#4a3a12', art2:'#160f04', ico:'#ffe66d', border:'rgba(255,230,109,.5)', glow:'rgba(255,230,109,.2)' },
+  HI_TECH_LAB:{ label:'Hi-Tech Lab', art1:'#123a52', art2:'#04141a', ico:'#5ce1e6', border:'rgba(92,225,230,.55)', glow:'rgba(92,225,230,.22)' },
+  PIRATSKY_KLUB:{ label:'Pirátský klub', art1:'#4a1a1a', art2:'#1a0505', ico:'#ff8b7a', border:'rgba(255,139,122,.55)', glow:'rgba(255,107,107,.22)' },
+};
+const GALAXY_ICONS = ['home','factory','skull','gem'];
+const QUEST_ICONS = { deliver:'truck', collect:'package-search', kill:'skull' };
+
+function icon(name, cls) {
+  const paths = ICON_PATHS[name] || ICON_PATHS['package'] || '';
+  return `<svg class="icon${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" aria-hidden="true">${paths}</svg>`;
+}
+function catClass(cat) {
+  return ({
+    'Minerály':'cat-minerals', 'Zbraně':'cat-weapons', 'Potraviny':'cat-food',
+    'Technologie':'cat-tech', 'Léky':'cat-meds', 'Luxus':'cat-luxury', 'Komponenty':'cat-components'
+  })[cat] || 'cat-default';
+}
+function itemCat(name) { return ITEM_CATEGORY_MAP[name] || 'Komponenty'; }
+function itemIcon(name) { return ITEM_ICONS[name] || CATEGORY_ICONS[itemCat(name)] || 'package'; }
+function itemThumb(name, extra) {
+  const cat = ITEM_CATEGORY_MAP[name] || '';
+  return `<span class="thumb ${catClass(cat)}${extra ? ' ' + extra : ''}" title="${name}${cat ? ' · ' + cat : ''}">${icon(itemIcon(name))}</span>`;
+}
+function slotIcon(slot) { return SLOT_ICONS[slot] || 'package'; }
+function recipeThumb(rec) {
+  return `<span class="thumb cat-ship tier-${rec.tier || 1}" title="${rec.name}">${icon(slotIcon(rec.slot))}</span>`;
+}
+function stationIcon(type) { return STATION_ICONS[type] || 'globe'; }
+function stationThumb(type, size) {
+  const info = STATION_INFO[type] || STATION_INFO.PLANET;
+  return `<span class="thumb station${size ? ' ' + size : ''}" style="--t1:${info.art1};--t2:${info.art2};--ico:${info.ico};--tborder:${info.border};" title="${info.label}">${icon(stationIcon(type))}</span>`;
+}
+function stationArt(type, name) {
+  const info = STATION_INFO[type] || STATION_INFO.PLANET;
+  const label = name || info.label;
+  return `<div class="station-art" style="--art1:${info.art1};--art2:${info.art2};--art-ico:${info.ico};--art-border:${info.border};--art-glow:${info.glow};" title="${label}">
+    ${icon(stationIcon(type))}<span class="station-art-label">${label}</span></div>`;
+}
+function shipArt(label) {
+  return `<div class="ship-art" title="${label || 'Ranger'}">${icon('rocket')}<span class="ship-art-label">${label || 'Ranger'}</span></div>`;
+}
+function questIcon(type) { return QUEST_ICONS[type] || 'scroll-text'; }
+function questThumb(type) {
+  return `<span class="thumb cat-quest" title="${type}">${icon(questIcon(type))}</span>`;
+}
+function upgradeThumb(id) {
+  return `<span class="thumb cat-tech" title="${id}">${icon(UPGRADE_ICONS[id] || 'arrow-up-circle')}</span>`;
+}
+function skillThumb(id) {
+  return `<span class="thumb cat-tech" title="${id}">${icon(SKILL_ICONS[id] || 'sparkles')}</span>`;
+}
+function statLine(iconName, text) {
+  return `<div class="stat-line">${icon(iconName)}<span>${text}</span></div>`;
+}
+function progressBar(pct, color) {
+  const p = Math.max(0, Math.min(100, pct * 100));
+  return `<div class="progress"><span style="width:${p}%${color ? ';background:' + color : ''}"></span></div>`;
+}
+function resChip(name, amount) {
+  return `<span class="res-chip" title="${name}">${icon(itemIcon(name))}<span>${name}: <b>${amount}</b></span></span>`;
+}
+function reqChip(name, have, need) {
+  const ok = have >= need;
+  return `<span class="req-chip ${ok ? 'req-ok' : 'req-missing'}" title="${name}: ${have}/${need}">${icon(itemIcon(name))}<span>${name}:${have}/${need}</span></span>`;
+}
+function hydrateStaticIcons() {
+  document.querySelectorAll('[data-icon]').forEach(el => {
+    if (el.dataset.iconDone) return;
+    if (el.classList.contains('menu-feature') || el.classList.contains('legend-item')) {
+      el.insertAdjacentHTML('afterbegin', icon(el.dataset.icon));
+    } else {
+      const box = document.createElement('span');
+      box.className = 'btn-ico';
+      box.innerHTML = icon(el.dataset.icon);
+      el.prepend(box);
+    }
+    el.dataset.iconDone = '1';
+  });
+}
+function renderHelpLegend() {
+  const el = document.getElementById('helpCategoryLegend');
+  if (!el) return;
+  el.innerHTML = Object.keys(ITEM_CATEGORIES).map(cat =>
+    `<span class="legend-item"><span class="thumb sm ${catClass(cat)}">${icon(CATEGORY_ICONS[cat])}</span><span>${cat}</span></span>`
+  ).join('');
+}
+
+// Ikonové obrázky pro canvas (předměty ve vesmíru, mapa, HUD)
+const canvasIconCache = new Map();
+function iconImage(name, color) {
+  const c = color || '#ffffff';
+  const key = name + '|' + c;
+  if (canvasIconCache.has(key)) return canvasIconCache.get(key);
+  const paths = ICON_PATHS[name] || ICON_PATHS['package'] || '';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+  const img = new Image();
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  canvasIconCache.set(key, img);
+  return img;
+}
+function drawCanvasIcon(name, x, y, size, color, alpha) {
+  const img = iconImage(name, color || '#ffffff');
+  if (!img.complete || !img.naturalWidth) return false;
+  const oldAlpha = ctx.globalAlpha;
+  ctx.globalAlpha = alpha === undefined ? 1 : alpha;
+  ctx.drawImage(img, x - size / 2, y - size / 2, size, size);
+  ctx.globalAlpha = oldAlpha;
+  return true;
+}
+function preloadCanvasIcons() {
+  for (const [cat, name] of Object.entries(CATEGORY_ICONS)) iconImage(name, CATEGORY_COLORS[cat]);
+  for (const name of Object.values(ITEM_ICONS)) iconImage(name, '#ffffff');
+  for (const name of Object.values(STATION_ICONS)) iconImage(name, '#dff6ff');
+  for (const name of ['ship','skull','user','home','factory','gem','coins','package','truck','heart','shield','fuel','star']) iconImage(name, '#dff6ff');
+}
 
 // === GALAXIE ===
 const GALAXY_DEFS = [
@@ -1282,7 +2125,7 @@ function hideAllScreens() {
     .forEach(el => el.classList.add('hidden'));
 }
 function showScreen(el) { hideAllScreens(); el.classList.remove('hidden'); }
-function updateMenuWallet() { menuWallet.textContent = `Wallet: ${walletBalance.toFixed(4)} HVC`; }
+function updateMenuWallet() { menuWallet.innerHTML = `${icon('wallet')}<span>${walletBalance.toFixed(4)} HVC</span>`; }
 function showMessage(text, duration) { game.message = text; game.messageTimer = duration || 120; }
 
 // === TRADING ===
@@ -1294,8 +2137,8 @@ function openTrading() {
 function renderTrading() {
   const planet = game.dockedPlanet;
   if (!planet) return;
-  document.getElementById('tradeStation').textContent =
-    `${planet.name} (${planet.getTypeName()}) | Kredity: ${walletBalance.toFixed(4)} HVC`;
+  document.getElementById('tradeStation').innerHTML =
+    `${stationThumb(planet.stationType, 'sm')}<span>${planet.name} <span class="muted">(${planet.getTypeName()})</span> · ${icon('coins')} ${walletBalance.toFixed(4)} HVC</span>`;
   const buyDiv = document.getElementById('buyList');
   const scroll = game.tradingScroll || 0;
   const visible = planet.availableItems.slice(scroll, scroll+10);
@@ -1304,10 +2147,12 @@ function renderTrading() {
     const price = planet.prices[item] || 0.1;
     const stock = planet.goods[item] || 0;
     const inStock = stock > 0;
-    const color = inStock ? '#ddd' : '#555';
+    const color = inStock ? '#ddd' : '#666';
     const priceColor = price < 0.3 ? '#88dd88' : price < 0.8 ? '#e6e640' : '#dd6666';
     buyHtml += `<div class="item-row" data-action="buy" data-item="${item}" style="cursor:${inStock?'pointer':'default'};color:${color};">
-      <span class="name">${item}</span><span class="qty">${inStock ? stock : '---'}</span>
+      ${itemThumb(item)}
+      <span class="name">${item}<span class="item-cat">${ITEM_CATEGORY_MAP[item] || ''}</span></span>
+      <span class="qty">${inStock ? stock : '---'}</span>
       <span class="price" style="color:${priceColor}">${price.toFixed(4)} HVC</span></div>`;
   }
   buyDiv.innerHTML = buyHtml || '<div style="color:#666;padding:12px;">Žádné zboží</div>';
@@ -1320,7 +2165,9 @@ function renderTrading() {
     const price = planet.prices[item] || 0.1;
     const priceColor = price < 0.3 ? '#88dd88' : price < 0.8 ? '#e6e640' : '#dd6666';
     sellHtml += `<div class="item-row sell" data-action="sell" data-item="${item}" style="cursor:pointer;">
-      <span class="name">${item}</span><span class="qty">${amount}x</span>
+      ${itemThumb(item)}
+      <span class="name">${item}<span class="item-cat">${ITEM_CATEGORY_MAP[item] || ''}</span></span>
+      <span class="qty">${amount}x</span>
       <span class="price" style="color:${priceColor}">${price.toFixed(4)} HVC</span></div>`;
   }
   sellDiv.innerHTML = sellHtml || '<div style="color:#666;padding:12px;">Žádný náklad</div>';
@@ -1371,13 +2218,17 @@ function sellItem(item) {
 function openDocked(planet) {
   game.dockedPlanet = planet; ship.dockedAt = planet.name;
   game.state = 'DOCKED'; showScreen(dockedScreen);
-  document.getElementById('dockedTitle').textContent = `DOKOVÁNO U: ${planet.name}`;
-  document.getElementById('dockedType').textContent = `Typ: ${planet.getTypeName()}`;
+  document.getElementById('dockedTitle').innerHTML = `${icon('anchor')} DOKOVÁNO U: ${planet.name}`;
+  document.getElementById('dockedType').innerHTML = `${icon(stationIcon(planet.stationType))} Typ: ${planet.getTypeName()}`;
+  document.getElementById('dockedArt').innerHTML = stationArt(planet.stationType, planet.name) + shipArt(ship.name);
   let total = 0;
   for (const k of Object.keys(planet.goods)) total += planet.goods[k];
-  document.getElementById('dockedInfo').textContent = `Zboží: ${total} jednotek`;
+  document.getElementById('dockedInfo').innerHTML = `${icon('package')} Zboží: ${total} jednotek · ${icon('coins')} ${walletBalance.toFixed(4)} HVC`;
   document.getElementById('dockedShipStats').innerHTML =
-    `HP: ${Math.round(ship.hp)}/${ship.maxHp} | Shield: ${Math.round(ship.shield)}/${ship.maxShield} | Palivo: ${Math.round(ship.fuel)}/${ship.maxFuel} | Náklad: ${shipGetTotalCargo()}/${ship.maxCargo}`;
+    `${statLine('heart', `HP: ${Math.round(ship.hp)}/${ship.maxHp}`)}
+     ${statLine('shield', `Shield: ${Math.round(ship.shield)}/${ship.maxShield}`)}
+     ${statLine('fuel', `Palivo: ${Math.round(ship.fuel)}/${ship.maxFuel}`)}
+     ${statLine('package', `Náklad: ${shipGetTotalCargo()}/${ship.maxCargo}`)}`;
 }
 function closeDocked() {
   if (game.dockedPlanet) {
@@ -1401,13 +2252,12 @@ function renderQuests() {
     const pct = Math.min(1, progress);
     const color = pct > 0.7 ? '#44ee88' : pct > 0.3 ? '#e6e640' : '#dd6666';
     activeDiv.innerHTML = `
-      <div style="font-size:18px;color:#44ee88;">AKTUÁLNÍ ÚKOL</div>
-      <div style="font-size:16px;color:#ddd;margin:4px 0;">${q.name}</div>
-      <div style="font-size:13px;color:#e6e640;">Odměna: ${q.reward.toFixed(4)} HVC</div>
-      <div style="margin:6px 0;background:#222;border-radius:4px;height:16px;overflow:hidden;border:1px solid #444;">
-        <div style="height:100%;width:${pct*100}%;background:${color};transition:width 0.3s;"></div></div>
-      <div style="font-size:13px;color:#aaa;">${progressText}</div>
-      ${q.type==='deliver'?`<div style="font-size:12px;color:#88ccff;">Doruč z ${q.from} na ${q.to}</div>`:''}`;
+      <div class="quest-head">${questThumb(q.type)}<div><div class="quest-kicker">AKTUÁLNÍ ÚKOL</div><div class="quest-name">${q.name}</div></div></div>
+      <div class="quest-reward">${icon('coins')} Odměna: ${q.reward.toFixed(4)} HVC</div>
+      ${progressBar(pct, color)}
+      <div class="quest-progress">${progressText}</div>
+      ${q.type==='deliver'?`<div class="quest-note">${icon('truck')} Doruč z ${q.from} na ${q.to}</div>`:''}
+      ${q.item?`<div class="quest-item">${itemThumb(q.item, 'sm')} ${q.item}</div>`:''}`;
   } else activeDiv.innerHTML = '<div style="color:#666;padding:12px;">Není aktivní úkol.</div>';
   const listDiv = document.getElementById('questList');
   let html = '';
@@ -1415,7 +2265,9 @@ function renderQuests() {
     const q = game.quests[i];
     const typeColor = q.type==='deliver'?'#44ee88':q.type==='collect'?'#e6e640':'#dd6666';
     html += `<div class="item-row" data-action="acceptQuest" data-index="${i}" style="cursor:pointer;flex-wrap:wrap;">
-      <span class="name">[${i+1}] ${q.name}</span>
+      ${questThumb(q.type)}
+      <span class="name">[${i+1}] ${q.name}<span class="item-cat">${q.type.toUpperCase()}</span></span>
+      ${q.item?itemThumb(q.item, 'sm'):''}
       <span style="color:${typeColor};font-size:12px;">${q.type.toUpperCase()}</span>
       <span style="color:#88dd88;font-size:12px;">${q.reward.toFixed(4)} HVC</span>
       ${q.type==='deliver'?`<span style="color:#888;font-size:11px;">→ ${q.to}</span>`:''}</div>`;
@@ -1463,14 +2315,15 @@ function checkQuestCompletion(planet) {
 function openUpgrades() { game.state = 'UPGRADE'; showScreen(upgradeScreen); renderUpgrades(); }
 function renderUpgrades() {
   document.getElementById('upgradeStats').innerHTML = `
-    <div>Jméno: ${ship.name}</div><div>Level: ${ship.level}</div>
-    <div>HP: ${Math.round(ship.hp)}/${ship.maxHp}</div>
-    <div>Shield: ${Math.round(ship.shield)}/${ship.maxShield}</div>
-    <div>Rychlost: ${ship.maxSpeed.toFixed(1)}</div>
-    <div>Náklad: ${shipGetTotalCargo()}/${ship.maxCargo}</div>
-    <div>Palivo: ${Math.round(ship.fuel)}/${ship.maxFuel}</div>
-    <div>Zbraně: ${ship.weapons.join(', ')}</div>
-    <div style="color:#88dd88;margin-top:4px;">Kredity: ${walletBalance.toFixed(4)} HVC</div>`;
+    ${statLine('user', `Jméno: ${ship.name}`)}
+    ${statLine('star', `Level: ${ship.level}`)}
+    ${statLine('heart', `HP: ${Math.round(ship.hp)}/${ship.maxHp}`)}
+    ${statLine('shield', `Shield: ${Math.round(ship.shield)}/${ship.maxShield}`)}
+    ${statLine('gauge', `Rychlost: ${ship.maxSpeed.toFixed(1)}`)}
+    ${statLine('package', `Náklad: ${shipGetTotalCargo()}/${ship.maxCargo}`)}
+    ${statLine('fuel', `Palivo: ${Math.round(ship.fuel)}/${ship.maxFuel}`)}
+    ${statLine('crosshair', `Zbraně: ${ship.weapons.join(', ')}`)}
+    <div class="stat-line" style="color:#88dd88;margin-top:4px;">${icon('coins')}<span>Kredity: ${walletBalance.toFixed(4)} HVC</span></div>`;
 
   const listDiv = document.getElementById('upgradeList');
   const upgrades = [
@@ -1488,10 +2341,11 @@ function renderUpgrades() {
     const cost = up.baseCost * Math.pow(1.35, lvl);
     const canAfford = walletBalance >= cost;
     const nextLevel = lvl + 1;
-    html += `<div class="item-row" data-action="doUpgrade" data-id="${up.id}" style="cursor:${canAfford?'pointer':'default'};border-color:${canAfford?'#3a8acc':'#553333'};color:${canAfford?'#ddd':'#555'};">
-      <span class="name">${up.name} <span style="color:#66ddff;font-size:11px;">Lv.${lvl}</span></span>
-      <span style="color:${canAfford?'#88dd88':'#666'};min-width:110px;text-align:right;">${cost.toFixed(4)} HVC</span>
-      <span style="font-size:11px;color:#888;flex-basis:100%;">${up.desc} → Lv.${nextLevel} (+${(up.id==='speed'?'0.5':'')}${up.id==='hp'?'20':''}${up.id==='shield'?'20':''}${up.id==='cargo'?'20':''}${up.id==='fuel'?'50':''})</span>
+    html += `<div class="item-row" data-action="doUpgrade" data-id="${up.id}" style="cursor:${canAfford?'pointer':'default'};border-color:${canAfford?'#3a8acc':'#553333'};color:${canAfford?'#ddd':'#666'};">
+      ${upgradeThumb(up.id)}
+      <span class="name">${up.name} <span class="lvl">Lv.${lvl}</span><span class="item-cat">${up.desc}</span></span>
+      <span style="color:${canAfford?'#88dd88':'#666'};min-width:110px;text-align:right;font-weight:700;">${cost.toFixed(4)} HVC</span>
+      <span class="upgrade-next">${icon('chevron-right')} Další: Lv.${nextLevel} · ${up.desc}</span>
     </div>`;
   }
   listDiv.innerHTML = html;
@@ -1524,32 +2378,37 @@ function doUpgrade(id) {
 
 // === FUEL ===
 function openFuel() { game.state = 'FUEL'; showScreen(fuelScreen);
-  document.getElementById('fuelCurrent').textContent = `Aktuální palivo: ${Math.round(ship.fuel)}/${ship.maxFuel}`; }
+  renderFuelStatus(); }
+function renderFuelStatus() {
+  document.getElementById('fuelCurrent').innerHTML =
+    `${icon('fuel')} Aktuální palivo: <b>${Math.round(ship.fuel)}/${ship.maxFuel}</b> ${progressBar(ship.fuel / ship.maxFuel, '#ff8800')}`;
+}
 function buyFuel(amount) {
   const cost = amount * 0.005;
   if (subtractCredits(cost)) {
     ship.fuel = Math.min(ship.maxFuel, ship.fuel + amount);
     game.credits = walletBalance;
     showMessage(`Nakoupeno ${amount} paliva za ${cost.toFixed(4)} HVC`, 90);
-    saveGame(); updateMenuWallet();
-    document.getElementById('fuelCurrent').textContent = `Aktuální palivo: ${Math.round(ship.fuel)}/${ship.maxFuel}`;
+    saveGame(); updateMenuWallet(); renderFuelStatus();
   } else showMessage('Nedostatek kreditů!', 90);
 }
 
 // === SKILLS ===
 function openSkills() { game.state = 'SKILLS'; showScreen(skillsScreen); renderSkills(); }
 function renderSkills() {
-  document.getElementById('skillPoints').textContent = `Volných bodů: ${ship.skillPoints}`;
+  document.getElementById('skillPoints').innerHTML = `${icon('star')} Volných bodů: <b>${ship.skillPoints}</b>`;
   const listDiv = document.getElementById('skillList');
   let html = '', idx = 1;
   for (const [id, def] of Object.entries(SKILL_DEFS)) {
     const val = ship.skills[id]||0, maxed = val >= def.max;
     const canAdd = ship.skillPoints > 0 && !maxed;
-    html += `<div class="item-row" data-action="addSkill" data-id="${id}" style="cursor:${canAdd?'pointer':'default'};border-color:${canAdd?'#3a8acc':'#333'};">
-      <span class="name">[${idx}] ${def.icon} ${def.name}</span>
-      <span style="color:${maxed?'#88dd88':'#ddd'};">${val}/${def.max}</span>
-      <span style="font-size:11px;color:#888;">${def.desc}</span>
-      ${canAdd?'<span style="color:#44ee88;font-size:12px;">+</span>':''}</div>`;
+    html += `<div class="item-row skill-row" data-action="addSkill" data-id="${id}" style="cursor:${canAdd?'pointer':'default'};border-color:${canAdd?'#3a8acc':'#333'};">
+      ${skillThumb(id)}
+      <span class="name">[${idx}] ${def.name}<span class="item-cat">${def.desc}</span></span>
+      <span class="skill-val" style="color:${maxed?'#88dd88':'#ddd'};">${val}/${def.max}</span>
+      ${canAdd?`<span class="skill-add">${icon('plus')}</span>`:''}
+      <div class="skill-bar">${progressBar(val / def.max, maxed ? 'linear-gradient(90deg,#54e89a,#9dffc4)' : 'linear-gradient(90deg,#9966ff,#b78cff)')}</div>
+    </div>`;
     idx++;
   }
   listDiv.innerHTML = html;
@@ -1675,12 +2534,12 @@ function renderMiningLog() {
     const totalShares = game.miningHistory.reduce((s,h) => s+h.shares, 0);
     const avgEff = game.miningHistory.reduce((s,h) => s+h.efficiency, 0)/game.miningHistory.length;
     overallDiv.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;">
-      <div class="mining-stat">Sessions: <span class="highlight">${game.miningHistory.length}</span></div>
-      <div class="mining-stat">Total Mined: <span class="highlight2">${totalMined.toFixed(8)} HVC</span></div>
-      <div class="mining-stat">Total Hashes: <span class="highlight">${totalHashes.toLocaleString()}</span></div>
-      <div class="mining-stat">Total Shares: <span class="highlight">${totalShares}</span></div>
-      <div class="mining-stat">Avg Efficiency: <span class="highlight2">${avgEff.toFixed(4)}%</span></div>
-      <div class="mining-stat">Wallet: <span class="highlight">${walletBalance.toFixed(8)} HVC</span></div></div>`;
+      <div class="mining-stat">${icon('pickaxe')}<span>Sessions: <span class="highlight">${game.miningHistory.length}</span></span></div>
+      <div class="mining-stat">${icon('coins')}<span>Total Mined: <span class="highlight2">${totalMined.toFixed(8)} HVC</span></span></div>
+      <div class="mining-stat">${icon('cpu')}<span>Total Hashes: <span class="highlight">${totalHashes.toLocaleString()}</span></span></div>
+      <div class="mining-stat">${icon('gem')}<span>Total Shares: <span class="highlight">${totalShares}</span></span></div>
+      <div class="mining-stat">${icon('trending-up')}<span>Avg Efficiency: <span class="highlight2">${avgEff.toFixed(4)}%</span></span></div>
+      <div class="mining-stat">${icon('wallet')}<span>Wallet: <span class="highlight">${walletBalance.toFixed(8)} HVC</span></span></div></div>`;
   } else overallDiv.innerHTML = '<div style="color:#666;padding:12px;">Zatím žádné mining session.</div>';
   const sessionsDiv = document.getElementById('miningSessions');
   let html = '';
@@ -1884,7 +2743,8 @@ function renderCrafting() {
   const krystaly = ship.cargo['Krystaly'] || 0;
   const zlato = ship.cargo['Zlato'] || 0;
   document.getElementById('craftingResources').innerHTML =
-    `Ruda: <b>${ruda}</b> | Komponenty: <b>${komp}</b> | Titan: ${titan} | Kobalt: ${kobalt} | Platina: ${platina} | Krystaly: ${krystaly} | Zlato: ${zlato}`;
+    resChip('Ruda', ruda) + resChip('Komponenty', komp) + resChip('Titan', titan) +
+    resChip('Kobalt', kobalt) + resChip('Platina', platina) + resChip('Krystaly', krystaly) + resChip('Zlato', zlato);
 
   const listDiv = document.getElementById('craftingList');
   let html = '';
@@ -1899,21 +2759,24 @@ function renderCrafting() {
       const have = ship.cargo[item] || 0;
       const ok = have >= need;
       if (!ok) canCraft = false;
-      reqParts.push(`<span style="color:${ok?'#88dd88':'#dd6666'};">${item}:${have}/${need}</span>`);
+      reqParts.push(reqChip(item, have, need));
     }
     const equipped = game.inventory.equipped[rec.slot];
     const alreadyEquipped = equipped && equipped.name === rec.name;
     const tier = rec.tier || 1;
     const borderColor = canCraft && !alreadyEquipped ? tierColors[tier] : '#553333';
 
-    html += `<div class="item-row" data-action="craft" data-index="${i}" style="cursor:${canCraft && !alreadyEquipped?'pointer':'default'};border-color:${borderColor};color:${canCraft && !alreadyEquipped?'#ddd':'#666'};flex-wrap:wrap;">
-      <span class="name" style="flex:1 1 100%;">
-        <span style="color:${tierColors[tier]};font-size:10px;">[${tierLabels[tier]}]</span>
-        <b>${rec.name}</b>
-        ${alreadyEquipped?'<span style="color:#44ee88;font-size:11px;"> ✓ vybaveno</span>':''}
-      </span>
-      <span style="flex:1 1 100%;font-size:12px;">${reqParts.join(' ')}</span>
-      <span style="font-size:11px;color:#aaa;">+${rec.bonusVal} ${rec.bonus} → slot: ${rec.slot}</span>
+    html += `<div class="item-row recipe-row" data-action="craft" data-index="${i}" style="cursor:${canCraft && !alreadyEquipped?'pointer':'default'};border-color:${borderColor};color:${canCraft && !alreadyEquipped?'#ddd':'#777'};">
+      ${recipeThumb(rec)}
+      <div class="recipe-body">
+        <div class="recipe-title">
+          <span class="tier-badge tier-${tier}">${tierLabels[tier]}</span>
+          <b>${rec.name}</b>
+          ${alreadyEquipped?`<span class="equipped-tag">${icon('circle-check')} vybaveno</span>`:''}
+        </div>
+        <div class="recipe-req">${reqParts.join('')}</div>
+        <div class="recipe-bonus">${icon('sparkles')} +${rec.bonusVal} ${BONUS_LABELS[rec.bonus] || rec.bonus} → ${SLOT_LABELS[rec.slot] || rec.slot}</div>
+      </div>
     </div>`;
   }
   listDiv.innerHTML = html;
@@ -1949,17 +2812,17 @@ function renderInventory() {
   if (cargoItems.length === 0) cargoHtml = '<div style="color:#666;padding:12px;">Náklad prázdný</div>';
   else for (const [item, amount] of cargoItems) {
     const cat = ITEM_CATEGORY_MAP[item] || '';
-    cargoHtml += `<div class="item-row" style="cursor:default;"><span class="name">${item}</span><span style="color:#666;font-size:11px;">${cat}</span><span class="qty">${amount}x</span></div>`;
+    cargoHtml += `<div class="item-row" style="cursor:default;">${itemThumb(item)}<span class="name">${item}<span class="item-cat">${cat}</span></span><span class="qty">${amount}x</span></div>`;
   }
   cargoDiv.innerHTML = cargoHtml;
   const slotsDiv = document.getElementById('equippedSlots');
-  const slotNames = { trup:'Trup', stit:'Štít', motor:'Motor', zbran:'Zbraň', naklad:'Náklad', palivo:'Palivo', regenerace:'Regenerace', radar:'Radar', gyro:'Gyroskop' };
   let slotsHtml = '';
-  for (const [slotId, label] of Object.entries(slotNames)) {
+  for (const [slotId, label] of Object.entries(SLOT_LABELS)) {
     const item = game.inventory.equipped[slotId];
-    slotsHtml += `<div class="slot-item ${item?'equipped':''}" data-slot="${slotId}" style="cursor:${item?'pointer':'default'};">
+    slotsHtml += `<div class="slot-item ${item?'equipped':'empty'}" data-slot="${slotId}" style="cursor:${item?'pointer':'default'};">
+      ${item ? itemThumb(item.name) : `<span class="thumb cat-default ghost">${icon(slotIcon(slotId))}</span>`}
       <div class="slot-label">${label}</div>
-      ${item?`<div class="slot-name">${item.name}</div><div class="slot-effect">+${item.bonusVal} ${item.bonus}</div>`:'<div style="color:#555;">prázdný</div>'}</div>`;
+      ${item?`<div class="slot-name">${item.name}</div><div class="slot-effect">+${item.bonusVal} ${BONUS_LABELS[item.bonus] || item.bonus}</div>`:'<div class="slot-empty">prázdný</div>'}</div>`;
   }
   slotsDiv.innerHTML = slotsHtml;
   document.querySelectorAll('.slot-item[data-slot]').forEach(el => {
@@ -1967,7 +2830,7 @@ function renderInventory() {
       const slotId = el.dataset.slot;
       if (game.inventory.equipped[slotId]) {
         game.inventory.equipped[slotId] = null;
-        showMessage(`Odebráno: ${slotNames[slotId]}`, 90);
+        showMessage(`Odebráno: ${SLOT_LABELS[slotId]}`, 90);
         updatePassiveBonuses(); saveGame(); renderInventory();
       }
     });
@@ -1989,27 +2852,29 @@ function closeTraderComm() {
 function renderTraderScreen() {
   const tr = game.traderCommunication;
   if (!tr) return;
-  document.getElementById('traderTitle').textContent = tr.name;
-  document.getElementById('traderStatus').textContent =
-    `${tr.isPirate?'☠ PIRÁTSKÁ LOĎ':'Přátelská loď'} | Palivo: ${Math.round(tr.fuel)}/${tr.maxFuel} | HP: ${Math.round(tr.hp)}/${tr.maxHp}${tr.hired?' | ⚔ NAJATA (permanentně)':''}`;
+  document.getElementById('traderTitle').innerHTML = `${icon(tr.isPirate ? 'skull' : 'ship')} ${tr.name}`;
+  document.getElementById('traderStatus').innerHTML =
+    `${icon(tr.isPirate?'skull':'users')} ${tr.isPirate?'PIRÁTSKÁ LOĎ':'Přátelská loď'} · ${icon('fuel')} ${Math.round(tr.fuel)}/${tr.maxFuel} · ${icon('heart')} ${Math.round(tr.hp)}/${tr.maxHp}${tr.hired?` · ${icon('swords')} NAJATA (permanentně)`:''}`;
   const contentDiv = document.getElementById('traderContent');
-  let html = `<div style="color:#88ccff;font-size:13px;margin-bottom:6px;">Zboží k prodeji:</div>`;
+  let html = `<div style="color:#88ccff;font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:5px;">${icon('package')} Zboží k prodeji:</div>`;
   if (tr.cargo.length === 0) html += `<div style="color:#666;padding:8px;">Loď nemá zboží.</div>`;
   for (const c of tr.cargo) {
     const finalPrice = c.price * tr.tradeFee;
     html += `<div class="item-row" data-action="trBuy" data-name="${c.name}" data-price="${finalPrice}" style="cursor:pointer;">
-      <span class="name">${c.name}</span><span class="qty">${c.qty}x</span>
+      ${itemThumb(c.name)}
+      <span class="name">${c.name}<span class="item-cat">${ITEM_CATEGORY_MAP[c.name] || ''}</span></span>
+      <span class="qty">${c.qty}x</span>
       <span class="price">${finalPrice.toFixed(4)} HVC/ks</span></div>`;
   }
   if (tr.hired) {
-    html += `<div style="margin-top:12px;padding:10px;background:rgba(170,102,255,0.1);border:1px solid #aa66ff;border-radius:6px;color:#aa66ff;font-size:13px;">
-      ⚔ Tato loď je najata. Letí za tebou a útočí na piráty. Cena pronájmu byla ${tr.hireCost.toFixed(4)} HVC.<br>
-      Stiskni [5] pro propuštění.
+    html += `<div style="margin-top:12px;padding:10px;background:rgba(170,102,255,0.1);border:1px solid #aa66ff;border-radius:6px;color:#c9a8ff;font-size:13px;display:flex;gap:6px;align-items:flex-start;">
+      ${icon('swords')}<span>Tato loď je najata. Letí za tebou a útočí na piráty. Cena pronájmu byla ${tr.hireCost.toFixed(4)} HVC.<br>
+      Stiskni [5] pro propuštění.</span>
     </div>`;
   } else if (!tr.isPirate) {
-    html += `<div style="margin-top:12px;padding:10px;background:rgba(68,238,136,0.1);border:1px solid #44ee88;border-radius:6px;color:#44ee88;font-size:13px;">
-      💰 Můžeš najmout tuto loď za <b>${tr.hireCost.toFixed(4)} HVC</b> (klávesa [4]).<br>
-      Najatá loď tě bude následovat a automaticky útočit na piráty.
+    html += `<div style="margin-top:12px;padding:10px;background:rgba(68,238,136,0.1);border:1px solid #44ee88;border-radius:6px;color:#9dffc4;font-size:13px;display:flex;gap:6px;align-items:flex-start;">
+      ${icon('coins')}<span>Můžeš najmout tuto loď za <b>${tr.hireCost.toFixed(4)} HVC</b> (klávesa [4]).<br>
+      Najatá loď tě bude následovat a automaticky útočit na piráty.</span>
     </div>`;
   }
   contentDiv.innerHTML = html;
@@ -2239,6 +3104,14 @@ function drawPlanet(p) {
   ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.fill();
   ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.stroke();
+  // Malý ikonový štítek stanice / planety
+  const badgeR = Math.max(7, Math.min(13, r*0.55));
+  const bx = sx + r*0.72, by = sy - r*0.72;
+  ctx.fillStyle = 'rgba(4,10,22,0.82)';
+  ctx.beginPath(); ctx.arc(bx, by, badgeR, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = p.color; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(bx, by, badgeR, 0, Math.PI*2); ctx.stroke();
+  drawCanvasIcon(stationIcon(p.stationType), bx, by, badgeR*1.25, '#e8f6ff', 0.95);
   if (game.zoom > 0.4) {
     ctx.fillStyle = '#ddd';
     ctx.font = `${Math.max(9, 11*Math.min(1, game.zoom*1.5))}px monospace`;
@@ -2594,7 +3467,7 @@ function drawItemTooltip(item, sx, sy) {
   const approxPrice = basePrices[cat] || 0.15;
 
   const lines = [
-    { text:`📦 ${item.name}`, color:'#e6e640', size:13, bold:true },
+    { text:`${item.name}`, color:'#e6e640', size:13, bold:true },
     { text:`Kategorie: ${cat}`, color:'#66ddff', size:11 },
     { text:`Orientační cena: ~${approxPrice.toFixed(3)} HVC`, color:'#88dd88', size:10 },
     { text:`[J] pro sebrání`, color:'#888', size:10 }
@@ -2607,7 +3480,8 @@ function drawItemTooltip(item, sx, sy) {
     maxWidth = Math.max(maxWidth, ctx.measureText(l.text).width);
   }
   const pad = 8;
-  const tw = maxWidth + pad*2;
+  const icoSize = 22;
+  const tw = maxWidth + pad*2 + icoSize + 6;
   const th = lines.length * 17 + pad*2;
   let tx = sx + 18;
   let ty = sy - th - 8;
@@ -2621,12 +3495,13 @@ function drawItemTooltip(item, sx, sy) {
   ctx.lineWidth = 1.5;
   ctx.strokeRect(tx, ty, tw, th);
 
+  drawCanvasIcon(itemIcon(item.name), tx + pad + icoSize/2, ty + pad + 8, icoSize, CATEGORY_COLORS[cat] || '#e6e640', 0.95);
   ctx.textAlign = 'left'; ctx.textBaseline = 'top';
   let y = ty + pad;
   for (const l of lines) {
     ctx.font = (l.bold?'bold ':'') + l.size + 'px monospace';
     ctx.fillStyle = l.color;
-    ctx.fillText(l.text, tx + pad, y);
+    ctx.fillText(l.text, tx + pad + icoSize + 6, y);
     y += 17;
   }
 }
@@ -2731,14 +3606,15 @@ function drawMap() {
     const sx = p.x*zoom + offX, sy = p.y*zoom + offY;
     if (sx > -50 && sx < SCREEN_W+50 && sy > -50 && sy < SCREEN_H+50) {
       const r = Math.max(3, p.radius*zoom);
-      ctx.fillStyle = p.color;
-      ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 0.5;
-      ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.stroke();
+      ctx.fillStyle = 'rgba(4,10,22,0.88)';
+      ctx.beginPath(); ctx.arc(sx, sy, Math.max(6, r+3), 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = p.color; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(sx, sy, Math.max(6, r+3), 0, Math.PI*2); ctx.stroke();
+      drawCanvasIcon(stationIcon(p.stationType), sx, sy, Math.max(9, Math.min(18, r*2.2)), '#e8f6ff', 0.95);
       if (zoom > 0.1) {
         ctx.fillStyle = '#ddd'; ctx.font = `${Math.max(8, 10*Math.min(1, zoom*2))}px monospace`;
         ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-        ctx.fillText(p.name, sx, sy - r - 2);
+        ctx.fillText(p.name, sx, sy - r - 7);
       }
     }
   }
@@ -2769,9 +3645,10 @@ function drawMap() {
     const g = GALAXY_DEFS[i];
     const isCurrent = i === currentGalaxy;
     const cost = isCurrent ? 0 : (2 + Math.abs(i - currentGalaxy) * 3 + i * 1.5);
-    ctx.fillStyle = isCurrent ? '#44ee88' : '#ddd';
+    drawCanvasIcon(GALAXY_ICONS[i] || 'globe', panelX + 9, gy + 7, 15, isCurrent ? '#54e89a' : '#8ef0ff', 0.95);
+    ctx.fillStyle = isCurrent ? '#54e89a' : '#ddd';
     ctx.font = '13px monospace';
-    ctx.fillText(`${isCurrent?'▶ ':'  '}${g.name}`, panelX, gy);
+    ctx.fillText(`${isCurrent?'▶ ':'  '}${g.name}`, panelX + 20, gy);
     gy += 16;
     if (!isCurrent) {
       ctx.fillStyle = '#88dd88'; ctx.font = '10px monospace';
@@ -2790,17 +3667,16 @@ function drawMap() {
   ctx.fillText('LEGENDA:', 16, legY);
   legY += 18;
   const legendItems = [
-    ['#0066cc','Planeta'], ['#6696c8','Doky'], ['#bb2222','Pirát klub'],
-    ['#22bbbb','Hi-Tech Lab'], ['#c89600','Obch. stanice'],
-    ['#8B7D6B','Asteroid'], ['#ffbb66','Puto asteroid'],
-    ['#66ddff','Trader'], ['#ff6666','Pirát trader'],
-    ['#aa66ff','Najatá loď']
+    ['globe','#8ef0ff','Planeta'], ['anchor','#b9c6d8','Doky'], ['skull','#ff8b7a','Pirát klub'],
+    ['flask-conical','#5ce1e6','Hi-Tech Lab'], ['store','#ffe66d','Obch. stanice'],
+    ['mountain','#c8b89a','Asteroid'], ['gem','#ffbb66','Puto asteroid'],
+    ['ship','#66ddff','Trader'], ['skull','#ff6666','Pirát trader'],
+    ['swords','#b78cff','Najatá loď']
   ];
-  for (const [color, name] of legendItems) {
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.arc(24, legY + 5, 5, 0, Math.PI*2); ctx.fill();
+  for (const [icoName, color, name] of legendItems) {
+    drawCanvasIcon(icoName, 24, legY + 6, 15, color, 0.95);
     ctx.fillStyle = '#ddd'; ctx.font = '11px monospace';
-    ctx.textBaseline = 'top';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(name, 34, legY);
     legY += 16;
   }
@@ -2842,8 +3718,19 @@ function draw() {
     const sx = item.x*zoom + offX, sy = item.y*zoom + offY;
     if (sx < -20 || sx > SCREEN_W+20 || sy < -20 || sy > SCREEN_H+20) continue;
     const pulse = Math.sin(Date.now()*0.004 + item.x)*0.3 + 0.7;
-    ctx.fillStyle = `rgb(${Math.floor(200*pulse)},${Math.floor(200*pulse)},50)`;
-    ctx.beginPath(); ctx.arc(sx, sy, Math.max(3, 5*zoom), 0, Math.PI*2); ctx.fill();
+    const cat = item.category || ITEM_CATEGORY_MAP[item.name] || 'Minerály';
+    const col = CATEGORY_COLORS[cat] || '#ffff66';
+    const glowR = Math.max(7, 10*zoom);
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.beginPath(); ctx.arc(sx, sy, glowR*1.35, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = col; ctx.globalAlpha = 0.35 + pulse*0.35; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(sx, sy, glowR, 0, Math.PI*2); ctx.stroke();
+    ctx.globalAlpha = 1;
+    const iconSize = Math.max(11, 16*zoom);
+    if (!drawCanvasIcon(itemIcon(item.name), sx, sy, iconSize, col, 0.95)) {
+      ctx.fillStyle = col;
+      ctx.beginPath(); ctx.arc(sx, sy, Math.max(3, 5*zoom), 0, Math.PI*2); ctx.fill();
+    }
 
     // Popisek když je hráč blízko
     const dToShip = Math.sqrt((item.x-ship.x)**2 + (item.y-ship.y)**2);
@@ -3240,6 +4127,9 @@ function init() {
   hideAllScreens();
   showScreen(menuScreen);
   game.state = 'MENU';
+  hydrateStaticIcons();
+  renderHelpLegend();
+  preloadCanvasIcons();
 
   const container = document.getElementById('gameContainer');
   const resizeContainer = () => {
